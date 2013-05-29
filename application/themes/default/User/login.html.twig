@@ -1,0 +1,14 @@
+{% extends '_layouts/login.html.twig' %}
+{% block content %}
+{% import '_tools/formElements.twig' as forms %}
+<form id="formulario"  class="form-horizontal" method="post" >
+    <fieldset>
+        {% for campo in formcampos %}
+            {{ forms.campo(campo) }}
+        {% endfor %}
+    </fieldset>
+    <div class="form-actions">
+        <button type="submit" name="submit" class="btn btn-primary" value="login">login</button>
+    </div>
+</form>
+{% endblock %}

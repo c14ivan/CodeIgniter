@@ -1,0 +1,130 @@
+{# ASSETS HELPERS {{{ #}
+{# https://github.com/ixmedia/SkiiTwigHelpersMacros}
+
+{# Insert SVG or insert Fallback
+   Require: Modernizr (http://modernizr.com/)
+#}
+{% macro asset_svg(svg_filepath,fallback_filepath,attributes) %}
+<script>document.write('<img src="' + ((Modernizr.svg) ? '{{ svg_filepath }}' : '{{ fallback_filepath }}') + '" {% for attrname, attrvalue in attributes %}{{ attrname }}="{{ attrvalue }}" {% endfor %}/>')</script>
+<noscript><img src="{{ fallback_filepath }}" {% for attrname, attrvalue in attributes %}{{ attrname }}="{{ attrvalue }}" {% endfor %}/></noscript>
+{% endmacro %}
+
+{# END ASSETS HELPERS }}} #}
+
+{# THIRD PARTY INTEGRATION {{{ #}
+
+{# Facebook Init Script
+   Reference: https://developers.facebook.com/docs/plugins/
+#}
+{% macro fb_init(app_id,locale) %}
+    <div id="fb-root"></div>
+    <script>(function(d, s, id) { var js, fjs = d.getElementsByTagName(s)[0]; if (d.getElementById(id)) return; js = d.createElement(s); js.id = id; js.src = "//connect.facebook.net/{{ locale|default('en_US') }}/all.js#xfbml=1&appId={{ app_id }}"; fjs.parentNode.insertBefore(js, fjs); }(document, 'script', 'facebook-jssdk'));</script>
+{% endmacro %}
+
+{# Facebook Like Button
+   Reference: https://developers.facebook.com/docs/reference/plugins/like/
+#}
+{% macro fb_like_button(url,layout_style,width,show_send_button,show_face,display_verb,color_scheme,font) %}
+    <div class="fb-like" data-href="{{ url|default(app.request.Uri) }}" data-send="{{ show_send_button|default('false') }}" data-layout="{{ layout_style|default('button_count') }}" data-width="{{ width|default('450') }}" data-show-faces="{{ show_face|default('false') }}" data-action="{{ display_verb|default('like') }}" data-colorscheme="{{ color_scheme|default('light') }}" data-font="{{ font|default('arial') }}"></div>
+{% endmacro %}
+
+{# Facebook Like Box
+   Reference: https://developers.facebook.com/docs/reference/plugins/like-box/
+#}
+{% macro fb_like_box(url,width,show_face,show_stream,show_header,border_color) %}
+    <div class="fb-like-box" data-href="{{ url }}" data-width="{{ width|default('292') }}" data-show-faces="{{ show_face|default('false') }}" data-stream="{{ show_stream|default('true') }}" data-header="{{ show_header|default('false') }}" data-border-color="{{ border_color|default('#AAAAAA') }}"></div>
+{% endmacro %}
+
+{# Facebook Comment Box
+   Reference: https://developers.facebook.com/docs/reference/plugins/comments/
+#}
+{% macro fb_comment_box(url,num_posts,width,colorscheme) %}
+    <div class="fb-comments" data-href="{{ url|default(app.request.Uri) }}" data-num-posts="{{ num_posts|default('2') }}" data-width="{{ width|default('470') }}" data-colorscheme="{{ colorscheme|default('light') }}"></div>
+{% endmacro %}
+
+
+
+{# Twitter Follow Button
+   Reference: https://twitter.com/about/resources/buttons#follow
+#}
+{% macro tw_follow_btn(username,lang,show_count) %}
+    <a href="https://twitter.com/{{ username }}" class="twitter-follow-button" data-show-count="{{ show_count|default('false') }}" data-lang="{{ lang|default('en') }}">Follow @{{ username }}</a>
+    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+{% endmacro %}
+
+{# Twitter Share Button
+   Reference: https://twitter.com/about/resources/buttons#tweet
+#}
+{% macro tw_share_btn(url,lang,show_count,text,via,recommend,hashtags) %}
+    <a href="https://twitter.com/share" class="twitter-share-button" data-url="{{ url|default(app.request.Uri) }}" data-text="{{ text }}" data-via="{{ via }}" data-lang="{{ lang|default('en') }}" data-related="{{ recommend }}" data-count="{{ show_count|default('false') }}" data-hashtags="{{ hashtags }}">Tweet</a>
+    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+{% endmacro %}
+
+{# Twitter Feeds Widgets
+   Currently support profile feeds only.
+   Reference: http://twitter.com/about/resources/widgets/widget_profile
+#}
+{% macro tw_feed(username,width,height,shell_background,shell_color,tweets_background,tweets_color,tweets_links,tweets_number,scrollbar,loop,live,behavior,tweet_interval) %}
+    <script src="http://widgets.twimg.com/j/2/widget.js"></script>
+    <script>
+        new TWTR.Widget({
+        version: 2,
+        type: 'profile',
+        rpp: {{ tweets_number|default('4') }},
+        interval: {{ tweet_interval|default('30000') }},
+        width: {{ width }},
+        height: {{ height }},
+        theme: {
+            shell: {
+                background: '{{ shell_background }}',
+                color: '{{ shell_color }}'
+            },
+            tweets: {
+                background: '{{ tweets_background }}',
+                color: '{{ tweets_color }}',
+                links: '{{ tweets_links }}'
+            }
+        },
+        features: {
+            scrollbar: {{ scrollbar|default('true') }},
+            loop: {{ loop|default('false') }},
+            live: {{ live|default('true') }},
+            behavior: '{{ behavior|default('all') }}'
+        }
+        }).render().setUser('{{ username }}').start();
+    </script>
+{% endmacro %}
+
+
+
+{# Google widget init script
+   Reference: http://www.google.com/webmasters/+1/button/
+#}
+{% macro gplusone_init(lang) %}
+    <script>window.___gcfg = {lang: '{{ lang|default('en') }}'}; (function() { var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true; po.src = 'https://apis.google.com/js/plusone.js'; var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s); })();</script>
+{% endmacro %}
+
+{# Google +1 Button
+   Reference: http://www.google.com/webmasters/+1/button/
+#}
+{% macro gplusone_btn(url,size,annotation) %}
+    <div class="g-plusone" data-size="{{ size|default('medium') }}" data-href="{{ url|default(app.request.Uri) }}" data-annotation="{{ annotation|default('bubble') }}"></div>
+{% endmacro %}
+
+{# Google Analytics Tracking Code
+   Reference: https://developers.google.com/analytics/devguides/collection/gajs/
+#}
+{% macro ganalytics_tracking(tracking_code) %}
+    <script>var _gaq = _gaq || []; _gaq.push(['_setAccount', '{{ tracking_code }}']); _gaq.push(['_trackPageview']); (function() { var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true; ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js'; var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s); })();</script>
+{% endmacro %}
+
+
+
+{# Gaug.es Tracking Code
+   Reference: http://get.gaug.es/documentation/tracking/
+#}
+{% macro gauges_tracking(tracking_code) %}
+    <script>var _gauges = _gauges || []; (function() { var t   = document.createElement('script'); t.type  = 'text/javascript'; t.async = true; t.id = 'gauges-tracker'; t.setAttribute('data-site-id', '{{ tracking_code }}'); t.src = '//secure.gaug.es/track.js'; var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(t, s); })();</script>
+{% endmacro %}
+
+{# END THIRD PARTY INTEGRATION }}} #}

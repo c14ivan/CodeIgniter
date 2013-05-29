@@ -1,0 +1,282 @@
+{#GENERICOS#}
+    {% macro icon(name, inverted) %}
+        <i class="icon-{{ name }}{% if inverted|default(false) %} icon-white{% endif %}"></i>
+    {% endmacro %}
+    {# img: MUESTRA UNA IMAGEN #}
+    {% macro img(url,width,height,alt) %}
+        <img src="{{ url }}" width="{{ width|default('') }}" alt="{{alt|default('Image')}}"/>
+    {% endmacro%}
+    
+    {# foco: PONE EL FOCO EN EL ID INDICADO #}
+    {% macro foco(id) %}
+        <script language='JavaScript' type='text/javascript'>
+        document.getElementById('{{id}}').focus();
+        </script>
+    {% endmacro %}
+    {# label: MUESTRA UN <DIV> CONTENIENDO EL TEXTO value Y APLICANDO LA CLASE class #}
+    {# ----------------------------------------------------------------------------- #}
+    {% macro label(value,class,for) %}
+        <div class="{{ class|default('Etiqueta') }}"><label for="{{ for }}">{{ value }}</div>
+    {% endmacro %}
+    {# span: MUESTRA UN <span> CONTENIENDO EL TEXTO value Y APLICANDO LA CLASE class #}
+    {# ----------------------------------------------------------------------------- #}
+    {% macro span(value,class) %}
+        <span class="{{ class|default('') }}">{{ value }}</span>
+    {% endmacro %}
+{# TABLAS #}
+    {% macro th(columnname) %}
+        <th>{{ columnname }}</th>
+    {% endmacro %}
+    {% macro td(columnname) %}
+        <td>{{ columnname }}</td>
+    {% endmacro %}
+
+{# FORMULARIOS#}
+    {# campo: MUESTRA UN CAMPO #}
+    {# ------------------------- #}
+    {% macro campo(campo) %}
+        {% if campo.tipo=='input' %}
+            {{ _self.input(campo) }}
+        {% elseif campo.tipo=='textarea' %}
+            {{ _self.textarea(campo) }}
+        {% elseif campo.tipo=='select' %}
+            {{ _self.select(campo) }}
+        {% elseif campo.tipo=='legend' %}
+            {{ _self.legend(campo) }}
+        {% elseif campo.tipo=='strfieldset' %}
+            {{ _self.strfieldset(campo) }}
+        {% elseif campo.tipo=='endfieldset' %}
+            {{ _self.endfieldset(campo) }}
+        {% elseif campo.tipo=='button' %}
+            {{ _self.button(campo) }}
+        {% elseif campo.label=='label' %}
+            {{ _self.label(campo.value,campo.class,campo.for) }}
+        {% elseif campo.label=='span' %}
+            {{ _self.span(campo.value,campo.class) }}
+        {% elseif attribute(campo,'value') %}
+            {{ campo.value }}
+        {% else %}
+            {{ campo }}
+        {% endif %}
+    {% endmacro %}
+    {# input: MUESTRA UN <INPUT> #}
+    {# ------------------------- #}
+    {% macro input(campo) %}
+    
+        {% set label=campo.label %}
+        {% set type=campo.type %}
+        {% set name=campo.name %}
+        {% set id=campo.id %}
+        {% set value=campo.value %}
+        {% set maxLength=campo.maxLength %}
+        {% set extra=campo.extra %}
+        {% set placeholder=campo.placeholder %}
+        {% set onchange=campo.onchange %}
+        {% set append=campo.append %}
+        {% set prepend=campo.prepend %}
+        {% set opciones=campo.opciones %}
+        {% set classappprep='' %}
+        {% if maxLength>20%}
+            {% set class='input-xlarge' %}
+        {% else %}
+            {% set class='' %}
+        {% endif %}
+        {% if type=='date' %}
+            {% set type='text' %}
+            {% set class='input datepicker ' %}
+        {% elseif type=='file' %}
+            {% set class='input-file uniform_on ' %}
+        {% endif %}
+        {% if append%}
+            {% set classappprep= classappprep ~' input-append' %}
+        {% endif %}
+        {% if prepend or type=='password' %}
+            {% set classappprep= classappprep ~' input-prepend' %}
+        {% endif %}
+        {% if type=='hidden' %}
+            <input type="{{ type|default('text') }}" name="{{ name }}" id="{{ id|default(name)}}"
+               value="{{ value }}" {% if onchange %} onchange="{{ onchange }}" {% endif %}/>
+        {% else %}
+            <div class="control-group" {% if id %} id="div_{{id}}" {% endif %}>
+                {% if label %}
+                    {{ _self.label(label,'control-label',id|default(name)) }}
+                {% endif %}
+                <div class="controls">
+                    <div class="{{ classappprep }}">
+                        {% if append%}
+                            <span class="add-on">{{ _self.campo(append) }}</span>
+                        {% endif %}
+                        {% if opciones %}
+                            {% if type=='radio' %}
+                                {% for key,valor in opciones %}
+                                    {{ _self.radio(name,key,class,valor,value) }}
+                                {% endfor %}
+                            {% elseif type=='checkbox' %}
+                                {% if opciones is not empty %}
+                                    {% for key,valor in opciones %}
+                                        {{ _self.checkbox(valor) }}
+                                    {% endfor %}
+                                {% endif %}
+                            {% endif %}
+                        {% else %}
+                            <input type="{{ type|default('text') }}" name="{{ name }}" id="{{ id|default(name)}}"
+                               value="{{ value }}" {% if maxLength %} maxlength="{{ maxLength|default(20) }}" {% endif %}
+                               class="{{ class }}" placeholder="{{ placeholder }}" {{extra}} {% if onchange %} onchange="{{ onchange }}" {% endif %}/>
+                        {% endif %}
+                        {% if prepend or type=='password' %}
+                            {% if prepend%}
+                                {% if attribute(prepend,'tipo') %}
+                                    {{ _self.campo(prepend) }}
+                                {% else %}
+                                    {% for tmp in prepend %}
+                                        {{ _self.campo(tmp) }}
+                                    {% endfor %}
+                                {% endif %}
+                            {% endif %}
+                            {% if type=='password' %}
+                                <span class="add-on">
+                                    <div class="password-meter">
+                                		<div class="password-meter-message"> </div>
+                                		<div class="password-meter-bg">
+                                			<div class="password-meter-bar"></div>
+                                		</div>
+                                	</div>
+                            	</span>
+                        	{% endif %}
+                    	{% endif %}
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    {% endmacro %}
+    {# textarea: MUESTRA UN <RADIOBUTTON> #}
+    {# ------------------------------- #}
+    {% macro radio(name,value,class,label,sel) %}
+    <label class="radio">
+        <input type="radio" name="{{ name }}" value="{{ value }}" 
+       class="{{ class }}" {% if value==sel %} checked="checked" {% endif %}/>{{ label }}
+    </label>
+    {% endmacro %}
+    {# textarea: MUESTRA UN <CHECKBOX> #}
+    {# ------------------------------- #}
+    {% macro checkbox(valor) %}
+       <label class="checkbox inline {% if valor.clase %} {{ valor.clase }} {% endif %}">
+            <input type="checkbox" name="{{ valor.name }}" style="opacity:0;" id="check_{{ valor.name }}"
+               value="1" {% if valor.checked %} checked {% endif %}/>
+            {{ valor.valor }}
+       </label>
+    {% endmacro %}
+    {# textarea: MUESTRA UN <TEXTAREA> #}
+    {# ------------------------------- #}
+    {% macro textarea(campo) %}
+        {% set label=campo.label %}
+        {% set name=campo.name %}
+        {% set id=campo.id %}
+        {% set value=campo.value %}
+        {% set placeholder=campo.placeholder %}
+        {% set onchange=campo.onchange %}
+        {% set rows=campo.rows %}
+        {% set cols=campo.cols %}
+        {% set type=campo.type %}
+        {% if type=='html'%}
+            {% set class='cleditor' %}
+        {% else %}
+            {% set class='autogrow' %}
+        {% endif %}
+        <div class="control-group" {% if id %} id="div_{{id}}" {% endif %}>
+            {% if label %}
+                {{ _self.label(label,'control-label',id|default(name)) }}
+            {% endif %}
+            <div class="controls">
+                <textarea name="{{ name }}" id="{{ id|default(name)}}"
+                          rows="{{ rows|default(10) }}"
+                          cols="{{ cols|default(10) }}"
+                          class="{{ class }}" 
+                          placeholder="{{ placeholder }}"
+                          {% if onchange %} onchange="{{ onchange }}" {% endif %}
+                          >{{value}}</textarea>
+            </div>
+        </div>
+    {% endmacro %}
+    {# select: MUESTRA UN <SELECT> #}
+    {# --------------------------- #}
+    {% macro select(campo) %}
+        {% set label=campo.label %}
+        {% set name=campo.name %}
+        {% set id=campo.id %}
+        {% set onchange=campo.onchange %}
+        {% set size=campo.size %}
+        {% set defecto=campo.defecto %}
+        {% set opciones=campo.opciones %}
+        {% set extra=campo.extra %}
+        {% set class=campo.class %}
+        {% set placeholder=campo.placeholder %}
+        <div class="control-group" {% if id %} id="div_{{id}}" {% endif %}>
+            {% if label %}
+                {{ _self.label(label,'control-label',id|default(name)) }}
+            {% endif %}
+            <div class="controls">
+                <div class="input-prepend">
+                    <select name="{{ name }}" id="{{ id|default(name)}}" size="{{ size|default(1) }}" data-placeholder="{{ placeholder }}" {{ extra }} class="{{ class }}" onchange="{{onchange}}" data-rel="chosen">
+                        {% if placeholder %}
+                            <option> </option>
+                        {% endif %}
+                        
+                        {% for key,value in opciones %}
+                            {% if value.name %}
+                                <optgroup label="{{ value.name }}">
+                                {% for keyopt,val in value.options %}
+                                    <option value="{{ keyopt }}" {% if (keyopt==defecto) %} SELECTED {%endif%}>
+                                        {{val|raw}}
+                                    </option>
+                                {% endfor %}
+                            {% else %}
+                                <option value="{{ key }}" {% if (key==defecto) %} SELECTED {%endif%}>
+                                    {{value}}
+                                </option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+        </div>
+    {% endmacro %}
+    {# select: MUESTRA UN <BUTTON> #}
+    {# --------------------------- #}
+    {% macro button(campo) %}
+        {% set value=campo.value %}
+        {% set class=campo.class %}
+        {% set icon=campo.icon %}
+        {% set iconinv=campo.iconinv %}
+        {% set title=campo.title %}
+        <button {% if class %} class="{{ class }}"{% endif %} {% if title %} title="{{ title }}"{% endif %}>
+        {% if icon %}
+            {{ _self.icon(icon,iconinv) }}
+        {% endif %}
+        {{ value }}
+        </button>
+    {% endmacro %}
+    {# select: MUESTRA UN <LEGEND> #}
+    {# --------------------------- #}
+    {% macro legend(campo) %}
+        {% set name=campo.name %}
+        {% set id=campo.id %}
+        {% set extra=campo.extra %}
+        {% set value=campo.value %}
+        <legend>{{ name }}{% if extra %} {{ extra }} {% endif %} {% if value %} {{ value }} {% endif %}</legend>
+        
+    {% endmacro %}
+    {# select: MUESTRA UN <FIELSET> #}
+    {# --------------------------- #}
+    {% macro strfieldset(campo) %}
+        <fieldset {% if campo.style %} style="{{ campo.style }}" {% endif %} {% if campo.id %} id="{{ campo.id }}" {% endif %}>
+        {% if campo.value %}
+            {{ _self.legend(campo) }}
+        {% endif %}
+        
+    {% endmacro %}
+    {# select: MUESTRA UN </FIELSET> #}
+    {# --------------------------- #}
+    {% macro endfieldset(campo) %}
+        </fieldset>
+    {% endmacro %}

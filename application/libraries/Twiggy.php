@@ -69,7 +69,7 @@ class Twiggy
 
         $this->_twig = new Twig_Environment($this->_twig_loader, $this->_config['environment']);
         $this->_twig->setLexer(new Twig_Lexer($this->_twig, $this->_config['delimiters']));
-
+        $this->_twig->addExtension(new Twig_Extension_Debug() );
         // Initialize defaults
         $this->theme($this->_config['default_theme'])
         ->layout($this->_config['default_layout'])
