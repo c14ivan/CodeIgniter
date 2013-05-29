@@ -98,8 +98,8 @@ $db['default'] = array(
 	'encrypt' => FALSE,
 	'compress' => FALSE,
 	'stricton' => FALSE,
-	'failover' => array()
+	'failover' => array(),
+    'frozen'   => FALSE
 );
-
 /* End of file database.php */
 /* Location: ./application/config/database.php */

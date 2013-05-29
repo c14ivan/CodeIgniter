@@ -7,6 +7,6 @@
  * @license		http://www.opensource.org/licenses/MIT
  */
 
-$autoload['libraries'] = array('twiggy');
+$autoload['libraries'] = array('twiggy','rb');
 $autoload['config'] = array('twiggy','asset');
 $autoload['helper'] = array('form','url','asset','path','twiggy');
