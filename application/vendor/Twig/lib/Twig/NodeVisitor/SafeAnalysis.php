@@ -31,8 +31,8 @@ class Twig_NodeVisitor_SafeAnalysis implements Twig_NodeVisitorInterface
             }
         }
         $this->data[$hash][] = array(
-            'key' => $node,
-            'value' => $safe,
+                'key' => $node,
+                'value' => $safe,
         );
     }
 

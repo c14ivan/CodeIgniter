@@ -2,12 +2,12 @@
 
 /*
  * This file is part of Twig.
- *
- * (c) 2010 Fabien Potencier
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+*
+* (c) 2010 Fabien Potencier
+*
+* For the full copyright and license information, please view the LICENSE
+* file that was distributed with this source code.
+*/
 
 /**
  * Represents a template function.
@@ -23,8 +23,8 @@ abstract class Twig_Function implements Twig_FunctionInterface
     public function __construct(array $options = array())
     {
         $this->options = array_merge(array(
-            'needs_environment' => false,
-            'needs_context'     => false,
+                'needs_environment' => false,
+                'needs_context'     => false,
         ), $options);
     }
 

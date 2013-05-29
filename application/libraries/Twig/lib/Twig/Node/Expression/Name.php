@@ -2,19 +2,19 @@
 
 /*
  * This file is part of Twig.
- *
- * (c) 2009 Fabien Potencier
- * (c) 2009 Armin Ronacher
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+*
+* (c) 2009 Fabien Potencier
+* (c) 2009 Armin Ronacher
+*
+* For the full copyright and license information, please view the LICENSE
+* file that was distributed with this source code.
+*/
 class Twig_Node_Expression_Name extends Twig_Node_Expression
 {
     protected $specialVars = array(
-        '_self'    => '$this',
-        '_context' => '$context',
-        '_charset' => '$this->env->getCharset()',
+            '_self'    => '$this',
+            '_context' => '$context',
+            '_charset' => '$this->env->getCharset()',
     );
 
     public function __construct($name, $lineno)
@@ -41,16 +41,16 @@ class Twig_Node_Expression_Name extends Twig_Node_Expression
             if (version_compare(phpversion(), '5.4.0RC1', '>=') && ($this->getAttribute('ignore_strict_check') || !$compiler->getEnvironment()->isStrictVariables())) {
                 // PHP 5.4 ternary operator performance was optimized
                 $compiler
-                    ->raw('(isset($context[')
-                    ->string($name)
-                    ->raw(']) ? $context[')
-                    ->string($name)
-                    ->raw('] : null)')
+                ->raw('(isset($context[')
+                ->string($name)
+                ->raw(']) ? $context[')
+                ->string($name)
+                ->raw('] : null)')
                 ;
             } else {
                 $compiler
-                    ->raw('$this->getContext($context, ')
-                    ->string($name)
+                ->raw('$this->getContext($context, ')
+                ->string($name)
                 ;
 
                 if ($this->getAttribute('ignore_strict_check')) {
@@ -58,7 +58,7 @@ class Twig_Node_Expression_Name extends Twig_Node_Expression
                 }
 
                 $compiler
-                    ->raw(')')
+                ->raw(')')
                 ;
             }
         }

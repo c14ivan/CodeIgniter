@@ -2,12 +2,12 @@
 
 /*
  * This file is part of Twig.
- *
- * (c) 2011 Fabien Potencier
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+*
+* (c) 2011 Fabien Potencier
+*
+* For the full copyright and license information, please view the LICENSE
+* file that was distributed with this source code.
+*/
 
 class Twig_Node_SetTemp extends Twig_Node
 {
@@ -20,16 +20,16 @@ class Twig_Node_SetTemp extends Twig_Node
     {
         $name = $this->getAttribute('name');
         $compiler
-            ->addDebugInfo($this)
-            ->write('if (isset($context[')
-            ->string($name)
-            ->raw('])) { $_')
-            ->raw($name)
-            ->raw('_ = $context[')
-            ->repr($name)
-            ->raw(']; } else { $_')
-            ->raw($name)
-            ->raw("_ = null; }\n")
+        ->addDebugInfo($this)
+        ->write('if (isset($context[')
+        ->string($name)
+        ->raw('])) { $_')
+        ->raw($name)
+        ->raw('_ = $context[')
+        ->repr($name)
+        ->raw(']; } else { $_')
+        ->raw($name)
+        ->raw("_ = null; }\n")
         ;
     }
 }

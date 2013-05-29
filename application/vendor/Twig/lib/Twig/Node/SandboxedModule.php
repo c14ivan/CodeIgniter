@@ -2,13 +2,13 @@
 
 /*
  * This file is part of Twig.
- *
- * (c) 2009 Fabien Potencier
- * (c) 2009 Armin Ronacher
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+*
+* (c) 2009 Fabien Potencier
+* (c) 2009 Armin Ronacher
+*
+* For the full copyright and license information, please view the LICENSE
+* file that was distributed with this source code.
+*/
 
 /**
  * Represents a module node.
@@ -45,27 +45,27 @@ class Twig_Node_SandboxedModule extends Twig_Node_Module
         parent::compileDisplayFooter($compiler);
 
         $compiler
-            ->write("protected function checkSecurity() {\n")
-            ->indent()
-            ->write("\$this->env->getExtension('sandbox')->checkSecurity(\n")
-            ->indent()
-            ->write(!$this->usedTags ? "array(),\n" : "array('".implode('\', \'', $this->usedTags)."'),\n")
-            ->write(!$this->usedFilters ? "array(),\n" : "array('".implode('\', \'', $this->usedFilters)."'),\n")
-            ->write(!$this->usedFunctions ? "array()\n" : "array('".implode('\', \'', $this->usedFunctions)."')\n")
-            ->outdent()
-            ->write(");\n")
+        ->write("protected function checkSecurity() {\n")
+        ->indent()
+        ->write("\$this->env->getExtension('sandbox')->checkSecurity(\n")
+        ->indent()
+        ->write(!$this->usedTags ? "array(),\n" : "array('".implode('\', \'', $this->usedTags)."'),\n")
+        ->write(!$this->usedFilters ? "array(),\n" : "array('".implode('\', \'', $this->usedFilters)."'),\n")
+        ->write(!$this->usedFunctions ? "array()\n" : "array('".implode('\', \'', $this->usedFunctions)."')\n")
+        ->outdent()
+        ->write(");\n")
         ;
 
         if (null !== $this->getNode('parent')) {
             $compiler
-                ->raw("\n")
-                ->write("\$this->parent->checkSecurity();\n")
+            ->raw("\n")
+            ->write("\$this->parent->checkSecurity();\n")
             ;
         }
 
         $compiler
-            ->outdent()
-            ->write("}\n\n")
+        ->outdent()
+        ->write("}\n\n")
         ;
     }
 }

@@ -2,12 +2,12 @@
 
 /*
  * This file is part of Twig.
- *
- * (c) 2009 Fabien Potencier
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+*
+* (c) 2009 Fabien Potencier
+*
+* For the full copyright and license information, please view the LICENSE
+* file that was distributed with this source code.
+*/
 
 /**
  * Stores the Twig configuration.
@@ -85,14 +85,14 @@ class Twig_Environment
         }
 
         $options = array_merge(array(
-            'debug'               => false,
-            'charset'             => 'UTF-8',
-            'base_template_class' => 'Twig_Template',
-            'strict_variables'    => false,
-            'autoescape'          => true,
-            'cache'               => false,
-            'auto_reload'         => null,
-            'optimizations'       => -1,
+                'debug'               => false,
+                'charset'             => 'UTF-8',
+                'base_template_class' => 'Twig_Template',
+                'strict_variables'    => false,
+                'autoescape'          => true,
+                'cache'               => false,
+                'auto_reload'         => null,
+                'optimizations'       => -1,
         ), $options);
 
         $this->debug              = (bool) $options['debug'];
@@ -100,9 +100,9 @@ class Twig_Environment
         $this->baseTemplateClass  = $options['base_template_class'];
         $this->autoReload         = null === $options['auto_reload'] ? $this->debug : (bool) $options['auto_reload'];
         $this->extensions         = array(
-            'core'      => new Twig_Extension_Core(),
-            'escaper'   => new Twig_Extension_Escaper((bool) $options['autoescape']),
-            'optimizer' => new Twig_Extension_Optimizer($options['optimizations']),
+                'core'      => new Twig_Extension_Core(),
+                'escaper'   => new Twig_Extension_Escaper((bool) $options['autoescape']),
+                'optimizer' => new Twig_Extension_Optimizer($options['optimizations']),
         );
         $this->strictVariables    = (bool) $options['strict_variables'];
         $this->runtimeInitialized = false;
@@ -219,12 +219,12 @@ class Twig_Environment
         return $this->cache;
     }
 
-     /**
-      * Sets the cache directory or false if cache is disabled.
-      *
-      * @param string|false $cache The absolute path to the compiled templates,
-      *                            or false to disable cache
-      */
+    /**
+     * Sets the cache directory or false if cache is disabled.
+     *
+     * @param string|false $cache The absolute path to the compiled templates,
+     *                            or false to disable cache
+     */
     public function setCache($cache)
     {
         $this->cache = $cache ? $cache : false;

@@ -2,12 +2,12 @@
 
 /*
  * This file is part of Twig.
- *
- * (c) 2009 Fabien Potencier
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+*
+* (c) 2009 Fabien Potencier
+*
+* For the full copyright and license information, please view the LICENSE
+* file that was distributed with this source code.
+*/
 
 /**
  * Represents a macro node.
@@ -35,50 +35,50 @@ class Twig_Node_Macro extends Twig_Node
         }
 
         $compiler
-            ->addDebugInfo($this)
-            ->write(sprintf("public function get%s(%s)\n", $this->getAttribute('name'), implode(', ', $arguments)), "{\n")
-            ->indent()
+        ->addDebugInfo($this)
+        ->write(sprintf("public function get%s(%s)\n", $this->getAttribute('name'), implode(', ', $arguments)), "{\n")
+        ->indent()
         ;
 
         if (!count($this->getNode('arguments'))) {
             $compiler->write("\$context = \$this->env->getGlobals();\n\n");
         } else {
             $compiler
-                ->write("\$context = array_merge(\$this->env->getGlobals(), array(\n")
-                ->indent()
+            ->write("\$context = array_merge(\$this->env->getGlobals(), array(\n")
+            ->indent()
             ;
 
             foreach ($this->getNode('arguments') as $argument) {
                 $compiler
-                    ->write('')
-                    ->string($argument->getAttribute('name'))
-                    ->raw(' => $'.$argument->getAttribute('name'))
-                    ->raw(",\n")
+                ->write('')
+                ->string($argument->getAttribute('name'))
+                ->raw(' => $'.$argument->getAttribute('name'))
+                ->raw(",\n")
                 ;
             }
 
             $compiler
-                ->outdent()
-                ->write("));\n\n")
+            ->outdent()
+            ->write("));\n\n")
             ;
         }
 
         $compiler
-            ->write("\$blocks = array();\n\n")
-            ->write("ob_start();\n")
-            ->write("try {\n")
-            ->indent()
-            ->subcompile($this->getNode('body'))
-            ->outdent()
-            ->write("} catch(Exception \$e) {\n")
-            ->indent()
-            ->write("ob_end_clean();\n\n")
-            ->write("throw \$e;\n")
-            ->outdent()
-            ->write("}\n\n")
-            ->write("return ob_get_clean();\n")
-            ->outdent()
-            ->write("}\n\n")
+        ->write("\$blocks = array();\n\n")
+        ->write("ob_start();\n")
+        ->write("try {\n")
+        ->indent()
+        ->subcompile($this->getNode('body'))
+        ->outdent()
+        ->write("} catch(Exception \$e) {\n")
+        ->indent()
+        ->write("ob_end_clean();\n\n")
+        ->write("throw \$e;\n")
+        ->outdent()
+        ->write("}\n\n")
+        ->write("return ob_get_clean();\n")
+        ->outdent()
+        ->write("}\n\n")
         ;
     }
 }

@@ -23,10 +23,10 @@
  * @link		http://codeigniter.com
  * @since		Version 1.0
  * @filesource
- */
+*/
 
 /*
-|--------------------------------------------------------------------------
+ |--------------------------------------------------------------------------
 | File and Directory Modes
 |--------------------------------------------------------------------------
 |
@@ -44,7 +44,7 @@ define('DIR_READ_MODE', 0755);
 define('DIR_WRITE_MODE', 0777);
 
 /*
-|--------------------------------------------------------------------------
+ |--------------------------------------------------------------------------
 | File Stream Modes
 |--------------------------------------------------------------------------
 |
@@ -62,7 +62,7 @@ define('FOPEN_WRITE_CREATE_STRICT', 'xb');
 define('FOPEN_READ_WRITE_CREATE_STRICT', 'x+b');
 
 /*
-|--------------------------------------------------------------------------
+ |--------------------------------------------------------------------------
 | Display Debug backtrace
 |--------------------------------------------------------------------------
 |
@@ -74,18 +74,18 @@ define('FOPEN_READ_WRITE_CREATE_STRICT', 'x+b');
 define('SHOW_DEBUG_BACKTRACE', TRUE);
 
 /*
-|--------------------------------------------------------------------------
+ |--------------------------------------------------------------------------
 | Exit Status Codes
 |--------------------------------------------------------------------------
 |
 | Used to indicate the conditions under which the script is exit()ing.
 | While there is no universal standard for error codes, there are some
 | broad conventions.  Three such conventions are mentioned below, for
-| those who wish to make use of them.  The CodeIgniter defaults were 
+| those who wish to make use of them.  The CodeIgniter defaults were
 | chosen for the least overlap with these conventions, while still
 | leaving room for others to be defined in future versions and user
 | applications.
-| 
+|
 | The three main conventions used for determining exit status codes
 | are as follows:
 |
@@ -108,7 +108,7 @@ define('EXIT_USER_INPUT', 7); // invalid user input
 define('EXIT_DATABASE', 8); // database error
 define('EXIT__AUTO_MIN', 9); // lowest automatically-assigned error code
 define('EXIT__AUTO_MAX', 125); // highest automatically-assigned error code
- 
+
 
 /* End of file constants.php */
 /* Location: ./application/config/constants.php */

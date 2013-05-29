@@ -2,13 +2,13 @@
 
 /*
  * This file is part of Twig.
- *
- * (c) 2009 Fabien Potencier
- * (c) 2009 Armin Ronacher
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+*
+* (c) 2009 Fabien Potencier
+* (c) 2009 Armin Ronacher
+*
+* For the full copyright and license information, please view the LICENSE
+* file that was distributed with this source code.
+*/
 
 /**
  * Represents a token stream.
@@ -70,11 +70,11 @@ class Twig_TokenStream
         if (!$token->test($type, $value)) {
             $line = $token->getLine();
             throw new Twig_Error_Syntax(sprintf('%sUnexpected token "%s" of value "%s" ("%s" expected%s)',
-                $message ? $message.'. ' : '',
-                Twig_Token::typeToEnglish($token->getType(), $line), $token->getValue(),
-                Twig_Token::typeToEnglish($type, $line), $value ? sprintf(' with value "%s"', $value) : ''),
-                $line,
-                $this->filename
+                    $message ? $message.'. ' : '',
+                    Twig_Token::typeToEnglish($token->getType(), $line), $token->getValue(),
+                    Twig_Token::typeToEnglish($type, $line), $value ? sprintf(' with value "%s"', $value) : ''),
+                    $line,
+                    $this->filename
             );
         }
         $this->next();

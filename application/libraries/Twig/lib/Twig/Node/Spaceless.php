@@ -2,12 +2,12 @@
 
 /*
  * This file is part of Twig.
- *
- * (c) 2010 Fabien Potencier
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+*
+* (c) 2010 Fabien Potencier
+*
+* For the full copyright and license information, please view the LICENSE
+* file that was distributed with this source code.
+*/
 
 /**
  * Represents a spaceless node.
@@ -32,10 +32,10 @@ class Twig_Node_Spaceless extends Twig_Node
     public function compile(Twig_Compiler $compiler)
     {
         $compiler
-            ->addDebugInfo($this)
-            ->write("ob_start();\n")
-            ->subcompile($this->getNode('body'))
-            ->write("echo trim(preg_replace('/>\s+</', '><', ob_get_clean()));\n")
+        ->addDebugInfo($this)
+        ->write("ob_start();\n")
+        ->subcompile($this->getNode('body'))
+        ->write("echo trim(preg_replace('/>\s+</', '><', ob_get_clean()));\n")
         ;
     }
 }

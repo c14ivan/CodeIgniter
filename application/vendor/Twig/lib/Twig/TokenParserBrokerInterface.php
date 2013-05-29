@@ -2,13 +2,13 @@
 
 /*
  * This file is part of Twig.
- *
- * (c) 2010 Fabien Potencier
- * (c) 2010 Arnaud Le Blanc
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+*
+* (c) 2010 Fabien Potencier
+* (c) 2010 Arnaud Le Blanc
+*
+* For the full copyright and license information, please view the LICENSE
+* file that was distributed with this source code.
+*/
 
 /**
  * Interface implemented by token parser brokers.
@@ -33,13 +33,13 @@ interface Twig_TokenParserBrokerInterface
      * Calls Twig_TokenParserInterface::setParser on all parsers the implementation knows of.
      *
      * @param Twig_ParserInterface $parser A Twig_ParserInterface interface
-     */
+    */
     function setParser(Twig_ParserInterface $parser);
 
     /**
      * Gets the Twig_ParserInterface.
      *
      * @return null|Twig_ParserInterface A Twig_ParserInterface instance of null
-     */
+    */
     function getParser();
 }

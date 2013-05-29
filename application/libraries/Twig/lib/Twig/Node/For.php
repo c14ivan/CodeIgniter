@@ -2,13 +2,13 @@
 
 /*
  * This file is part of Twig.
- *
- * (c) 2009 Fabien Potencier
- * (c) 2009 Armin Ronacher
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+*
+* (c) 2009 Fabien Potencier
+* (c) 2009 Armin Ronacher
+*
+* For the full copyright and license information, please view the LICENSE
+* file that was distributed with this source code.
+*/
 
 /**
  * Represents a for node.
@@ -39,12 +39,12 @@ class Twig_Node_For extends Twig_Node
     public function compile(Twig_Compiler $compiler)
     {
         $compiler
-            ->addDebugInfo($this)
-            // the (array) cast bypasses a PHP 5.2.6 bug
-            ->write("\$context['_parent'] = (array) \$context;\n")
-            ->write("\$context['_seq'] = twig_ensure_traversable(")
-            ->subcompile($this->getNode('seq'))
-            ->raw(");\n")
+        ->addDebugInfo($this)
+        // the (array) cast bypasses a PHP 5.2.6 bug
+        ->write("\$context['_parent'] = (array) \$context;\n")
+        ->write("\$context['_seq'] = twig_ensure_traversable(")
+        ->subcompile($this->getNode('seq'))
+        ->raw(");\n")
         ;
 
         if (null !== $this->getNode('else')) {
@@ -53,25 +53,25 @@ class Twig_Node_For extends Twig_Node
 
         if ($this->getAttribute('with_loop')) {
             $compiler
-                ->write("\$context['loop'] = array(\n")
-                ->write("  'parent' => \$context['_parent'],\n")
-                ->write("  'index0' => 0,\n")
-                ->write("  'index'  => 1,\n")
-                ->write("  'first'  => true,\n")
-                ->write(");\n")
+            ->write("\$context['loop'] = array(\n")
+            ->write("  'parent' => \$context['_parent'],\n")
+            ->write("  'index0' => 0,\n")
+            ->write("  'index'  => 1,\n")
+            ->write("  'first'  => true,\n")
+            ->write(");\n")
             ;
 
             if (!$this->getAttribute('ifexpr')) {
                 $compiler
-                    ->write("if (is_array(\$context['_seq']) || (is_object(\$context['_seq']) && \$context['_seq'] instanceof Countable)) {\n")
-                    ->indent()
-                    ->write("\$length = count(\$context['_seq']);\n")
-                    ->write("\$context['loop']['revindex0'] = \$length - 1;\n")
-                    ->write("\$context['loop']['revindex'] = \$length;\n")
-                    ->write("\$context['loop']['length'] = \$length;\n")
-                    ->write("\$context['loop']['last'] = 1 === \$length;\n")
-                    ->outdent()
-                    ->write("}\n")
+                ->write("if (is_array(\$context['_seq']) || (is_object(\$context['_seq']) && \$context['_seq'] instanceof Countable)) {\n")
+                ->indent()
+                ->write("\$length = count(\$context['_seq']);\n")
+                ->write("\$context['loop']['revindex0'] = \$length - 1;\n")
+                ->write("\$context['loop']['revindex'] = \$length;\n")
+                ->write("\$context['loop']['length'] = \$length;\n")
+                ->write("\$context['loop']['last'] = 1 === \$length;\n")
+                ->outdent()
+                ->write("}\n")
                 ;
             }
         }
@@ -81,24 +81,24 @@ class Twig_Node_For extends Twig_Node
         $this->loop->setAttribute('ifexpr', $this->getAttribute('ifexpr'));
 
         $compiler
-            ->write("foreach (\$context['_seq'] as ")
-            ->subcompile($this->getNode('key_target'))
-            ->raw(" => ")
-            ->subcompile($this->getNode('value_target'))
-            ->raw(") {\n")
-            ->indent()
-            ->subcompile($this->getNode('body'))
-            ->outdent()
-            ->write("}\n")
+        ->write("foreach (\$context['_seq'] as ")
+        ->subcompile($this->getNode('key_target'))
+        ->raw(" => ")
+        ->subcompile($this->getNode('value_target'))
+        ->raw(") {\n")
+        ->indent()
+        ->subcompile($this->getNode('body'))
+        ->outdent()
+        ->write("}\n")
         ;
 
         if (null !== $this->getNode('else')) {
             $compiler
-                ->write("if (!\$context['_iterated']) {\n")
-                ->indent()
-                ->subcompile($this->getNode('else'))
-                ->outdent()
-                ->write("}\n")
+            ->write("if (!\$context['_iterated']) {\n")
+            ->indent()
+            ->subcompile($this->getNode('else'))
+            ->outdent()
+            ->write("}\n")
             ;
         }
 

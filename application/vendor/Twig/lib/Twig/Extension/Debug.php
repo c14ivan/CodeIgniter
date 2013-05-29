@@ -2,12 +2,12 @@
 
 /*
  * This file is part of Twig.
- *
- * (c) 2011 Fabien Potencier
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+*
+* (c) 2011 Fabien Potencier
+*
+* For the full copyright and license information, please view the LICENSE
+* file that was distributed with this source code.
+*/
 class Twig_Extension_Debug extends Twig_Extension
 {
     /**
@@ -21,7 +21,7 @@ class Twig_Extension_Debug extends Twig_Extension
         $isDumpOutputHtmlSafe = extension_loaded('xdebug') && (false === get_cfg_var('xdebug.overload_var_dump') || get_cfg_var('xdebug.overload_var_dump')) && get_cfg_var('html_errors');
 
         return array(
-            'dump' => new Twig_Function_Function('twig_var_dump', array('is_safe' => $isDumpOutputHtmlSafe ? array('html') : array(), 'needs_context' => true, 'needs_environment' => true)),
+                'dump' => new Twig_Function_Function('twig_var_dump', array('is_safe' => $isDumpOutputHtmlSafe ? array('html') : array(), 'needs_context' => true, 'needs_environment' => true)),
         );
     }
 

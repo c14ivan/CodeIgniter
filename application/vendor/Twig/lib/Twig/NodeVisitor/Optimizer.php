@@ -2,12 +2,12 @@
 
 /*
  * This file is part of Twig.
- *
- * (c) 2010 Fabien Potencier
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+*
+* (c) 2010 Fabien Potencier
+*
+* For the full copyright and license information, please view the LICENSE
+* file that was distributed with this source code.
+*/
 
 /**
  * Twig_NodeVisitor_Optimizer tries to optimizes the AST.
@@ -137,8 +137,8 @@ class Twig_NodeVisitor_Optimizer implements Twig_NodeVisitorInterface
         }
 
         if (
-            $node->getNode('expr') instanceof Twig_Node_Expression_BlockReference ||
-            $node->getNode('expr') instanceof Twig_Node_Expression_Parent
+                $node->getNode('expr') instanceof Twig_Node_Expression_BlockReference ||
+                $node->getNode('expr') instanceof Twig_Node_Expression_Parent
         ) {
             $node->getNode('expr')->setAttribute('output', true);
 
@@ -199,14 +199,14 @@ class Twig_NodeVisitor_Optimizer implements Twig_NodeVisitorInterface
 
         // the loop variable is referenced via an attribute
         elseif ($node instanceof Twig_Node_Expression_GetAttr
-            && (!$node->getNode('attribute') instanceof Twig_Node_Expression_Constant
-                || 'parent' === $node->getNode('attribute')->getAttribute('value')
-               )
-            && (true === $this->loops[0]->getAttribute('with_loop')
-                || ($node->getNode('node') instanceof Twig_Node_Expression_Name
-                    && 'loop' === $node->getNode('node')->getAttribute('name')
-                   )
-               )
+                && (!$node->getNode('attribute') instanceof Twig_Node_Expression_Constant
+                        || 'parent' === $node->getNode('attribute')->getAttribute('value')
+                )
+                && (true === $this->loops[0]->getAttribute('with_loop')
+                        || ($node->getNode('node') instanceof Twig_Node_Expression_Name
+                                && 'loop' === $node->getNode('node')->getAttribute('name')
+                        )
+                )
         ) {
             $this->addLoopToAll();
         }

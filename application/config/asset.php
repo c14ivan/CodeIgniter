@@ -39,15 +39,15 @@
  *					- application/
  * 						-- config/asset.php
  * 						-- helpers/asset_helper.php
- */
+*/
 
 /*
-|--------------------------------------------------------------------------
-| Custom Asset Paths for asset_helper.php
-|--------------------------------------------------------------------------
-|
-| URL Paths to static assets library
-|
+ |--------------------------------------------------------------------------
+ | Custom Asset Paths for asset_helper.php
+ |--------------------------------------------------------------------------
+ |
+ | URL Paths to static assets library
+ |
 */
 
 $config['asset_path'] 		= 'assets/';

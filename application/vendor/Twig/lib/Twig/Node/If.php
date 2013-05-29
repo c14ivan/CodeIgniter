@@ -2,13 +2,13 @@
 
 /*
  * This file is part of Twig.
- *
- * (c) 2009 Fabien Potencier
- * (c) 2009 Armin Ronacher
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+*
+* (c) 2009 Fabien Potencier
+* (c) 2009 Armin Ronacher
+*
+* For the full copyright and license information, please view the LICENSE
+* file that was distributed with this source code.
+*/
 
 /**
  * Represents an if node.
@@ -34,34 +34,34 @@ class Twig_Node_If extends Twig_Node
         for ($i = 0; $i < count($this->getNode('tests')); $i += 2) {
             if ($i > 0) {
                 $compiler
-                    ->outdent()
-                    ->write("} elseif (")
+                ->outdent()
+                ->write("} elseif (")
                 ;
             } else {
                 $compiler
-                    ->write('if (')
+                ->write('if (')
                 ;
             }
 
             $compiler
-                ->subcompile($this->getNode('tests')->getNode($i))
-                ->raw(") {\n")
-                ->indent()
-                ->subcompile($this->getNode('tests')->getNode($i + 1))
+            ->subcompile($this->getNode('tests')->getNode($i))
+            ->raw(") {\n")
+            ->indent()
+            ->subcompile($this->getNode('tests')->getNode($i + 1))
             ;
         }
 
         if ($this->hasNode('else') && null !== $this->getNode('else')) {
             $compiler
-                ->outdent()
-                ->write("} else {\n")
-                ->indent()
-                ->subcompile($this->getNode('else'))
+            ->outdent()
+            ->write("} else {\n")
+            ->indent()
+            ->subcompile($this->getNode('else'))
             ;
         }
 
         $compiler
-            ->outdent()
-            ->write("}\n");
+        ->outdent()
+        ->write("}\n");
     }
 }

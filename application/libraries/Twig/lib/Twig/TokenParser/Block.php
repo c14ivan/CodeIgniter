@@ -2,13 +2,13 @@
 
 /*
  * This file is part of Twig.
- *
- * (c) 2009 Fabien Potencier
- * (c) 2009 Armin Ronacher
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+*
+* (c) 2009 Fabien Potencier
+* (c) 2009 Armin Ronacher
+*
+* For the full copyright and license information, please view the LICENSE
+* file that was distributed with this source code.
+*/
 
 /**
  * Marks a section of a template as being reusable.
@@ -53,7 +53,7 @@ class Twig_TokenParser_Block extends Twig_TokenParser
             }
         } else {
             $body = new Twig_Node(array(
-                new Twig_Node_Print($this->parser->getExpressionParser()->parseExpression(), $lineno),
+                    new Twig_Node_Print($this->parser->getExpressionParser()->parseExpression(), $lineno),
             ));
         }
         $stream->expect(Twig_Token::BLOCK_END_TYPE);

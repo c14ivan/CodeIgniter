@@ -2,13 +2,13 @@
 
 /*
  * This file is part of Twig.
- *
- * (c) 2009 Fabien Potencier
- * (c) 2009 Armin Ronacher
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+*
+* (c) 2009 Fabien Potencier
+* (c) 2009 Armin Ronacher
+*
+* For the full copyright and license information, please view the LICENSE
+* file that was distributed with this source code.
+*/
 
 /**
  * Parses expressions.
@@ -336,11 +336,11 @@ class Twig_ExpressionParser
         if ($token->getValue() == '.') {
             $token = $stream->next();
             if (
-                $token->getType() == Twig_Token::NAME_TYPE
-                ||
-                $token->getType() == Twig_Token::NUMBER_TYPE
-                ||
-                ($token->getType() == Twig_Token::OPERATOR_TYPE && preg_match(Twig_Lexer::REGEX_NAME, $token->getValue()))
+                    $token->getType() == Twig_Token::NAME_TYPE
+                    ||
+                    $token->getType() == Twig_Token::NUMBER_TYPE
+                    ||
+                    ($token->getType() == Twig_Token::OPERATOR_TYPE && preg_match(Twig_Lexer::REGEX_NAME, $token->getValue()))
             ) {
                 $arg = new Twig_Node_Expression_Constant($token->getValue(), $lineno);
 

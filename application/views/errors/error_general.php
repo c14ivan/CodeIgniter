@@ -25,16 +25,27 @@
  * @filesource
  */
 defined('BASEPATH') OR exit('No direct script access allowed');
-?><!DOCTYPE html>
+?>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <title>Error</title>
 <style type="text/css">
+::selection {
+	background-color: #E13300;
+	color: white;
+}
 
-::selection { background-color: #E13300; color: white; }
-::-moz-selection { background-color: #E13300; color: white; }
-::-webkit-selection { background-color: #E13300; color: white; }
+::-moz-selection {
+	background-color: #E13300;
+	color: white;
+}
+
+::-webkit-selection {
+	background-color: #E13300;
+	color: white;
+}
 
 body {
 	background-color: #fff;
@@ -85,7 +96,9 @@ p {
 </head>
 <body>
 	<div id="container">
-		<h1><?php echo $heading; ?></h1>
+		<h1>
+			<?php echo $heading; ?>
+		</h1>
 		<?php echo $message; ?>
 	</div>
 </body>

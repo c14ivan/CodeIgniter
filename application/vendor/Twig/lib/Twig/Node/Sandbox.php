@@ -2,12 +2,12 @@
 
 /*
  * This file is part of Twig.
- *
- * (c) 2010 Fabien Potencier
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+*
+* (c) 2010 Fabien Potencier
+*
+* For the full copyright and license information, please view the LICENSE
+* file that was distributed with this source code.
+*/
 
 /**
  * Represents a sandbox node.
@@ -30,19 +30,19 @@ class Twig_Node_Sandbox extends Twig_Node
     public function compile(Twig_Compiler $compiler)
     {
         $compiler
-            ->addDebugInfo($this)
-            ->write("\$sandbox = \$this->env->getExtension('sandbox');\n")
-            ->write("if (!\$alreadySandboxed = \$sandbox->isSandboxed()) {\n")
-            ->indent()
-            ->write("\$sandbox->enableSandbox();\n")
-            ->outdent()
-            ->write("}\n")
-            ->subcompile($this->getNode('body'))
-            ->write("if (!\$alreadySandboxed) {\n")
-            ->indent()
-            ->write("\$sandbox->disableSandbox();\n")
-            ->outdent()
-            ->write("}\n")
+        ->addDebugInfo($this)
+        ->write("\$sandbox = \$this->env->getExtension('sandbox');\n")
+        ->write("if (!\$alreadySandboxed = \$sandbox->isSandboxed()) {\n")
+        ->indent()
+        ->write("\$sandbox->enableSandbox();\n")
+        ->outdent()
+        ->write("}\n")
+        ->subcompile($this->getNode('body'))
+        ->write("if (!\$alreadySandboxed) {\n")
+        ->indent()
+        ->write("\$sandbox->disableSandbox();\n")
+        ->outdent()
+        ->write("}\n")
         ;
     }
 }

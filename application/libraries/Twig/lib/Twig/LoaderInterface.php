@@ -2,12 +2,12 @@
 
 /*
  * This file is part of Twig.
- *
- * (c) 2009 Fabien Potencier
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+*
+* (c) 2009 Fabien Potencier
+*
+* For the full copyright and license information, please view the LICENSE
+* file that was distributed with this source code.
+*/
 
 /**
  * Interface all loaders must implement.
@@ -32,7 +32,7 @@ interface Twig_LoaderInterface
      * @param  string $name The name of the template to load
      *
      * @return string The cache key
-     */
+    */
     function getCacheKey($name);
 
     /**
@@ -40,6 +40,6 @@ interface Twig_LoaderInterface
      *
      * @param string    $name The template name
      * @param timestamp $time The last modification time of the cached template
-     */
+    */
     function isFresh($name, $time);
 }

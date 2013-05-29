@@ -2,12 +2,12 @@
 
 /*
  * This file is part of Twig.
- *
- * (c) 2010 Fabien Potencier
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+*
+* (c) 2010 Fabien Potencier
+*
+* For the full copyright and license information, please view the LICENSE
+* file that was distributed with this source code.
+*/
 
 /**
  * Twig_Node_SandboxedPrint adds a check for the __toString() method
@@ -35,10 +35,10 @@ class Twig_Node_SandboxedPrint extends Twig_Node_Print
     public function compile(Twig_Compiler $compiler)
     {
         $compiler
-            ->addDebugInfo($this)
-            ->write('echo $this->env->getExtension(\'sandbox\')->ensureToStringAllowed(')
-            ->subcompile($this->getNode('expr'))
-            ->raw(");\n")
+        ->addDebugInfo($this)
+        ->write('echo $this->env->getExtension(\'sandbox\')->ensureToStringAllowed(')
+        ->subcompile($this->getNode('expr'))
+        ->raw(");\n")
         ;
     }
 

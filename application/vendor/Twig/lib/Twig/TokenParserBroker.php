@@ -2,13 +2,13 @@
 
 /*
  * This file is part of Twig.
- *
- * (c) 2010 Fabien Potencier
- * (c) 2010 Arnaud Le Blanc
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+*
+* (c) 2010 Fabien Potencier
+* (c) 2010 Arnaud Le Blanc
+*
+* For the full copyright and license information, please view the LICENSE
+* file that was distributed with this source code.
+*/
 
 /**
  * Default implementation of a token parser broker.
@@ -27,7 +27,7 @@ class Twig_TokenParserBroker implements Twig_TokenParserBrokerInterface
      *
      * @param array|Traversable $parsers A Traversable of Twig_TokenParserInterface instances
      * @param array|Traversable $brokers A Traversable of Twig_TokenParserBrokerInterface instances
-     */
+    */
     public function __construct($parsers = array(), $brokers = array())
     {
         foreach ($parsers as $parser) {

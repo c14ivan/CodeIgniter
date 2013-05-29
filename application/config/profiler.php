@@ -23,10 +23,10 @@
  * @link		http://codeigniter.com
  * @since		Version 1.0
  * @filesource
- */
+*/
 
 /*
-| -------------------------------------------------------------------------
+ | -------------------------------------------------------------------------
 | Profiler Sections
 | -------------------------------------------------------------------------
 | This file lets you determine whether or not various sections of Profiler

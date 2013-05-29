@@ -2,12 +2,12 @@
 
 /*
  * This file is part of Twig.
- *
- * (c) 2009 Fabien Potencier
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+*
+* (c) 2009 Fabien Potencier
+*
+* For the full copyright and license information, please view the LICENSE
+* file that was distributed with this source code.
+*/
 
 /**
  * Twig_NodeVisitorInterface is the interface the all node visitor classes must implement.
@@ -34,7 +34,7 @@ interface Twig_NodeVisitorInterface
      * @param Twig_Environment   $env  The Twig environment instance
      *
      * @return Twig_NodeInterface The modified node
-     */
+    */
     function leaveNode(Twig_NodeInterface $node, Twig_Environment $env);
 
     /**
@@ -43,6 +43,6 @@ interface Twig_NodeVisitorInterface
      * Priority should be between -10 and 10 (0 is the default).
      *
      * @return integer The priority level
-     */
+    */
     function getPriority();
 }

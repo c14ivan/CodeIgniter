@@ -2,12 +2,12 @@
 
 /*
  * This file is part of Twig.
- *
- * (c) 2010 Fabien Potencier
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+*
+* (c) 2010 Fabien Potencier
+*
+* For the full copyright and license information, please view the LICENSE
+* file that was distributed with this source code.
+*/
 
 /**
  * Interface implemented by token parsers.
@@ -30,13 +30,13 @@ interface Twig_TokenParserInterface
      * @param Twig_Token $token A Twig_Token instance
      *
      * @return Twig_NodeInterface A Twig_NodeInterface instance
-     */
+    */
     function parse(Twig_Token $token);
 
     /**
      * Gets the tag name associated with this token parser.
      *
      * @return string The tag name
-     */
+    */
     function getTag();
 }

@@ -2,13 +2,13 @@
 
 /*
  * This file is part of Twig.
- *
- * (c) 2009 Fabien Potencier
- * (c) 2009 Armin Ronacher
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+*
+* (c) 2009 Fabien Potencier
+* (c) 2009 Armin Ronacher
+*
+* For the full copyright and license information, please view the LICENSE
+* file that was distributed with this source code.
+*/
 
 /**
  * Default base class for compiled templates.
@@ -46,7 +46,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
 
     /**
      * {@inheritdoc}
-     */
+    */
     public function getEnvironment()
     {
         return $this->env;
@@ -304,7 +304,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
      * @return The content of the context variable
      *
      * @throws Twig_Error_Runtime if the variable does not exist and Twig is running in strict mode
-     */
+    */
     final protected function getContext($context, $item, $ignoreStrictCheck = false)
     {
         if (!array_key_exists($item, $context)) {
@@ -339,7 +339,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
         // array
         if (Twig_TemplateInterface::METHOD_CALL !== $type) {
             if ((is_array($object) && array_key_exists($item, $object))
-                || ($object instanceof ArrayAccess && isset($object[$item]))
+                    || ($object instanceof ArrayAccess && isset($object[$item]))
             ) {
                 if ($isDefinedTest) {
                     return true;
@@ -359,7 +359,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
 
                 if (is_object($object)) {
                     throw new Twig_Error_Runtime(sprintf('Key "%s" in object (with ArrayAccess) of type "%s" does not exist', $item, get_class($object)));
-                // array
+                    // array
                 } else {
                     throw new Twig_Error_Runtime(sprintf('Key "%s" for array with keys "%s" does not exist', $item, implode(', ', array_keys($object))));
                 }
@@ -383,10 +383,10 @@ abstract class Twig_Template implements Twig_TemplateInterface
         // object property
         if (Twig_TemplateInterface::METHOD_CALL !== $type) {
             /* apparently, this is not needed as this is already covered by the array_key_exists() call below
-            if (!isset(self::$cache[$class]['properties'])) {
-                foreach (get_object_vars($object) as $k => $v) {
-                    self::$cache[$class]['properties'][$k] = true;
-                }
+             if (!isset(self::$cache[$class]['properties'])) {
+            foreach (get_object_vars($object) as $k => $v) {
+            self::$cache[$class]['properties'][$k] = true;
+            }
             }
             */
 

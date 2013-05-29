@@ -28,67 +28,67 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Demo extends CI_Controller {
 
-	/**
-	 * Index Page for this controller.
-	 *
-	 * Maps to the following URL
-	 * 		http://example.com/index.php/welcome
-	 *	- or -
-	 * 		http://example.com/index.php/welcome/index
-	 *	- or -
-	 * Since this controller is set as the default controller in
-	 * config/routes.php, it's displayed at http://example.com/
-	 *
-	 * So any other public methods not prefixed with an underscore will
-	 * map to /index.php/welcome/<method_name>
-	 * @see http://codeigniter.com/user_guide/general/urls.html
-	 */
-	public function index()
-	{
-		$this->twiggy->display('demo/index');
-	}
-	public function ui()
-	{
-	    $this->twiggy->display('demo/ui');
-	}
-	public function form()
-	{
-	    $this->twiggy->display('demo/form');
-	}
-	public function chart()
-	{
-	    $this->twiggy->display('demo/chart');
-	}
-	public function typography(){
-	    $this->twiggy->display('demo/typography');
-	}
-	public function gallery(){
-	    $this->twiggy->display('demo/gallery');
-	}
-	public function table(){
-	    $this->twiggy->display('demo/table');
-	}
-	public function calendar(){
-	    $this->twiggy->display('demo/calendar');
-	}
-	public function grid(){
-	    $this->twiggy->display('demo/grid');
-	}
-	public function fmanager(){
-	    $this->twiggy->display('demo/file-manager');
-	}
-	public function tour(){
-	    $this->twiggy->display('demo/tour');
-	}
-	public function icon(){
-	    $this->twiggy->display('demo/icon');
-	}
-	public function error(){
-	    $this->twiggy->display('demo/error');
-	}
-	public function login(){
-	    $this->twiggy->display('demo/login');
-	}
+    /**
+     * Index Page for this controller.
+     *
+     * Maps to the following URL
+     * 		http://example.com/index.php/welcome
+     *	- or -
+     * 		http://example.com/index.php/welcome/index
+     *	- or -
+     * Since this controller is set as the default controller in
+     * config/routes.php, it's displayed at http://example.com/
+     *
+     * So any other public methods not prefixed with an underscore will
+     * map to /index.php/welcome/<method_name>
+     * @see http://codeigniter.com/user_guide/general/urls.html
+     */
+    public function index()
+    {
+        $this->twiggy->display('demo/index');
+    }
+    public function ui()
+    {
+        $this->twiggy->display('demo/ui');
+    }
+    public function form()
+    {
+        $this->twiggy->display('demo/form');
+    }
+    public function chart()
+    {
+        $this->twiggy->display('demo/chart');
+    }
+    public function typography(){
+        $this->twiggy->display('demo/typography');
+    }
+    public function gallery(){
+        $this->twiggy->display('demo/gallery');
+    }
+    public function table(){
+        $this->twiggy->display('demo/table');
+    }
+    public function calendar(){
+        $this->twiggy->display('demo/calendar');
+    }
+    public function grid(){
+        $this->twiggy->display('demo/grid');
+    }
+    public function fmanager(){
+        $this->twiggy->display('demo/file-manager');
+    }
+    public function tour(){
+        $this->twiggy->display('demo/tour');
+    }
+    public function icon(){
+        $this->twiggy->display('demo/icon');
+    }
+    public function error(){
+        $this->twiggy->display('demo/error');
+    }
+    public function login(){
+        $this->twiggy->display('demo/login');
+    }
 }
 
 /* End of file welcome.php */

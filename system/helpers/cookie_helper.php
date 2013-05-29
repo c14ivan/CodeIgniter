@@ -34,72 +34,72 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * @category	Helpers
  * @author		EllisLab Dev Team
  * @link		http://codeigniter.com/user_guide/helpers/cookie_helper.html
- */
+*/
 
 // ------------------------------------------------------------------------
 
 if ( ! function_exists('set_cookie'))
 {
-	/**
-	 * Set cookie
-	 *
-	 * Accepts seven parameters, or you can submit an associative
-	 * array in the first parameter containing all the values.
-	 *
-	 * @param	mixed
-	 * @param	string	the value of the cookie
-	 * @param	string	the number of seconds until expiration
-	 * @param	string	the cookie domain.  Usually:  .yourdomain.com
-	 * @param	string	the cookie path
-	 * @param	string	the cookie prefix
-	 * @param	bool	true makes the cookie secure
-	 * @param	bool	true makes the cookie accessible via http(s) only (no javascript)
-	 * @return	void
-	 */
-	function set_cookie($name = '', $value = '', $expire = '', $domain = '', $path = '/', $prefix = '', $secure = FALSE, $httponly = FALSE)
-	{
-		// Set the config file options
-		$CI =& get_instance();
-		$CI->input->set_cookie($name, $value, $expire, $domain, $path, $prefix, $secure, $httponly);
-	}
+    /**
+     * Set cookie
+     *
+     * Accepts seven parameters, or you can submit an associative
+     * array in the first parameter containing all the values.
+     *
+     * @param	mixed
+     * @param	string	the value of the cookie
+     * @param	string	the number of seconds until expiration
+     * @param	string	the cookie domain.  Usually:  .yourdomain.com
+     * @param	string	the cookie path
+     * @param	string	the cookie prefix
+     * @param	bool	true makes the cookie secure
+     * @param	bool	true makes the cookie accessible via http(s) only (no javascript)
+     * @return	void
+     */
+    function set_cookie($name = '', $value = '', $expire = '', $domain = '', $path = '/', $prefix = '', $secure = FALSE, $httponly = FALSE)
+    {
+        // Set the config file options
+        $CI =& get_instance();
+        $CI->input->set_cookie($name, $value, $expire, $domain, $path, $prefix, $secure, $httponly);
+    }
 }
 
 // --------------------------------------------------------------------
 
 if ( ! function_exists('get_cookie'))
 {
-	/**
-	 * Fetch an item from the COOKIE array
-	 *
-	 * @param	string
-	 * @param	bool
-	 * @return	mixed
-	 */
-	function get_cookie($index = '', $xss_clean = FALSE)
-	{
-		$CI =& get_instance();
-		$prefix = isset($_COOKIE[$index]) ? '' : config_item('cookie_prefix');
-		return $CI->input->cookie($prefix.$index, $xss_clean);
-	}
+    /**
+     * Fetch an item from the COOKIE array
+     *
+     * @param	string
+     * @param	bool
+     * @return	mixed
+     */
+    function get_cookie($index = '', $xss_clean = FALSE)
+    {
+        $CI =& get_instance();
+        $prefix = isset($_COOKIE[$index]) ? '' : config_item('cookie_prefix');
+        return $CI->input->cookie($prefix.$index, $xss_clean);
+    }
 }
 
 // --------------------------------------------------------------------
 
 if ( ! function_exists('delete_cookie'))
 {
-	/**
-	 * Delete a COOKIE
-	 *
-	 * @param	mixed
-	 * @param	string	the cookie domain. Usually: .yourdomain.com
-	 * @param	string	the cookie path
-	 * @param	string	the cookie prefix
-	 * @return	void
-	 */
-	function delete_cookie($name = '', $domain = '', $path = '/', $prefix = '')
-	{
-		set_cookie($name, '', '', $domain, $path, $prefix);
-	}
+    /**
+     * Delete a COOKIE
+     *
+     * @param	mixed
+     * @param	string	the cookie domain. Usually: .yourdomain.com
+     * @param	string	the cookie path
+     * @param	string	the cookie prefix
+     * @return	void
+     */
+    function delete_cookie($name = '', $domain = '', $path = '/', $prefix = '')
+    {
+        set_cookie($name, '', '', $domain, $path, $prefix);
+    }
 }
 
 /* End of file cookie_helper.php */
