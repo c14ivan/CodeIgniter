@@ -23,10 +23,10 @@
  * @link		http://codeigniter.com
  * @since		Version 1.0
  * @filesource
-*/
+ */
 
 /*
- | -------------------------------------------------------------------------
+| -------------------------------------------------------------------------
 | URI ROUTING
 | -------------------------------------------------------------------------
 | This file lets you re-map URI requests to specific controller functions.
@@ -64,7 +64,8 @@
 |
 */
 
-$route['default_controller'] = 'demo';
+$route['default_controller'] = 'welcome';
 $route['404_override'] = '';
+
 /* End of file routes.php */
 /* Location: ./application/config/routes.php */

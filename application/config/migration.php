@@ -23,10 +23,10 @@
  * @link		http://codeigniter.com
  * @since		Version 1.0
  * @filesource
-*/
+ */
 
 /*
- |--------------------------------------------------------------------------
+|--------------------------------------------------------------------------
 | Enable/Disable Migrations
 |--------------------------------------------------------------------------
 |
@@ -38,7 +38,7 @@
 $config['migration_enabled'] = FALSE;
 
 /*
- |--------------------------------------------------------------------------
+|--------------------------------------------------------------------------
 | Migration Type
 |--------------------------------------------------------------------------
 |
@@ -56,7 +56,7 @@ $config['migration_enabled'] = FALSE;
 $config['migration_type'] = 'timestamp';
 
 /*
- |--------------------------------------------------------------------------
+|--------------------------------------------------------------------------
 | Migrations table
 |--------------------------------------------------------------------------
 |
@@ -70,21 +70,21 @@ $config['migration_type'] = 'timestamp';
 $config['migration_table'] = 'migrations';
 
 /*
- |--------------------------------------------------------------------------
+|--------------------------------------------------------------------------
 | Auto Migrate To Latest
 |--------------------------------------------------------------------------
 |
 | If this is set to TRUE when you load the migrations class and have
 | $config['migration_enabled'] set to TRUE the system will auto migrate
 | to your latest migration (whatever $config['migration_version'] is
-        | set to). This way you do not have to call migrations anywhere else
-    | in your code to have the latest migration.
+| set to). This way you do not have to call migrations anywhere else
+| in your code to have the latest migration.
 |
 */
 $config['migration_auto_latest'] = FALSE;
 
 /*
- |--------------------------------------------------------------------------
+|--------------------------------------------------------------------------
 | Migrations version
 |--------------------------------------------------------------------------
 |
@@ -96,7 +96,7 @@ $config['migration_auto_latest'] = FALSE;
 $config['migration_version'] = 0;
 
 /*
- |--------------------------------------------------------------------------
+|--------------------------------------------------------------------------
 | Migrations Path
 |--------------------------------------------------------------------------
 |

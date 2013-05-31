@@ -75,18 +75,18 @@
         {% set append=campo.append %}
         {% set prepend=campo.prepend %}
         {% set opciones=campo.opciones %}
+        {% set class=campo.class %}
         {% set classappprep='' %}
         {% if maxLength>20%}
-            {% set class='input-xlarge' %}
-        {% else %}
-            {% set class='' %}
+            {% set class = class ~' input-xlarge' %}
         {% endif %}
         {% if type=='date' %}
             {% set type='text' %}
-            {% set class='input datepicker ' %}
+            {% set class = class ~' input datepicker ' %}
         {% elseif type=='file' %}
-            {% set class='input-file uniform_on ' %}
+            {% set class =class ~' input-file uniform_on ' %}
         {% endif %}
+        
         {% if append%}
             {% set classappprep= classappprep ~' input-append' %}
         {% endif %}
@@ -123,7 +123,7 @@
                                value="{{ value }}" {% if maxLength %} maxlength="{{ maxLength|default(20) }}" {% endif %}
                                class="{{ class }}" placeholder="{{ placeholder }}" {{extra}} {% if onchange %} onchange="{{ onchange }}" {% endif %}/>
                         {% endif %}
-                        {% if prepend or type=='password' %}
+                        {% if prepend or 'passmeter' in class %}
                             {% if prepend%}
                                 {% if attribute(prepend,'tipo') %}
                                     {{ _self.campo(prepend) }}
@@ -133,7 +133,7 @@
                                     {% endfor %}
                                 {% endif %}
                             {% endif %}
-                            {% if type=='password' %}
+                            {% if 'passmeter' in class %}
                                 <span class="add-on">
                                     <div class="password-meter">
                                 		<div class="password-meter-message"> </div>
