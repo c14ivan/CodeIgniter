@@ -23,6 +23,11 @@
  * @license  Don't be a dick http://dontbeadick.com
  * @link     https://github.com/bmatschullat/Twig-Codeigniter
  */
+
+
+require_once(APPPATH . 'third_party/Twig/lib/Twig/Autoloader.php');
+Twig_Autoloader::register();
+
 class Twig {
     const 		TWIG_CONFIG_FILE = 'twig';
 
@@ -47,6 +52,7 @@ class Twig {
 	 */
 	private $_ci;
 
+	private $_config = array();
 	/**
 	 * Twig environment see http://twig.sensiolabs.org/api/v1.8.1/Twig_Environment.html.
 	 * 
@@ -60,22 +66,41 @@ class Twig {
 	public function __construct() 
 	{
 		$this->_ci = & get_instance();
-		$this->_ci->config->load(self::TWIG_CONFIG_FILE); // load config file
+		$this->_config = $this->_ci->config->item('twig');
 		// set include path for twig
-		ini_set('include_path', ini_get('include_path') . PATH_SEPARATOR . APPPATH . 'third_party/Twig/lib/Twig');
+		/*ini_set('include_path', ini_get('include_path') . PATH_SEPARATOR . APPPATH . 'third_party/Twig/lib/Twig');
 		require_once (string)'Autoloader.php';
 		// register autoloader
-		Twig_Autoloader::register();
+		Twig_Autoloader::register();*/
 		log_message('debug', 'twig autoloader loaded');
 		// init paths
-		$this->template_dir = $this->_ci->config->item('template_dir');
-		$this->cache_dir = $this->_ci->config->item('cache_dir');
+		$this->template_dir = $this->_config['template_dir'];
+		$this->cache_dir = $this->_config['cache_dir'];
 		// load environment
+		// Decide whether to enable Twig cache. If it is set to be enabled, then set the path where cached files will be stored.
+		$this->_config['environment']['cache'] = ($this->_config['environment']['cache']) ? $this->_config['twig_cache_dir'] : FALSE;
+		
+		
 		$loader = new Twig_Loader_Filesystem($this->template_dir, $this->cache_dir);
-		$this->_twig_env = new Twig_Environment($loader, array(
-			'cache' => $this->cache_dir,
-			'auto_reload' => TRUE));
+		$this->_twig_env = new Twig_Environment($loader,$this->_config['environment']);
+		
+		if($this->_config['environment']['debug']){
+		    $this->_twig_env->addExtension(new Twig_Extension_Debug() );
+		}
+		
+		// Auto-register functions and filters.
+		if(count($this->_config['register_functions']) > 0)
+		{
+		    foreach($this->_config['register_functions'] as $function) $this->register_function($function,new Twig_Function_Function($function));
+		}
+		
+		if(count($this->_config['register_filters']) > 0)
+		{
+		    foreach($this->_config['register_filters'] as $filter) $this->register_filter($filter);
+		}
+		
 		$this->ci_function_init();
+		$this->_twig_env->setLexer(new Twig_Lexer($this->_twig_env, $this->_config['delimiters']));
 	}
 
 	/**
@@ -106,7 +131,7 @@ class Twig {
 	 */
 	public function display($template, $data = array()) 
 	{
-		$template = $this->_twig_env->loadTemplate($template);
+		$template = $this->_twig_env->loadTemplate($template.$this->_config['template_file_ext']);
 		$this->_ci->output->set_output($template->render($data));
 	}
 

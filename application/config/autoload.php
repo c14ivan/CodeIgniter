@@ -79,7 +79,7 @@ $autoload['packages'] = array();
 |	$autoload['libraries'] = array('database', 'email', 'xmlrpc');
 */
 
-$autoload['libraries'] = array();
+$autoload['libraries'] = array('twig','rb');
 
 
 /*
@@ -107,7 +107,7 @@ $autoload['drivers'] = array('session', 'cache');
 |	$autoload['helper'] = array('url', 'file');
 */
 
-$autoload['helper'] = array();
+$autoload['helper'] = array('form','url','asset','path');
 
 
 /*
@@ -123,7 +123,7 @@ $autoload['helper'] = array();
 |
 */
 
-$autoload['config'] = array();
+$autoload['config'] = array('twig','asset');
 
 
 /*

@@ -45,49 +45,49 @@ class Demo extends CI_Controller {
      */
     public function index()
     {
-        $this->twiggy->display('demo/index');
+        $this->twig->display('demo/index');
     }
     public function ui()
     {
-        $this->twiggy->display('demo/ui');
+        $this->twig->display('demo/ui');
     }
     public function form()
     {
-        $this->twiggy->display('demo/form');
+        $this->twig->display('demo/form');
     }
     public function chart()
     {
-        $this->twiggy->display('demo/chart');
+        $this->twig->display('demo/chart');
     }
     public function typography(){
-        $this->twiggy->display('demo/typography');
+        $this->twig->display('demo/typography');
     }
     public function gallery(){
-        $this->twiggy->display('demo/gallery');
+        $this->twig->display('demo/gallery');
     }
     public function table(){
-        $this->twiggy->display('demo/table');
+        $this->twig->display('demo/table');
     }
     public function calendar(){
-        $this->twiggy->display('demo/calendar');
+        $this->twig->display('demo/calendar');
     }
     public function grid(){
-        $this->twiggy->display('demo/grid');
+        $this->twig->display('demo/grid');
     }
     public function fmanager(){
-        $this->twiggy->display('demo/file-manager');
+        $this->twig->display('demo/file-manager');
     }
     public function tour(){
-        $this->twiggy->display('demo/tour');
+        $this->twig->display('demo/tour');
     }
     public function icon(){
-        $this->twiggy->display('demo/icon');
+        $this->twig->display('demo/icon');
     }
     public function error(){
-        $this->twiggy->display('demo/error');
+        $this->twig->display('demo/error');
     }
     public function login(){
-        $this->twiggy->display('demo/login');
+        $this->twig->display('demo/login');
     }
 }
 
