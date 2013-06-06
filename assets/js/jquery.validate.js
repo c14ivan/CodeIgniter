@@ -1331,7 +1331,51 @@
         s=stripCharsInBag(phone_number,validWorldPhoneChars);
         return this.optional(element) || isInteger(s) && s.length >= minDigitsInIPhoneNumber;
         }, $.validator.messages.phone);
-    
+    $.validator.addMethod(
+            "higherThan",
+            function(value,element,params) {
+                if (parseInt(value) > parseInt($(params).val())) {
+                    return true;
+                }
+                return false;
+            },
+            $.validator.messages.higherThan
+        );
+        $.validator.addMethod(
+            "smallerThan",
+            function(value,element,params) {
+                if (parseInt(value) < parseInt($(params).val())) {
+                    return true;
+                }
+                return false;
+            },
+            $.validator.messages.smallerThan
+        );
+        $.validator.addMethod(
+                "captcha",
+                function(value, element) {
+                    var result = true;
+                    if (value.length < 6 || value.length > 6) {
+                        $.validator.messages.captcha = "Required: Captcha code is 6 characters";
+                        if(typeof(this.settings.messages.captchashort)!=undefined){
+                            $.validator.messages.captcha = this.settings.messages.captchashort;
+                        }
+                        result = false;
+                    } else {
+                        var myCaptcha = $.ajax({ type: "GET", url: $(element).rules().remote+"/"+value, async: false }).responseText;
+                        if (myCaptcha == "false") {
+                            $.validator.messages.captcha = "Captcha code is invalid, please try the new code.";
+                            if(typeof(this.settings.messages.captchawrong)!=undefined){
+                                $.validator.messages.captcha = this.settings.messages.captchawrong;
+                            }
+                            $("#captchaRefreshLink").click();
+                            result = false;
+                        }
+                    }
+                    return result;
+                },
+                $.validator.messages.captcha
+            );
 }(jQuery));
 
 function isInteger(s)
