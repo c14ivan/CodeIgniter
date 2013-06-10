@@ -104,7 +104,7 @@ $config['twig']['default_layout'] = 'index';
 
 $config['twig']['register_functions'] = array
 (
-        'css','img_url','img','site_url','asset_url','css_url','less_url','js_url','js','base_url','current_url'
+        'css','img_url','img','site_url','asset_url','css_url','less_url','js_url','js','base_url','current_url','lang','get_config','anchor'
 );
 
 /*

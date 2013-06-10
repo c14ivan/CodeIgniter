@@ -53,7 +53,7 @@
             {{ _self.label(campo.value,campo.class,campo.for) }}
         {% elseif campo.label=='span' %}
             {{ _self.span(campo.value,campo.class) }}
-        {% elseif attribute(campo,'value') %}
+        {% elseif campo is iterable %}
             {{ campo.value }}
         {% else %}
             {{ campo }}
@@ -75,22 +75,21 @@
         {% set append=campo.append %}
         {% set prepend=campo.prepend %}
         {% set opciones=campo.opciones %}
-        {% set class=campo.class %}
         {% set classappprep='' %}
+        {% set class=campo.class %}
         {% if maxLength>20%}
-            {% set class = class ~' input-xlarge' %}
+            {% set class=class ~'input-xlarge' %}
         {% endif %}
         {% if type=='date' %}
             {% set type='text' %}
-            {% set class = class ~' input datepicker ' %}
+            {% set class='input datepicker ' %}
         {% elseif type=='file' %}
-            {% set class =class ~' input-file uniform_on ' %}
+            {% set class='input-file uniform_on ' %}
         {% endif %}
-        
         {% if append%}
             {% set classappprep= classappprep ~' input-append' %}
         {% endif %}
-        {% if prepend or type=='password' %}
+        {% if prepend or (type=='password' and class=="passmeter") %}
             {% set classappprep= classappprep ~' input-prepend' %}
         {% endif %}
         {% if type=='hidden' %}
@@ -106,7 +105,7 @@
                         {% if append%}
                             <span class="add-on">{{ _self.campo(append) }}</span>
                         {% endif %}
-                        {% if opciones %}
+                        {% if opciones is iterable %}
                             {% if type=='radio' %}
                                 {% for key,valor in opciones %}
                                     {{ _self.radio(name,key,class,valor,value) }}
@@ -123,9 +122,9 @@
                                value="{{ value }}" {% if maxLength %} maxlength="{{ maxLength|default(20) }}" {% endif %}
                                class="{{ class }}" placeholder="{{ placeholder }}" {{extra}} {% if onchange %} onchange="{{ onchange }}" {% endif %}/>
                         {% endif %}
-                        {% if prepend or 'passmeter' in class %}
+                        {% if prepend or type=='password' %}
                             {% if prepend%}
-                                {% if attribute(prepend,'tipo') %}
+                                {% if prepend.tipo or prepend is not iterable %}
                                     {{ _self.campo(prepend) }}
                                 {% else %}
                                     {% for tmp in prepend %}
@@ -133,7 +132,7 @@
                                     {% endfor %}
                                 {% endif %}
                             {% endif %}
-                            {% if 'passmeter' in class %}
+                            {% if type=='password' and class=="passmeter" %}
                                 <span class="add-on">
                                     <div class="password-meter">
                                 		<div class="password-meter-message"> </div>

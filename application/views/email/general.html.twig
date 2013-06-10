@@ -1,0 +1,25 @@
+{% extends '_layouts/email.html.twig' %}
+
+{% if preheader|length>0 %}
+    {% block preheader %}
+        {{ preheader }} 
+    {% endblock  %}
+{% endif %}
+
+{% if emailtitle|length>0 %}
+    {% block emailtitle %}
+        {{ emailtitle }} 
+    {% endblock  %}
+{% endif %}
+
+{% if subtitle|length>0 %}
+    {% block subtitle %}
+        {{ subtitle }} 
+    {% endblock  %}
+{% endif %}
+
+{% if content|length>0 %}
+    {% block content %}
+        {{ content }} 
+    {% endblock  %}
+{% endif %}

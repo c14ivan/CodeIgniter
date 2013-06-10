@@ -1,0 +1,23 @@
+{% extends '_layouts/email.html.twig' %}
+
+{% block emailtitle %}
+{{ lang('auth_changeemailtitle') }}
+{% endblock  %}
+{% block subtitle %}
+    {{ lang('auth_chaguedemail') }}
+{% endblock  %}
+
+{% block content %}
+{{ lang('auth_chenguedemaillabel') }}<br />
+<br />
+<big style="font: 16px/18px Arial, Helvetica, sans-serif;"><b><a href="{{ site_url('/auth/reset_email/'~userid~'/'~new_email_key) }}" style="color: #3366cc;">{{ lang('auth_confirm') }}</a></b></big><br />
+<br />
+{{ lang('linktoaddressbar') }}<br />
+<nobr><a href="{{ site_url('/auth/reset_email/'~userid~'/'~new_email_key) }}" style="color: #3366cc;">{{ site_url('/auth/reset_email/'~userid~'/'~new_email_key) }}</a></nobr><br />
+<br />
+<b>{{ lang('auth_youremail') }}:</b>{{ new_email }}
+<br />
+<br />
+<br />
+{{ lang('auth_theteam')|format(config.appname) }}
+{% endblock %}

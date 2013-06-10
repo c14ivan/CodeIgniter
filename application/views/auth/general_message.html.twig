@@ -1,0 +1,22 @@
+{% extends '_layouts/login.html.twig' %} 
+{% block content %} 
+
+<div class="row-fluid">
+    <div class="row-fluid">
+        <div class="span12 center login-header">
+            <h2>{{ lang('auth_welcome')|format(config.appname) }}</h2>
+        </div>
+        <!--/span-->
+    </div>
+    <!--/row-->
+
+    <div class="row-fluid">
+        <div class="well span5 center login-box">
+            <div class="alert alert-info">{{ message }}</div>
+        </div>
+        <!--/span-->
+    </div>
+    <!--/row-->
+</div>
+<!--/fluid-row-->
+{% endblock %}

@@ -107,7 +107,7 @@ $autoload['drivers'] = array('session', 'cache');
 |	$autoload['helper'] = array('url', 'file');
 */
 
-$autoload['helper'] = array('form','url','asset','path');
+$autoload['helper'] = array('form','url','asset','path','language');
 
 
 /*
@@ -139,7 +139,7 @@ $autoload['config'] = array('twig','asset');
 |
 */
 
-$autoload['language'] = array();
+$autoload['language'] = array('general');
 
 
 /*

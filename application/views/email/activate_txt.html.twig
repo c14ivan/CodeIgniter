@@ -1,0 +1,29 @@
+{% extends '_layouts/email.html.twig' %}
+
+{% block emailtitle %}
+    {{ lang('auth_welcome')|format(config.appname) }}
+{% endblock  %}
+{% block subtitle %}
+    {{ lang('auth_confirmemail') }}
+{% endblock  %}
+
+{% block content %}
+{{ lang('auth_welcomejoin') }}<br />
+<br />
+<big style="font: 16px/18px Arial, Helvetica, sans-serif;"><b><a href="{{ site_url('/auth/activate/'~userid~'/'~new_email_key) }}" style="color: #3366cc;">{{ lang('auth_finishregister') }}</a></b></big><br />
+<br />
+{{ lang('linktoaddressbar') }}<br />
+<nobr><a href="{{ site_url('/auth/activate/'~userid~'/'~new_email_key) }}" style="color: #3366cc;">{{ site_url('/auth/activate/'~userid~'/'~new_email_key) }}</a></nobr><br />
+<br />
+{{ lang('auth_verifybefore_email')|format(activation_period) }}
+<br />
+<br />
+{% if username|length>0 %}
+<b>{{ lang('auth_yourlogin') }}:</b>{{ username }}
+{% endif %}
+{% if email|length>0 %}
+<b>{{ lang('auth_youremail') }}:</b>{{ email }}
+{% endif %}
+<br />
+{{ lang('auth_theteam')|format(config.appname) }}
+{% endblock %}

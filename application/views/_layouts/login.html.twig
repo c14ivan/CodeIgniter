@@ -51,10 +51,13 @@
 
 	<!-- The fav icon -->
 	<link rel="shortcut icon" href="{{ img_url() }}favicon.ico">
-		
+	{% block headext %}
+    {% endblock %}	
 </head>
 
 <body>
+
+{%  set config = get_config('appname') %}
 		<div class="container-fluid">
 		<div class="row-fluid">
 			{% block content %}
@@ -147,6 +150,7 @@
     {{ js('jquery.validate.js') }}
     <!-- application script for Charisma demo -->
     {{ js('charisma.js') }}
-
+{% block jscode %}
+{% endblock %}
 </body>
 </html>

@@ -46,6 +46,9 @@
 {% endblock %}
 </head>
 <body>
+
+{%  set config = get_config() %}
+{%  set CI = get_instance() %}
 <!-- topbar starts -->
 <div class="navbar">
     <div class="navbar-inner">
@@ -76,17 +79,16 @@
                 </ul>
             </div>
             <!-- theme selector ends -->
-
             <!-- user dropdown starts -->
             <div class="btn-group pull-right" >
                 <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-                    <i class="icon-user"></i><span class="hidden-phone"> Username</span>
+                    <i class="icon-user"></i><span class="hidden-phone"> {{ CI.session.userdata('username') }}</span>
                     <span class="caret"></span>
                 </a>
                 <ul class="dropdown-menu">
                     <li><a href="#">{{ 'Perfil' }}</a></li>
                     <li class="divider"></li>
-                    <li><a href="{{ site_url('logout')}}"> Salir </a></li>
+                    <li><a href="{{ site_url('auth/logout')}}"> Salir </a></li>
                 </ul>
             </div>
             <!-- user dropdown ends -->
@@ -141,7 +143,8 @@
         {% endblock %}
     </ul>
 </div>
-    {% block content %} {% endblock %}
+    {% block content %}
+{% endblock %}
 <!-- content ends -->
 </div><!--/#content.span10-->
 </div><!--/fluid-row-->

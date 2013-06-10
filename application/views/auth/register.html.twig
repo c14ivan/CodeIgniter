@@ -1,0 +1,165 @@
+{% extends '_layouts/login.html.twig' %}
+
+{% block headext %}
+    {{ css('jquery.validate.password.css') }}
+    <link rel="stylesheet" type="text/css" href="{{ asset_url()~'cssapp/general.css' }}" media="all">
+{% endblock %}	
+
+{% block content %} 
+{% if login_by_username and login_by_email %} 
+    {% set logintitle=lang('auth_logwithusernameormail') %}
+{% elseif login_by_username %} 
+    {% set logintitle=lang('auth_email_in_use') %} 
+{% elseif auth_logwithemail %} 
+    {% set logintitle=lang('auth_email_in_use')%} 
+{% endif %}
+<div class="row-fluid">
+    <div class="row-fluid">
+        <div class="span12 center login-header">
+            <h2>{{ config.appname }}</h2>
+            <h4>{{ lang('auth_register') }}</h4>
+        </div>
+        <!--/span-->
+    </div>
+    <!--/row-->
+
+	{% import '_tools/formElements.twig' as forms %}
+    <div class="row-fluid">
+        <div class="well">
+        <div class="box-content span5 center ">
+        {% if errors is iterable  and errors|length > 0 %}
+            <div class="alert alert-info">
+                <button type="button" class="close" data-dismiss="alert">×</button>
+                <strong>lang('error')</strong>
+                {% for error in errors %}
+                    {{ error }}<br/>
+                {% endfor %}
+            </div>
+        {% endif %}
+        {% endif %}
+            <form id="formregister" class="form-horizontal" action="{{ current_url() }}"  method="post" autocomplete="off">
+                <fieldset style="text-align:left">
+                    <div class="left" style="text-align:left;">
+                        {{ forms.campo({'tipo':'input','label':lang('auth_logwithusername'),'class':'','type':'text','name':'username','id':'username','maxlength': config.tank_auth.password_max_length,'placeholder': lang('auth_reg_username')}) }}
+                        {{ forms.campo({'tipo':'input','label':lang('auth_logwithemail'),'class':'','type':'email','name':'email','id':'email','maxlength': config.tank_auth.password_max_length,'placeholder': lang('auth_reg_email'),'append':'@'}) }}
+                        
+                        {{ forms.campo({'tipo':'input','label':lang('auth_password'),'class':'passmeter','type':'password','name':'password','id':'password','maxlength': config.tank_auth.password_max_length,'placeholder': lang('auth_reg_password')}) }}
+                        {{ forms.campo({'tipo':'input','label':lang('auth_reg_confpassword'),'class':'','type':'password','name':'confirm_password','id':'confirm_password','maxlength': config.tank_auth.password_max_length,'placeholder': lang('auth_reg_confpassword')}) }}
+    
+                        {% if captcha_registration %}
+                            {% if use_recaptcha %}
+                                <div class="control-group">
+                                    <div id="recaptcha_image"></div>
+                                    <a href="javascript:Recaptcha.reload()">{{ lang('auth_getanother_captcha') }}</a>
+                					<div class="recaptcha_only_if_image">
+                                        <a href="javascript:Recaptcha.switch_type('audio')">{{ lang('auth_getaudio_captcha') }}</a>
+                                    </div>
+                                    <div class="recaptcha_only_if_audio">
+                                        <a href="javascript:Recaptcha.switch_type('image')">{{ lang('auth_getimage_captcha') }}</a>
+                                    </div>
+                                    
+                					<label class="control-label" for="recaptcha_response_field">
+                					    <span class="recaptcha_only_if_image">{{ lang('auth_enterimage_captcha') }}</span> 
+                                        <span class="recaptcha_only_if_audio">{{ lang('auth_enteraudio_captcha') }}</span>
+                                    </label>
+                					<div class="controls">
+                						 <input class="input-xlarge focused" id="recaptcha_response_field" name="recaptcha_response_field" type="text" value="">
+            						     {{ recaptcha_html }}
+                					</div>
+                				</div>
+                            {% else %}
+                                <div class="control-group">
+                                    <div class="controls" style="padding:15px;">{{ captcha_html }}</div>
+                					<label class="control-label" for="captcha">{{ lang('auth_confirmcode') }}</label>
+                					<div class="controls">
+                						 <input autofocus class="input-large" name="captcha" id="captcha" type="text" value="" />
+                					</div>
+                				</div>
+                            {% endif %}
+                        </div>
+                        <div class="form-actions">
+						    <button type="submit" class="btn btn-primary">{{ lang('auth_register') }}</button>
+						    <button type="reset" class="btn">Cancel</button>
+						</div>
+                    {% endif %}
+                </fieldset>
+            </form>
+        </div>
+        </div>
+        <!--/span-->
+    </div>
+    <!--/row-->
+</div>
+<!--/fluid-row-->
+{% endblock %}
+{% block jscode %}
+{{ js('jquery.validate.password.js') }}
+<script type="text/javascript">
+$().ready(function(){
+    $('#formregister').validate({
+    	errorClass:'errorlabelform',
+        elErrorClass:'errorlabel',
+        ignore:':hidden.chzn',
+        rules:{
+            username: {
+                required: true,
+                minlength:5,
+                noSpace : true,
+                /*remote '/auth/validate'*/
+            },
+            password:{
+            	password: "#username",
+            	minlength:5,
+            	
+            },
+            confirm_password:{
+                required: true,
+                equalTo: "#password"
+            },
+            email:{
+                required: true,
+                email:true,
+                },
+            {% if captcha_registration %}
+                {% if use_recaptcha %}
+                    recaptcha_response_field: "required",
+                {% else%}
+                    captcha: "required",
+                {% endif %}
+            {% endif %}
+        },
+        messages:{
+            username: {
+                required: "{{ lang('auth_required') }}",
+                minlength:"{{ lang('auth_tooshort') }}",
+                noSpace: "{{ lang('auth_nospaces') }}",
+            },
+            password:{
+                required: "{{ lang('auth_required') }}",
+                pass_too_short:"{{ lang('auth_tooshort') }}",
+                pass_similar_to_username:"{{ lang('auth_passtousername') }}",
+                pass_very_weak:"{{ lang('passtooweak') }}",
+                pass_good: "{{ lang('passgood') }}",
+                pass_strong : "{{ lang('passtrong') }}"
+            },
+            confirm_password:{
+                required: "{{ lang('auth_required') }}",
+                equalTo: "{{ lang('auth_pass_dontmatch') }}"
+            },
+            email:{
+                required: "{{ lang('auth_required') }}",
+                email:"{{ lang('auth_email_formatwrong') }}",
+                },
+            {% if captcha_registration %}
+                {% if use_recaptcha %}
+                recaptcha_response_field: "{{ lang('auth_required') }}",
+                {% else%}
+                captcha: "{{ lang('auth_required') }}",
+                {% endif %}
+            {% endif %}
+        }
+    });
+    $('#formregister').showPassword();
+});
+</script>
+{% endblock %}

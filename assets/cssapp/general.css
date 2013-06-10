@@ -1,0 +1,19 @@
+
+label .error{
+    margin-left:3px;
+}
+.checksinmarleft{
+    margin-left: 0px !important;
+}
+.errorlabelform{
+    float:none;
+    margin-left:5px;
+}
+ .input-prepend .errorlabelform{
+    float:right;
+    margin-left:5px;
+}
+input .errorlabelform{
+    float:none;
+    margin-left:5px;
+}

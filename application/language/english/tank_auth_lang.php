@@ -35,6 +35,38 @@ $lang['auth_subject_forgot_password'] = 'Forgot your password on %s?';
 $lang['auth_subject_reset_password'] = 'Your new password on %s';
 $lang['auth_subject_change_email'] = 'Your new email address on %s';
 
+//labels
+$lang['auth_logwithusername'] = 'Username';
+$lang['auth_logwithemail'] = 'E-mail';
+$lang['auth_logwithusernameormail'] = 'Username or E-mail';
+$lang['auth_pleaselogin'] = 'Please login with your Account';
+$lang['auth_password'] = 'Password';
+$lang['auth_rememberme'] = 'Remember me';
+$lang['auth_login'] = 'Login';
+$lang['auth_welcome'] = 'Welcome to %s';
+$lang['auth_forgot_pass'] = 'Forgot password';
+$lang['auth_register'] = 'Register';
+$lang['auth_getanother_captcha'] = 'Get another captcha';
+$lang['auth_getaudio_captcha'] = 'Get an audio Captcha';
+$lang['auth_getimage_captcha'] = 'Get an image Captcha';
+$lang['auth_enteraudio_captcha'] = 'Enter the words above';
+$lang['auth_enterimage_captcha'] = 'Enter the numbers you hear';
+
+
+$lang['auth_entercode'] = 'Enter confirmation Code';
+$lang['auth_confirmcode'] = 'Confirmation Code';
+$lang['auth_required'] = 'Required';
+$lang['auth_tooshort'] = 'Too short';
+
+$lang['auth_reg_username'] = 'Please insert your Username';
+$lang['auth_reg_password'] = 'Please insert your Password';
+$lang['auth_reg_confpassword'] = 'Confirm your Password';
+$lang['auth_reg_email'] = 'Please insert your e-mail';
+$lang['auth_email_formatwrong'] = 'Please a a valid e-mail format';
+$lang['auth_pass_dontmatch'] = 'The passwords doesn\'t match';
+
+
+
 
 /* End of file tank_auth_lang.php */
 /* Location: ./application/language/english/tank_auth_lang.php */

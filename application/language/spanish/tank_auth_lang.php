@@ -35,6 +35,73 @@ $lang['auth_subject_forgot_password'] = 'Ha olvidado su contraseña en %s?';
 $lang['auth_subject_reset_password'] = 'Su nueva contraseña en %s';
 $lang['auth_subject_change_email'] = 'Su nuevo email en %s';
 
+//labels
+$lang['auth_logwithusername'] = 'Login';
+$lang['auth_logwithemail'] = 'E-mail';
+$lang['auth_logwithusernameormail'] = 'Login o E-mail';
+$lang['auth_pleaselogin'] = 'Ingrese con sus datos';
+$lang['auth_password'] = 'Contraseña';
+$lang['auth_rememberme'] = 'Recordarme';
+$lang['auth_login'] = 'Login';
+$lang['auth_welcome'] = 'Bienvenido a %s';
+$lang['auth_forgot_pass'] = 'Olvide contraseña';
+$lang['auth_register'] = 'Registro';
+$lang['auth_getanother_captcha'] = 'Obtener otro Captcha';
+$lang['auth_getaudio_captcha'] = 'Obtener un Captcha de Audio';
+$lang['auth_getimage_captcha'] = 'Obtener un Captcha de Imagen';
+$lang['auth_enteraudio_captcha'] = 'Ingrese las Palabras deabajo';
+$lang['auth_enterimage_captcha'] = 'Ingrese los numeros que escucho';
 
+
+$lang['auth_entercode'] = 'Ingrese el codigo de Confirmación';
+$lang['auth_confirmcode'] = 'Codigo de Confirmación';
+$lang['auth_required'] = 'Requerido';
+$lang['auth_tooshort'] = 'Muy Corto';
+
+$lang['auth_reg_username'] = 'Por favor ingrese su Login';
+$lang['auth_reg_password'] = 'Por favor ingrese su contraseña';
+$lang['auth_reg_confpassword'] = 'Confirme su contraseña';
+$lang['auth_reg_email'] = 'Ingrese su e-mail';
+$lang['auth_email_formatwrong'] = 'Debe tener un formato e-mail valido';
+$lang['auth_pass_dontmatch'] = 'La contraseña no concide';
+$lang['auth_nospaces'] = 'No debe contener espcios';
+$lang['auth_passtousername'] = 'Contraseña muy similar al Username';
+$lang['passtooweak']='Contraseña Muy Debil';
+$lang['passgood'] =" Normal";
+$lang['passtrong']="Fuerte";
+
+$lang['auth_confirmemail']="Confirmación de correo electronico";
+$lang['auth_welcomejoin']="¡Gracias por registrarse!. Listamos los detalles de su cuenta a continuación, asegurese de conservarlos seguros.<br />
+Para verificar su dirección de correo eletronico, por favor siga el siguiente link:";
+$lang['auth_finishregister']='Finalizar registro';
+$lang['linktoaddressbar']='¿No funciona? Por favor copie el link a continuacion en la barra de direcciones';
+$lang['auth_verifybefore_email']='Por favor confirme su e-mail antes de %s horas, de otra manera su registro sera invalido y tendra que registrarse nuevamente';
+$lang['auth_yourlogin'] = 'Su Nombre de usuario';
+$lang['auth_youremail'] = 'Su Dirección de correo electronico';
+$lang['auth_yourpassword'] = 'Su Contraseña';
+$lang['auth_theteam']='El Equipo de %s';
+
+$lang['auth_getnewpsw']='Obtener nueva contraseña';
+$lang['auth_createnewpassword']='Crear una nueva contraseña para %s';
+$lang['auth_creatednewpassword']='Nueva contraseña para %s';
+$lang['auth_newpswlabel']='¿Olvidaste tu contraseña? No hay problema!<br />
+Para crear una nueva contraseña, sigue el siguiente link:';
+$lang['auth_newpswignore']='Recibiste este correo, porque fue reportado una perdida de tu contraseña, Si no lo solicitaste por favor ignora este mensaje y tu contraseña permanecera igual';
+$lang['auth_changuepsw']='Cambiar Contraseña';
+$lang['auth_oldpassword']='Antigua Contraseña';
+$lang['auth_newpassword']='Nueva Contraseña';
+$lang['auth_newemail']='Nuevo e-mail';
+$lang['auth_changeemail']='Cambiar e-mail';
+$lang['auth_changeemailtitle']='Cambio de la dirección de correo electronico';
+$lang['auth_chaguedemail']='Haz cambiado tu dirección de correo electronico';
+
+$lang['auth_chenguedemaillabel']="Haz cambiado tu dirección de correo eletronico <br />
+Por favor sigue el enlace para confirmar tu nueva dirección de correo:";
+
+$lang['auth_confirm']='Confirmar';
+$lang['auth_goto'] = 'Ir a %s';
+
+$lang['auth_resetpassword']="Haz cambiado tu contraseña!<br />
+Por favor conservala en un lugar seguro y no la olvides!";
 /* End of file tank_auth_lang.php */
 /* Location: ./application/language/spanish/tank_auth_lang.php */

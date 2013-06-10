@@ -70,9 +70,9 @@
 		var rating = $.validator.passwordRating(password, username.val());
 		// update message for this field
 		
-		var meter = $(".password-meter", element.form);
+		var meter = $(".password-meter", element.parentElement);
 		var text= $.validator.passwordRating.messages[rating.messageKey];
-        if(typeof(this.settings.messages[element.name])!=undefined){
+        if(typeof(this.settings.messages[element.name])!="undefined"){
             text=this.settings.messages[element.name]['pass_'+rating.messageKey];
         }
         
@@ -97,11 +97,11 @@ jQuery.fn.showPassword = function(conf) {
         className: 'password-toggler'
     }, conf);
     return this.each(function() {
-        jQuery('input[type=password]', this)
+        jQuery('input[type=password].passmeter', this)
             .each(function() {
             var field = jQuery(this);
             var classfield= field.attr('class');
-            var fakeField = jQuery('<input type="text" class="' + classfield + '" value="' + field.val() + '" />')
+            var fakeField = jQuery('<input type="text" name="dummy_pass" class="' + classfield + '" value="' + field.val() + '" />')
                 .insertAfter(field)
                 .hide();
             var check = jQuery('<span class="add-on"><input type="checkbox"  name="dummy_pass" title="'+ config.str + '" /></span>');

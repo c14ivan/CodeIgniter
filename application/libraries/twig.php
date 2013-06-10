@@ -67,11 +67,7 @@ class Twig {
 	{
 		$this->_ci = & get_instance();
 		$this->_config = $this->_ci->config->item('twig');
-		// set include path for twig
-		/*ini_set('include_path', ini_get('include_path') . PATH_SEPARATOR . APPPATH . 'third_party/Twig/lib/Twig');
-		require_once (string)'Autoloader.php';
-		// register autoloader
-		Twig_Autoloader::register();*/
+		
 		log_message('debug', 'twig autoloader loaded');
 		// init paths
 		$this->template_dir = $this->_config['template_dir'];
@@ -96,13 +92,13 @@ class Twig {
 		
 		if(count($this->_config['register_filters']) > 0)
 		{
+		    //TODO agregar register_fdilter
 		    foreach($this->_config['register_filters'] as $filter) $this->register_filter($filter);
 		}
 		
 		$this->ci_function_init();
 		$this->_twig_env->setLexer(new Twig_Lexer($this->_twig_env, $this->_config['delimiters']));
 	}
-
 	/**
 	 * render a twig template file
 	 * 
@@ -135,6 +131,11 @@ class Twig {
 		$this->_ci->output->set_output($template->render($data));
 	}
 
+	public function getDisplay($template, $data = array())
+	{
+	    $template = $this->_twig_env->loadTemplate($template.$this->_config['template_file_ext']);
+	    return ($template->render($data));
+	}
 	/**
 	 * Entry point for controllers (and the likes) to register
 	 * callback functions to be used from Twig templates
@@ -157,6 +158,7 @@ class Twig {
 	 */
 	public function ci_function_init() 
 	{
+	    $this->_twig_env->addFunction('get_instance', new Twig_Function_Function('get_instance'));
 		$this->_twig_env->addFunction('base_url', new Twig_Function_Function('base_url'));
 		$this->_twig_env->addFunction('site_url', new Twig_Function_Function('site_url'));
 		$this->_twig_env->addFunction('current_url', new Twig_Function_Function('current_url'));

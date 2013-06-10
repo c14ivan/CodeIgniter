@@ -25,6 +25,12 @@
  * @filesource
  */
 
+$config['appname']	= 'IEF Site';
+$config['company']	= 'Institución educativa la floresta';
+$config['twitter_profile'] = 'https://twitter.com/ivanJespitia';
+$config['fb_profile'] = 'https://twitter.com/ivanJespitia';
+$config['gplus_profile'] = 'https://twitter.com/ivanJespitia';
+$config['email_info'] = 'tics@ieflafloresta.edu.co';
 /*
 |--------------------------------------------------------------------------
 | Base Site URL
@@ -94,7 +100,7 @@ $config['url_suffix'] = '';
 | than english.
 |
 */
-$config['language']	= 'english';
+$config['language']	= 'spanish';
 
 /*
 |--------------------------------------------------------------------------
