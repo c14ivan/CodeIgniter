@@ -113,7 +113,7 @@ $config['forgot_password_expire'] = 60*15;
 */
 $config['captcha_path'] = FCPATH.'/assets/cache/captcha/';
 $config['captcha_imgpath'] = 'cache/captcha/';
-$config['captcha_fonts_path'] = 'third_party/captcha/captcha/fonts/5.ttf';
+$config['captcha_fonts_path'] = 'third_party/captcha/fonts/5.ttf';
 $config['captcha_width'] = 200;
 $config['captcha_height'] = 50;
 $config['captcha_font_size'] = 14;
@@ -144,5 +144,6 @@ $config['recaptcha_private_key'] = '6LcjpOISAAAAAC1OSbZQc1xshT4zJcjlJxqJfUYm';
 $config['db_table_prefix'] = '';
 
 
+$config['default_role'] = 'student';
 /* End of file tank_auth.php */
 /* Location: ./application/config/tank_auth.php */

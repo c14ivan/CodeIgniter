@@ -1,5 +1,6 @@
 <?php if (!defined('BASEPATH')) exit('No direct script access allowed');
 
+//TODO profile page
 class Auth extends CI_Controller
 {
 	function __construct()
@@ -67,6 +68,7 @@ class Auth extends CI_Controller
 			            $this->form_validation->set_value('remember'),
 			            $data['login_by_username'],
 			            $data['login_by_email'])) {								// success
+			        
 			        redirect('');
 			
 			    } else {
