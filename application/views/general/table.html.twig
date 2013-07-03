@@ -1,21 +1,72 @@
 {% extends '_layouts/index.html.twig' %}
 
 {% block headext %}
-{{ css('jquery.mobile.min.css') }}
-{{ css('custom-table.css') }}
+
+<style type="text/css" media="screen">
+	.dataTable .sorting_asc b{
+	    width:15px;
+	    height:15px;
+	    display:inline-block;
+	    float:right;
+	    background: url('{{ img_url() }}chosen-sprite.png') no-repeat 0 0;
+	}
+	.dataTable .sorting_desc b{
+	    width:15px;
+	    height:15px;
+	    display:inline-block;
+	    float:right;
+	    background: url('{{ img_url() }}chosen-sprite.png') no-repeat -18px 1px;
+	}
+</style>
 {% endblock %}
 
 {% block jscode %}
-{{ js('jquery.mobile-1.3.1.min.js') }}
+<script type="text/javascript">
+$().ready(function(){
+    $('.delete_register').on('click',function(){
+        {% if delajax %}
+        
+        {% else %}
+        window.location.href = "{{ urldel }}/"+$(this).attr('data-id');
+        {% endif %}
+        });
+    $('.tabledata').dataTable({
+        "sDom": "<'row-fluid'<'span6'l><'span6'f>r>t<'row-fluid'<'span12'i><'span12 center'p>>",
+        "sPaginationType": "bootstrap",
+        "oLanguage": {
+            "sProcessing": "{{ lang('table_processing') }}",
+            "sLengthMenu": "{{ lang('table_recordsperpage') }}",
+            "sZeroRecords": "{{ lang('table_noregisters') }}",
+            "sEmptyTable": "{{ lang('table_empty') }}",
+            "sInfo": "{{ lang('table_pager') }}",
+            "sInfoEmpty": "{{ lang('table_pagerempty') }}",
+            "sInfoFiltered": "{{ lang('table_filtered') }}",
+            "sSearch": "{{ lang('table_search') }}",
+            "sLoadingRecords": "{{ lang('table_loading') }}",
+            "oAria": {
+                "sSortAscending": "{{ lang('table_sortAsc') }}",
+                "sSortDescending": "{{ lang('table_sortDesc') }}",
+            },
+            "oPaginate": {
+                "sFirst": "{{ lang('table_first') }}",
+                "sLast": "{{ lang('table_last') }}",
+                "sNext": "{{ lang('table_next') }}",
+                "sPrevious": "{{ lang('table_previous') }}",
+            },
+        }
+    	});
+});
+</script>
 {% endblock %}
 
 {% block content %}
-<table data-role="table" id="movie-table" data-mode="reflow" class="ui-responsive table-stroke">
+<table class="table table-striped table-bordered bootstrap-datatable tabledata" style="width:100%;">
       <thead>
         <tr>
+        {% if hasactions %} <th data-priority="persistent">{{ lang('actions') }}<b></b></th>{% endif %}
         {% for colheader in headers %}
-            <th  {% if colheader.priority %} data-priority="{{ colheader.priority }}" {% endif %}>
-                <abbr title="{% if colheader.abbr %} {{ colheader.abbr }} {% endif %}">{{ colheader.valor }}</abbr>
+            <th>
+                <abbr title="{% if colheader.abbr %} {{ colheader.abbr }} {% endif %}">{{ colheader.valor }}</abbr><b></b>
             </th>
         {% endfor %}
         </tr>
@@ -23,6 +74,20 @@
       <tbody>
         {% for dato in data %}
             <tr>
+            {% if hasactions %}
+                <td>
+                {% if canedit %}
+                    <a class="btn btn-info" href="{{ urledit }}/{{ dato.id }}" >
+                    <i class="icon-edit icon-white" title="{{ lang('edit') }}"></i>
+                    </a>
+                {% endif %}
+                {% if candel %}
+                    <a class="btn btn-info delete_register" data-id="{{ dato.id }}" href="javascript:void()" >
+                    <i class="icon-trash icon-white" title="{{ lang('delete') }}"></i>
+                    </a>
+                {% endif %}
+                </td>
+            {% endif %}
             {% for keycol,col in headers %}
                 <td>{{ attribute(dato, keycol) }}</td>
             {% endfor %}

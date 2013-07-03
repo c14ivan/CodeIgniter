@@ -116,7 +116,6 @@ class Auth extends CI_Controller
 	    if (!$this->tank_auth->is_logged_in()) {
 	        redirect('');
 	    }
-	    $data=array();
 	    $headers= array(
 	            'username'=>array('priority'=>1,'abbr'=>'username','valor'=>'Nombre de Usuario','celllabel'=>'Username'),
 	            'email'=>array('priority'=>2,'abbr'=>'e-mail','valor'=>'Correo electronico','celllabel'=>'e-mail'),
@@ -124,8 +123,18 @@ class Auth extends CI_Controller
 	            );
 	    $datos= $this->db->get('users');
 	    
+	    $data=array(
+	            'headers'=>$headers,
+	            'data'=>$datos->result(),
+	            'hasactions'=>true,
+	            'canedit'=>true,
+	            'candel'=>true,
+	            'urledit'=>site_url("auth/edituser/"),
+	            'urldel'=>site_url("auth/deluser/"),
+	            'delajax'=>false
+	            );
 	    
-	    $this->twig->display('general/table',array('headers'=>$headers,'data'=>$datos->result()));
+	    $this->twig->display('general/table',$data);
 	}
 	/**
 	 * Register user on the site

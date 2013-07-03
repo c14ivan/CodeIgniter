@@ -1,0 +1,62 @@
+{% extends '_layouts/index.html.twig' %}
+
+{% block content %}
+<div class="row-fluid sortable">
+    <div class="box span12">
+    
+        <div class="box-header well" data-original-title>
+            <h2><i class="icon-{{ icon }}"></i> {{ title }}</h2>
+        </div>
+        <div class="box-content">
+            <form id="formulario" name="{{ table }}" class="form-horizontal" method="post" autocomplete="off">
+                <fieldset>
+                    {% for campo in campos%}
+                        {{ forms.campo(campo) }}
+                    {% endfor %}
+                </fieldset>
+                <div class="form-actions">
+                    <button type="submit" name="submit" class="btn btn-primary" value="register">{{ lang('save') }}</button>
+                    <button class="btn cancelar">{{ lang('cancel') }}</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block jscode %}
+<script type="text/javascript">
+$(document).ready(function() {
+    {% if jsCode.code is defined %}
+        {{ jsCode.code|raw }}
+    {% endif %}
+    $('#formulario').validate({
+        errorClass:'errorlabelform',
+        elErrorClass:'errorlabel',
+        ignore:':hidden.chzn',
+        {% if reglas|length > 0  %}
+            rules : {
+                {% for key,value in reglas %}
+                {{ key }} : {
+                    {% for keyr,valr in value %}
+                        {% if valr.val %}
+                            {{ keyr }} :{% if(valr.istring)%}'{%endif%}{% if keyr=='remote'%}{{ rutaBase }}{% endif %}{{ valr.val }}{% if(valr.istring)%}'{%endif%},
+                        {% endif %}
+                    {% endfor %}
+                    },
+                {% endfor %}
+            },
+            messages : {
+                {% for key,value in reglas %}
+                {{ key }}:{
+                    {% for keyr,valr in value %}
+                        {{ keyr }} : '{{ valr.msj }}',
+                    {% endfor %}
+                    },
+                {% endfor %}
+            },
+        {% endif %}
+    });
+    $('[data-rel="chosen"],[rel="chosen"]').chosen({"no_results_text":"{{ lang('noresults') }}"});
+});
+{% endblock %}
