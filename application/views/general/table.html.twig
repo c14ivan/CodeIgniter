@@ -1,0 +1,33 @@
+{% extends '_layouts/index.html.twig' %}
+
+{% block headext %}
+{{ css('jquery.mobile.min.css') }}
+{{ css('custom-table.css') }}
+{% endblock %}
+
+{% block jscode %}
+{{ js('jquery.mobile-1.3.1.min.js') }}
+{% endblock %}
+
+{% block content %}
+<table data-role="table" id="movie-table" data-mode="reflow" class="ui-responsive table-stroke">
+      <thead>
+        <tr>
+        {% for colheader in headers %}
+            <th  {% if colheader.priority %} data-priority="{{ colheader.priority }}" {% endif %}>
+                <abbr title="{% if colheader.abbr %} {{ colheader.abbr }} {% endif %}">{{ colheader.valor }}</abbr>
+            </th>
+        {% endfor %}
+        </tr>
+      </thead>
+      <tbody>
+        {% for dato in data %}
+            <tr>
+            {% for keycol,col in headers %}
+                <td>{{ attribute(dato, keycol) }}</td>
+            {% endfor %}
+            </tr>
+        {% endfor %}
+      </tbody>
+</table>
+{% endblock %}

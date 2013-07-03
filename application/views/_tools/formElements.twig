@@ -226,9 +226,13 @@
                                 <optgroup label="{{ value.name }}">
                                 {% for keyopt,val in value.options %}
                                     <option value="{{ keyopt }}" {% if (keyopt==defecto) %} SELECTED {%endif%}>
-                                        {{val|raw}}
+                                        {{val}}
                                     </option>
                                 {% endfor %}
+                            {% elseif value.id %}
+                                <option value="{{ value.id }}" {% if (value.id==defecto) %} SELECTED {%endif%}>
+                                    {{value.valor}}
+                                </option>
                             {% else %}
                                 <option value="{{ key }}" {% if (key==defecto) %} SELECTED {%endif%}>
                                     {{value}}

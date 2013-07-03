@@ -7,8 +7,8 @@
 | These details are used in emails sent by authentication library.
 |--------------------------------------------------------------------------
 */
-$config['website_name'] = 'Your project';
-$config['webmaster_email'] = 'webmaster@your-site.com';
+//$config['website_name'] = 'Your project';
+//$config['webmaster_email'] = 'webmaster@your-site.com';
 
 /*
 |--------------------------------------------------------------------------
@@ -43,7 +43,7 @@ $config['allow_registration'] = TRUE;
 $config['captcha_registration'] = TRUE;
 $config['captcha_relogin'] = FALSE;
 
-$config['email_activation'] = TRUE;
+$config['email_activation'] = FALSE;
 $config['email_activation_expire'] = 60*60*24*2;
 $config['email_account_details'] = TRUE;
 $config['use_username'] = TRUE;
@@ -144,6 +144,6 @@ $config['recaptcha_private_key'] = '6LcjpOISAAAAAC1OSbZQc1xshT4zJcjlJxqJfUYm';
 $config['db_table_prefix'] = '';
 
 
-$config['default_role'] = 'student';
+//$config['default_role'] = 'student';
 /* End of file tank_auth.php */
 /* Location: ./application/config/tank_auth.php */
