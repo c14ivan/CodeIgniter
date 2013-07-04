@@ -62,7 +62,25 @@ class Roles_perm extends CI_Model
 		}
 		return NULL;
 	}
-
+	//TODO: implement this functions
+	/**
+	 * Asign a capabilitie to a role
+	 * @param unknown $roleid
+	 * @param unknown $contextid
+	 * @param unknown $capabilitieid
+	 */
+	function asign_role_capabilitie($roleid,$contextid,$capabilitieid){
+	    
+	}
+	/**
+	 * Unasign a capabilitie to a role
+	 * @param unknown $roleid
+	 * @param unknown $contextid
+	 * @param unknown $capabilitieid
+	 */
+	function unasign_role_capabilitie($roleid,$contextid,$capabilitieid){
+	     
+	}
 }
 
 /* End of file users.php */

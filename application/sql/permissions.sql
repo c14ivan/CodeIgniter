@@ -30,6 +30,7 @@ CREATE TABLE `capabilities` (
   `capability` bigint(10) NOT NULL DEFAULT '0',
   `url` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
   `weight` bigint(10) NOT NULL DEFAULT '0',
+  `contextlevel` bigint(10) NOT NULL DEFAULT '0',
   `timemodified` bigint(10) NOT NULL DEFAULT '0',
   `modifierid` bigint(10) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
@@ -42,7 +43,6 @@ CREATE TABLE `role_capabilities` (
   `contextid` bigint(10) NOT NULL DEFAULT '0',
   `roleid` bigint(10) NOT NULL DEFAULT '0',
   `capabilityid` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
-  `icon` varchar(45) COLLATE utf8_bin DEFAULT NULL,
   `permission` bigint(10) NOT NULL DEFAULT '0',
   `timemodified` bigint(10) NOT NULL DEFAULT '0',
   `modifierid` bigint(10) NOT NULL DEFAULT '0',

@@ -33,16 +33,26 @@ class Permision extends Controller {
         echo 'hello!';
     }
 
-    function add_permissions()
+    //TODO implement this functions
+    /**
+     * edit role permissions
+     * @param number $roleid
+     */
+    function role_edit($roleid=0)
     {
-        // in view file, make sure you have a post with name "permX" and a value of 1, X would be the ID of the permission in the database
 
-        // set groupID
-        $groupID = 1;
-
-        // example of how you would add permissions
-        $this->permission->add_permissions($groupID);
-
+    }
+    /**
+     * Create a role
+     */
+    function role_create(){
+        
+    }
+    /**
+     * Instalation, create the defaults and insert into database
+     */
+    function install(){
+        
     }
 
 
