@@ -49,23 +49,12 @@ class Home extends CI_Controller {
     
         $this->load->helper('url');
         $this->load->library('tank_auth');
-        //$this->load->library('permissions');
+        //$this->load->library('permissions'); //TODO, debe ir en el autoloader
         $this->ci =& get_instance();
     }
     public function index()
     {
-        
-        if (!$this->tank_auth->is_logged_in()) {
-            redirect('/auth/login/');
-        } else {
-            //$context=$this->permissions->get_context(0,10);
-            //$role= $this->permissions->get_user_role($this->ci->session->userdata('user_id'),$context);
-            $this->ci->session->set_userdata('context','');
-            $this->ci->session->set_userdata('role','');
-            $data['user_id']	= $this->tank_auth->get_user_id();
-            $data['username']	= $this->tank_auth->get_username();
-            $this->twig->display('home/home',$data);
-        }
+        $this->twig->display('home/home');
     }
 }
 

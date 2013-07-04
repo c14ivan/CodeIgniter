@@ -1,34 +1,17 @@
 <?php
 class Permision extends Controller {
 
-    // set defaults
-    var $permissions = array();
 
-    function Example()
+    function __construct()
     {
-        parent::Controller();
+        parent::__construct();
 
         //  load libs
         $this->load->library('permission');
-
-        // set groupID
-        $userid = ($this->session->userdata('user_id')) ? $this->session->userdata('user_id') : 0;
-
-        // get permissions and show error if they don't have any permissions at all
-        if (!$this->permissions = $this->permission->get_user_permissions($userid))
-        {
-            show_error('You do not have any permissions!');
-        }
     }
 
     function index()
     {
-        // show error if they dont have access to this page
-        if (!in_array('access_to_index', $this->permissions))
-        {
-            show_error('You do not have access to this page!');
-        }
-
         // they got in...
         echo 'hello!';
     }
@@ -52,7 +35,23 @@ class Permision extends Controller {
      * Instalation, create the defaults and insert into database
      */
     function install(){
+        //1. crear contexto home, debe tener context level 10 e instanceid=0
+        $home_contextid=$this->permissions->create_context('CONTEXT_SYSTEM',0);
+        //2. crear los roles por defecto
+        $roles=$this->config->item('default-roles', 'permissions');
+        foreach($roles as $role){
+            $role['id'] = $this->permissions->create_role();
+        }
+        //3. crear las capabilities en DB
+        $capabilities=$this->config->item('default-capabilities');
+        foreach ($capabilities as $cap){
+            //TODO ACA VOY
+        }
+        //3.1 crear las capabilities para guest
         
+        //4. crear las capacidades de los roles, comparando los pesos de los roles con los pesos de las capacidades y
+        //   que esten en el context_level 0, por defecto quiero crear capacidades para el home
+        //5. crear un usuario y asignar el role superadministrador para el contexto home.
     }
 
 

@@ -44,32 +44,75 @@ class Permissions {
     {
         // init vars
         $this->ci =& get_instance();
-        
+
         $this->ci->load->config('permissions', TRUE);
-        
+
         $this->ci->load->library('session');
         //$this->ci->load->database();
-        
-        $this->ci->load->model('permissions/Roles_perm');
-        
+
+        $this->ci->load->model('permissions/Perms');
+
     }
+
+    /**
+     * Create a context if doesn't exist. otherwise return the id of the previous created
+     * @param unknown $contextlevel
+     * @param unknown $instanceid
+     * @return unknown
+     */
+    function create_context($contextlevel,$instanceid){
+
+        $ctx_levels=$this->ci->config->item('context_levels', 'permissions');
+
+        if(!$prevcontext=$this->perms->get_context($ctx_levels[$contextlevel],$instanceid)){
+            $prevcontext=$this->perms->create_context($ctx_levels[$contextlevel],$instanceid);
+        }
+        return $prevcontext;
+    }
+    
+    /**
+     * Create a role if doesn't exist another with the same name or shortname
+     * @param string $name
+     * @param int $weigth max 99
+     * @param string $shortname
+     * @param string $description
+     * @return unknown
+     */
+    function create_role($name,$weigth,$shortname,$description=''){
+        if(!$role=$this->perms->valid_role($name,$shortname)){
+            $role=$this->perms->create_role();
+        }
+        return $role;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
 
     function get_context($instanceid,$contextlevel){
         $this->ci->db->select('id');
         $this->ci->db->where('instanceid',$instanceid);
         $this->ci->db->where('contextlevel',$contextlevel);
-        
+
         // set permissions array and return
         $query = $this->ci->db->get('context');
         $result = $query->result_array();
-        
+
         if ($query->num_rows())
         {
             foreach ($query->result_array() as $row)
             {
                 $permissions = $row['id'];
             }
-        
+
             return $permissions;
         }
         else
@@ -80,18 +123,18 @@ class Permissions {
     function get_context_by_id($id){
         $this->ci->db->select('*');
         $this->ci->db->where('id',$id);
-        
+
         // set permissions array and return
         $query = $this->CI->db->get('permissions');
         $result = $query->result_array();
-        
+
         if ($query->num_rows())
         {
             foreach ($query->result_array() as $row)
             {
                 $permissions = $row;
             }
-        
+
             return $permissions;
         }
         else
@@ -103,24 +146,33 @@ class Permissions {
         $this->ci->db->select('roleid');
         $this->ci->db->where('userid',$userid);
         $this->ci->db->where('contextid',$contextid);
-        
+
         // set permissions array and return
         $query = $this->ci->db->get('role_assignments');
         $result = $query->result_array();
-        
+
         if ($query->num_rows())
         {
             foreach ($query->result_array() as $row)
             {
                 $permissions = $row['roleid'];
             }
-        
+
             return $permissions;
         }
         else
         {
             return false;
         }
+    }
+    /**
+     * get the menus for a user in determinated context and for some position
+     * @param unknown $userid
+     * @param unknown $contextid
+     * @param unknown $position the menu position.
+     */
+    function get_menu_user($userid,$contextid,$position){
+
     }
     // get permissions from for this group
     function get_user_permissions($roleid,$contextid=0)
@@ -132,17 +184,17 @@ class Permissions {
         $this->ci->db->where('roleid',$roleid);
         $this->ci->db->where('contextid',$contextid);
 
-    // set permissions array and return
+        // set permissions array and return
         $query = $this->ci->db->get('role_capabilities');
         $result = $query->result_array();
-        
+
         if ($query->num_rows())
         {
             foreach ($query->result_array() as $row)
             {
                 $permissions[] = $row['url'];
             }
-        
+
             return $permissions;
         }
         else
@@ -150,147 +202,147 @@ class Permissions {
             return false;
         }
     }
-/*
-    // get all permissions, or permissions from a group for the purposes of listing them in a form
+    /*
+     // get all permissions, or permissions from a group for the purposes of listing them in a form
     function get_permissions($groupID = '')
     {
-        // select
-        $this->CI->db->select('DISTINCT(category)');
+    // select
+    $this->CI->db->select('DISTINCT(category)');
 
-        // if groupID is set get on that groupID
-        if ($groupID)
-        {
-            $this->CI->db->where_in('key', $this->get_user_permissions($groupID));
-        }
+    // if groupID is set get on that groupID
+    if ($groupID)
+    {
+    $this->CI->db->where_in('key', $this->get_user_permissions($groupID));
+    }
 
-        // order
-        $this->CI->db->order_by('category');
+    // order
+    $this->CI->db->order_by('category');
 
-        // return
-        $query = $this->CI->db->get('permissions');
+    // return
+    $query = $this->CI->db->get('permissions');
 
-        if ($query->num_rows())
-        {
-            $result = $query->result_array();
+    if ($query->num_rows())
+    {
+    $result = $query->result_array();
 
-            foreach($result as $row)
-            {
-                if ($cat_perms = $this->get_perms_from_cat($row['category']))
-                {
-                    $permissions[$row['category']] = $cat_perms;
-                }
-                else
-                {
-                    $permissions[$row['category']] = 'N/A';
-                }
-            }
-            return $permissions;
-        }
-        else
-        {
-            return false;
-        }
+    foreach($result as $row)
+    {
+    if ($cat_perms = $this->get_perms_from_cat($row['category']))
+    {
+    $permissions[$row['category']] = $cat_perms;
+    }
+    else
+    {
+    $permissions[$row['category']] = 'N/A';
+    }
+    }
+    return $permissions;
+    }
+    else
+    {
+    return false;
+    }
     }
 
     // get permissions from a category name, for the purposes of showing permissions inside a category
     function get_perms_from_cat($category = '')
     {
-        // where
-        if ($category)
-        {
-            $this->CI->db->where('category', $category);
-        }
+    // where
+    if ($category)
+    {
+    $this->CI->db->where('category', $category);
+    }
 
-        // return
-        $query = $this->CI->db->get('permissions');
+    // return
+    $query = $this->CI->db->get('permissions');
 
-        if ($query->num_rows())
-        {
-            return $query->result_array();
-        }
-        else
-        {
-            return false;
-        }
+    if ($query->num_rows())
+    {
+    return $query->result_array();
+    }
+    else
+    {
+    return false;
+    }
     }
 
     // get the map of keys from a group ID
     function get_permission_map($groupID)
     {
-        // grab keys
-        $this->CI->db->select('permissionID');
+    // grab keys
+    $this->CI->db->select('permissionID');
 
-        // where
-        $this->CI->db->where('groupID', $groupID);
+    // where
+    $this->CI->db->where('groupID', $groupID);
 
-        // return
-        $query = $this->CI->db->get('permission_map');
+    // return
+    $query = $this->CI->db->get('permission_map');
 
-        if ($query->num_rows())
-        {
-            return $query->result_array();
-        }
-        else
-        {
-            return false;
-        }
+    if ($query->num_rows())
+    {
+    return $query->result_array();
+    }
+    else
+    {
+    return false;
+    }
     }
 
     // get the groups, for the purposes of displaying them in a form
     function get_groups()
     {
-        // where
-        $this->CI->db->where('siteID', $this->siteID);
+    // where
+    $this->CI->db->where('siteID', $this->siteID);
 
-        // return
-        $query = $this->CI->db->get('permission_groups');
+    // return
+    $query = $this->CI->db->get('permission_groups');
 
-        if ($query->num_rows())
-        {
-            return $query->result_array();
-        }
-        else
-        {
-            return false;
-        }
+    if ($query->num_rows())
+    {
+    return $query->result_array();
+    }
+    else
+    {
+    return false;
+    }
     }
 
     // add permissions to a group, each permission must have an input name of "perm1", or "perm2" etc
     function add_permissions($groupID)
     {
-        // delete all permissions on this groupID first
-        $this->CI->db->where('groupID', $groupID);
-        $this->CI->db->delete('permission_map');
+    // delete all permissions on this groupID first
+    $this->CI->db->where('groupID', $groupID);
+    $this->CI->db->delete('permission_map');
 
-        // get post
-        $post = $this->CI->easysite->get_post();
-        foreach ($post as $key => $value)
-        {
-            if (preg_match('/^perm([0-9]+)/i', $key, $matches))
-            {
-                $this->CI->db->set('groupID', $groupID);
-                $this->CI->db->set('permissionID', $matches[1]);
-                $this->CI->db->insert('permission_map');
-            }
-        }
+    // get post
+    $post = $this->CI->easysite->get_post();
+    foreach ($post as $key => $value)
+    {
+    if (preg_match('/^perm([0-9]+)/i', $key, $matches))
+    {
+    $this->CI->db->set('groupID', $groupID);
+    $this->CI->db->set('permissionID', $matches[1]);
+    $this->CI->db->insert('permission_map');
+    }
+    }
 
-        return true;
+    return true;
     }
 
     // a group to the permission groups table
     function add_group($groupName = '')
     {
-        if ($groupName)
-        {
-            $this->CI->db->set('groupName', $groupName);
-            $this->CI->db->insert('permission_groups');
+    if ($groupName)
+    {
+    $this->CI->db->set('groupName', $groupName);
+    $this->CI->db->insert('permission_groups');
 
-            return $this->CI->db->insert_id();
-        }
-        else
-        {
-            return false;
-        }
+    return $this->CI->db->insert_id();
+    }
+    else
+    {
+    return false;
+    }
     }*/
 
 }
