@@ -54,6 +54,9 @@ class Permissions {
 
     }
 
+    function create_capability($capability,$url,$weigth,$context_level,$visible){
+        $this->perms->create_capability($capability,$url,$weigth,$context_level,$visible);
+    }
     /**
      * Create a context if doesn't exist. otherwise return the id of the previous created
      * @param unknown $contextlevel
@@ -79,47 +82,45 @@ class Permissions {
      * @return unknown
      */
     function create_role($name,$weigth,$shortname,$description=''){
-        if(!$role=$this->perms->valid_role($name,$shortname)){
-            $role=$this->perms->create_role();
+        if($this->perms->valid_role($name,$shortname)){
+            $role=$this->perms->create_role($name,$weigth,$shortname,$description);
+            $this->init_role($role);
         }
         return $role;
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-    function get_context($instanceid,$contextlevel){
-        $this->ci->db->select('id');
-        $this->ci->db->where('instanceid',$instanceid);
-        $this->ci->db->where('contextlevel',$contextlevel);
-
-        // set permissions array and return
-        $query = $this->ci->db->get('context');
-        $result = $query->result_array();
-
-        if ($query->num_rows())
-        {
-            foreach ($query->result_array() as $row)
-            {
-                $permissions = $row['id'];
-            }
-
-            return $permissions;
-        }
-        else
-        {
-            return false;
+    /**
+     * Initialize a role, insert the default capabilities according with the weigth,
+     * insert all the capabilities but activate just the capabilities weigther than the role weigth
+     * @param int $roleid
+     */
+    function init_role($roleid){
+        $role= $this->perms->get_role_by_id($roleid);
+        $capabilities = $this->perms->get_capabilities();
+        foreach ($capabilities as $capability){
+            $permission=($role->weigth>$capability['weigth'])?1:0;
+            $this->perms->set_role_permission($roleid,$capability['id'],$permission,$capability['position']);
         }
     }
+
+
+    /**
+     * get the context
+     * @param int $instanceid
+     * @param int $contextlevel
+     */
+    function get_context($instanceid,$contextlevel){
+        return $this->perms->get_context($instanceid,$contextlevel);
+    }
+
+
+
+
+
+
+
+
+
+
     function get_context_by_id($id){
         $this->ci->db->select('*');
         $this->ci->db->where('id',$id);

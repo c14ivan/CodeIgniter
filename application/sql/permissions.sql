@@ -34,6 +34,7 @@ CREATE TABLE `capabilities` (
   `weight` tinyint(2) NOT NULL DEFAULT '0',
   `contextlevel` bigint(10) NOT NULL DEFAULT '0',
   `visible` bigint(10) NOT NULL DEFAULT '0',
+  `position` varchar(10) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
   `timemodified` bigint(10) NOT NULL DEFAULT '0',
   `modifierid` bigint(10) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
@@ -43,10 +44,9 @@ DROP TABLE IF EXISTS `role_capabilities` $$
 
 CREATE TABLE `role_capabilities` (
   `id` bigint(10) NOT NULL AUTO_INCREMENT,
-  `contextid` bigint(10) NOT NULL DEFAULT '0',
   `roleid` bigint(10) NOT NULL DEFAULT '0',
   `capabilityid` bigint(10) NOT NULL DEFAULT '0',
-  `position` varchar(5) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT 'left-side',
+  `position` varchar(10) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT 'left-side',
   `permission` tinyint(2) NOT NULL DEFAULT '0',
   `timemodified` bigint(10) NOT NULL DEFAULT '0',
   `modifierid` bigint(10) NOT NULL DEFAULT '0',

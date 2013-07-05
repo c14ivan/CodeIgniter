@@ -37,20 +37,27 @@ class Permision extends Controller {
     function install(){
         //1. crear contexto home, debe tener context level 10 e instanceid=0
         $home_contextid=$this->permissions->create_context('CONTEXT_SYSTEM',0);
-        //2. crear los roles por defecto
-        $roles=$this->config->item('default-roles', 'permissions');
-        foreach($roles as $role){
-            $role['id'] = $this->permissions->create_role();
-        }
-        //3. crear las capabilities en DB
+        
+
+        //2. crear las capabilities en DB
         $capabilities=$this->config->item('default-capabilities');
         foreach ($capabilities as $cap){
-            //TODO ACA VOY
+            //TODO aca voy
+            //verificar si ya existe no inserte, otherwise...
+            //$capability,$url,$weigth,$context_level,$visible
+            $this->permissions->create_capability();
         }
-        //3.1 crear las capabilities para guest
+        //2.1 crear las capabilities para guest
         
+        
+        //3. crear los roles por defecto
         //4. crear las capacidades de los roles, comparando los pesos de los roles con los pesos de las capacidades y
         //   que esten en el context_level 0, por defecto quiero crear capacidades para el home
+        $roles=$this->config->item('default-roles', 'permissions');
+        foreach($roles as $role){
+            $role['id'] = $this->permissions->create_role($role['name'],$role['weigth'],$role['shortname'],$role['description']);
+        }
+        
         //5. crear un usuario y asignar el role superadministrador para el contexto home.
     }
 

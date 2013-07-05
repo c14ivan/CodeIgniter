@@ -65,8 +65,8 @@ class Perms extends CI_Model
 
     /**
      * Verify if exist a role with the given name or shortname, if exists return false, otherwise return true
-     * @param unknown $name
-     * @param unknown $shortname
+     * @param $name
+     * @param $shortname
      * @return boolean
      */
     function valid_role($name,$shortname){
@@ -76,9 +76,9 @@ class Perms extends CI_Model
 
     /**
      * Create a role
-     * @param unknown $name name of the role
-     * @param unknown $weigth  weigth of the role, max 99
-     * @param unknown $shortname shortname of the role
+     * @param string $name name of the role
+     * @param int $weigth  weigth of the role, max 99
+     * @param string $shortname shortname of the role
      * @param string $description optional description of the role
      * @return unknown|boolean the roleid if could create, otherwise returns false
      */
@@ -95,26 +95,6 @@ class Perms extends CI_Model
         }
         return false;
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     /**
      * Get a Role with a name
      *
@@ -135,26 +115,76 @@ class Perms extends CI_Model
         return NULL;
     }
 
-    //TODO: implement this functions
     /**
-    * Asign a capabilitie to a role
-    * @param unknown $roleid
-    * @param unknown $contextid
-    * @param unknown $capabilitieid
-    */
-    function asign_role_capabilitie($roleid,$contextid,$capabilitieid){
+     * Get a Role with an id
+     *
+     * @param $rolename
+     * @return NULL
+     */
+    function get_role_by_id($roleid){
+        $this->db->where('id=', strtolower($roleid));
          
+        $query = $this->db->get($this->table_name);
+        if ($query->num_rows() == 1){
+            return $query->row();
+        }
+        return NULL;
     }
     /**
-     * Unasign a capabilitie to a role
-     * @param unknown $roleid
-     * @param unknown $contextid
-     * @param unknown $capabilitieid
+     * get all the available capabilities
      */
-    function unasign_role_capabilitie($roleid,$contextid,$capabilitieid){
-
+    function get_capabilities(){
+        $q = $this->db->get($this->table_caps);
+        return $q->result_array();
+    }
+    /**
+     * Update the capabilitie for a role and its positions
+     * if it doesn't exists, the role assignment is added
+     * @param int $roleid The roleid
+     * @param int $capabilityid The capability id 
+     * @param boolean $permission if is active or not
+     * @param int $position Refers to menus, if it's just a capability it doesn't matter
+     */
+    function set_role_permission($roleid,$capabilityid,$permission,$position=''){
+        $this->db->where('roleid=', $roleid);
+        $this->db->where('capabilityid=', $capabilityid);
+        
+        $query=$this->db->get($this->table_enrolments);
+        
+        if ($query->num_rows() > 0){//update permission
+            $roleperm= $query->row_array();
+            
+            $roleupdate = array(
+                    'position'=>$position,
+                    'permission'=> $permission
+                    );
+            
+            $this->db->where('id', $roleperm['id']);
+            $this->db->update($this->table_enrolments, $roleupdate);
+        }else{//insert permission
+            $roleperm=array(
+                    'roleid'=>$roleid,
+                    'capabilityid'=>$capabilityid,
+                    'position'=>$position,
+                    'permission'=>$permission,
+                    );
+            $this->db->insert($this->table_enrolments, $data);
+        }
+        
+        
+    }
+    
+    function create_capability($capability,$url,$weigth,$context_level,$visible){
+        $cap=array(
+                'capability'=>$capability,
+                'url'=>$url,
+                'weigth'=>$weigth,
+                'context_level'=>$context_level,
+                'visible'=>$visible
+        );
+        $this->db->insert($this->table_caps, $cap);
     }
 }
 
-/* End of file users.php */
+/* End of file perms.php */
 /* Location: ./application/models/auth/users.php */
