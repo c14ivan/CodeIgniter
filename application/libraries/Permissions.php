@@ -54,8 +54,8 @@ class Permissions {
 
     }
 
-    function create_capability($capability,$url,$weigth,$context_level,$visible){
-        $this->perms->create_capability($capability,$url,$weigth,$context_level,$visible);
+    function set_capability($capability,$weigth,$context_level,$position,$visible){
+        return $this->perms->set_capability($capability,$weigth,$context_level,$position,$visible);
     }
     /**
      * Create a context if doesn't exist. otherwise return the id of the previous created
@@ -64,11 +64,8 @@ class Permissions {
      * @return unknown
      */
     function create_context($contextlevel,$instanceid){
-
-        $ctx_levels=$this->ci->config->item('context_levels', 'permissions');
-
-        if(!$prevcontext=$this->perms->get_context($ctx_levels[$contextlevel],$instanceid)){
-            $prevcontext=$this->perms->create_context($ctx_levels[$contextlevel],$instanceid);
+        if(!$prevcontext=$this->perms->get_context($contextlevel,$instanceid)){
+            $prevcontext=$this->perms->create_context($contextlevel,$instanceid);
         }
         return $prevcontext;
     }

@@ -30,7 +30,6 @@ DROP TABLE IF EXISTS `capabilities` $$
 CREATE TABLE `capabilities` (
   `id` bigint(10) NOT NULL AUTO_INCREMENT,
   `capability` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
-  `url` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
   `weight` tinyint(2) NOT NULL DEFAULT '0',
   `contextlevel` bigint(10) NOT NULL DEFAULT '0',
   `visible` bigint(10) NOT NULL DEFAULT '0',

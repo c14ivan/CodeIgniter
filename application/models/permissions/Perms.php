@@ -174,15 +174,35 @@ class Perms extends CI_Model
         
     }
     
-    function create_capability($capability,$url,$weigth,$context_level,$visible){
-        $cap=array(
-                'capability'=>$capability,
-                'url'=>$url,
-                'weigth'=>$weigth,
-                'context_level'=>$context_level,
-                'visible'=>$visible
-        );
-        $this->db->insert($this->table_caps, $cap);
+    function set_capability($capability,$weigth,$context_level,$position,$visible){
+        $this->db->where('capability=',$capability);
+        $this->db->where('context_level=',$context_level);
+        $query=$this->db->get($this->table_caps);
+        if ($query->num_rows() > 0){//update capability
+            //TODO it never changues it's supossed, only for development
+            $cap= $query->row_array();
+            
+            $capupdate = array(
+                    'weigth'=>$weigth,
+                    'context_level'=> $context_level,
+                    'position'=>$position,
+                    'visible'=> $visible,
+            );
+            
+            $this->db->where('id', $cap['id']);
+            $this->db->update($this->table_caps, $capupdate);
+        }else{//insert capability
+            $cap=array(
+                    'capability'=>$capability,
+                    'weigth'=>$weigth,
+                    'context_level'=>$context_level,
+                    'position'=>$position,
+                    'visible'=>$visible
+            );
+            $this->db->insert($this->table_caps, $cap);
+            return true;
+        }
+        return false;
     }
 }
 

@@ -1,8 +1,14 @@
 <?php
 $config['db_table_prefix']='';
 
-$config['context_levels'] = array('CONTEXT_SYSTEM'=>10,'CONTEXT_USER'=>20,'CONTEXT_MODULE'=>30,'CONTEXT_SUBMODULE'=>40);
-$config['menu_positions']=array('left-bar','top','bottom','mini-top');
+define('CONTEXT_HOME',0);
+define('CONTEXT_SYSTEM', 10);
+define('CONTEXT_USER', 20);
+define('CONTEXT_MODULE', 30);
+define('CONTEXT_SUBMODULE', 40);
+
+
+$config['menu_positions']=array('left-bar','top','bottom','mini-top','status');
 
 $config['context']=array();
 $config['default-roles']=array(
@@ -14,35 +20,24 @@ $config['default-roles']=array(
         );
 
 $config['guest-capabilities']=array(
-        array('capability'=>'auth/login','url'=>'auth/login','visible'=>false),
-        array('capability'=>'auth/register','url'=>'auth/register','visible'=>false),
-        array('capability'=>'auth/send_again','url'=>'auth/send_again','visible'=>false),
-        array('capability'=>'auth/activate','url'=>'auth/activate','visible'=>false),
-        array('capability'=>'auth/forgot_password','url'=>'auth/forgot_password','visible'=>false),
-        array('capability'=>'auth/reset_password','url'=>'auth/reset_password','visible'=>false),
-        array('capability'=>'auth/change_password','url'=>'auth/change_password','visible'=>false),
-        array('capability'=>'auth/change_email','url'=>'auth/change_email','visible'=>false),
-        array('capability'=>'auth/reset_password','url'=>'auth/reset_password','visible'=>false),
-        array('capability'=>'auth/reset_email','url'=>'auth/reset_email','visible'=>false),
-        array('capability'=>'auth/unregister','url'=>'auth/unregister','visible'=>false),
+        'auth/login' => array('visible'=>true,'position'=>'status'),
+        'auth/register' => array(),
+        'auth/send_again' => array(),
+        'auth/activate' => array(),
+        'auth/forgot_password' => array(),
+        'auth/reset_password' => array(),
+        'auth/change_password' => array(),
+        'auth/change_email' => array(),
+        'auth/reset_password' => array(),
+        'auth/reset_email' => array(),
+        'auth/unregister' => array(),
         );
 
 $config['default-capabilities']=array(
-        array('capability'=>'auth/view','url'=>'auth/view','weight'=>30, 'visible'=>true,'position'=>'left-bar'),
-        array('capability'=>'auth/add','url'=>'auth/add','weight'=>30, 'visible'=>false),
-        array('capability'=>'auth/enrolments','url'=>'auth/enrolments','weight'=>30),
+        'auth/view' => array('weight'=>30, 'visible'=>true,'position'=>'left-bar','ctx_level'=>CONTEXT_SYSTEM),
+        'auth/add' => array('weight'=>30,'ctx_level'=>CONTEXT_SYSTEM),
+        'auth/enrolments' => array('weight'=>30,'ctx_level'=>CONTEXT_SYSTEM),
         );
-
-
-
-//TODO: implement this
-//al instalar:
-//1. crear contexto home, debe tener context level 10 e instanceid=0
-//2. crear los roles por defecto
-//3. crear las capabilities en DB
-//4. crear las capacidades de los roles, comparando los pesos de los roles con los pesos de las capacidades y 
-//   que esten en el context_level 0, por defecto quiero crear capacidades para el home
-//5. crear un usuario y asignar el role superadministrador para el contexto home. 
 
 
 //NOTAS

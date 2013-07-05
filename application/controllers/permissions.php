@@ -41,14 +41,18 @@ class Permision extends Controller {
 
         //2. crear las capabilities en DB
         $capabilities=$this->config->item('default-capabilities');
-        foreach ($capabilities as $cap){
-            //TODO aca voy
-            //verificar si ya existe no inserte, otherwise...
-            //$capability,$url,$weigth,$context_level,$visible
-            $this->permissions->create_capability();
+        foreach ($capabilities as $capability => $cap){
+            $vis=(isset($cap['visible']))?1:0;
+            $pos=(isset($cap['position']))?$cap['position']:'';
+            $this->permissions->set_capability($capability,$cap['weigth'],$cap['ctx_level'],$pos,$vis);
         }
         //2.1 crear las capabilities para guest
-        
+        $guestcapabilities=$this->config->item('guest-capabilities');
+        foreach ($guestcapabilities as $capability => $cap){
+            $vis=(isset($cap['visible']))?1:0;
+            $pos=(isset($cap['position']))?$cap['position']:'';
+            $this->permissions->set_capability($capability,0,CONTEXT_HOME,$pos,$vis);
+        }
         
         //3. crear los roles por defecto
         //4. crear las capacidades de los roles, comparando los pesos de los roles con los pesos de las capacidades y
@@ -59,6 +63,7 @@ class Permision extends Controller {
         }
         
         //5. crear un usuario y asignar el role superadministrador para el contexto home.
+        //TODO aca voy y probar
     }
 
 
