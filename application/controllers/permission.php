@@ -1,5 +1,5 @@
 <?php
-class Permision extends Controller {
+class Permission extends CI_Controller {
 
 
     function __construct()
@@ -7,7 +7,7 @@ class Permision extends Controller {
         parent::__construct();
 
         //  load libs
-        $this->load->library('permission');
+        $this->load->library('permissions');
     }
 
     function index()
@@ -40,14 +40,14 @@ class Permision extends Controller {
         
 
         //2. crear las capabilities en DB
-        $capabilities=$this->config->item('default-capabilities');
+        $capabilities=$this->config->item('default-capabilities','permission');
         foreach ($capabilities as $capability => $cap){
             $vis=(isset($cap['visible']))?1:0;
             $pos=(isset($cap['position']))?$cap['position']:'';
-            $this->permissions->set_capability($capability,$cap['weigth'],$cap['ctx_level'],$pos,$vis);
+            $this->permissions->set_capability($capability,$cap['weight'],$cap['ctx_level'],$pos,$vis);
         }
         //2.1 crear las capabilities para guest
-        $guestcapabilities=$this->config->item('guest-capabilities');
+        $guestcapabilities=$this->config->item('guest-capabilities','permission');
         foreach ($guestcapabilities as $capability => $cap){
             $vis=(isset($cap['visible']))?1:0;
             $pos=(isset($cap['position']))?$cap['position']:'';
@@ -57,13 +57,14 @@ class Permision extends Controller {
         //3. crear los roles por defecto
         //4. crear las capacidades de los roles, comparando los pesos de los roles con los pesos de las capacidades y
         //   que esten en el context_level 0, por defecto quiero crear capacidades para el home
-        $roles=$this->config->item('default-roles', 'permissions');
+        $roles=$this->config->item('default-roles', 'permission');
         foreach($roles as $role){
-            $role['id'] = $this->permissions->create_role($role['name'],$role['weigth'],$role['shortname'],$role['description']);
+            $role['id'] = $this->permissions->create_role($role['name'],$role['weight'],$role['shortname'],$role['description']);
         }
         
         //5. crear un usuario y asignar el role superadministrador para el contexto home.
         //TODO aca voy y probar
+        $this->twig->display('home/home');
     }
 
 

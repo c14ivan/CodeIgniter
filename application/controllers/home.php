@@ -49,7 +49,6 @@ class Home extends CI_Controller {
     
         $this->load->helper('url');
         $this->load->library('tank_auth');
-        //$this->load->library('permissions'); //TODO, debe ir en el autoloader
         $this->ci =& get_instance();
     }
     public function index()

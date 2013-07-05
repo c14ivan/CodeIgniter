@@ -12,8 +12,8 @@
 */
 class Perms extends CI_Model
 {
-    private $table_roles         = 'roles';            // roles
-    private $table_enrolments    = 'role_asignment';   // role asignments
+    private $table_roles         = 'role';            // roles
+    private $table_enrolments    = 'role_assignments';   // role asignments
     private $table_rolecaps      = 'role_capabilities';// role capabilities
     private $table_caps          = 'capabilities';     // capabilities
     private $table_ctx           = 'context';          // contexts
@@ -23,11 +23,11 @@ class Perms extends CI_Model
         parent::__construct();
 
         $ci =& get_instance();
-        $this->table_roles        = $ci->config->item('db_table_prefix', 'permissions').$this->table_roles;
-        $this->table_enrolments   = $ci->config->item('db_table_prefix', 'permissions').$this->table_enrolments;
-        $this->table_rolecaps     = $ci->config->item('db_table_prefix', 'permissions').$this->table_rolecaps;
-        $this->table_caps         = $ci->config->item('db_table_prefix', 'permissions').$this->table_caps;
-        $this->table_ctx          = $ci->config->item('db_table_prefix', 'permissions').$this->table_ctx;
+        $this->table_roles        = $ci->config->item('db_table_prefix', 'permission').$this->table_roles;
+        $this->table_enrolments   = $ci->config->item('db_table_prefix', 'permission').$this->table_enrolments;
+        $this->table_rolecaps     = $ci->config->item('db_table_prefix', 'permission').$this->table_rolecaps;
+        $this->table_caps         = $ci->config->item('db_table_prefix', 'permission').$this->table_caps;
+        $this->table_ctx          = $ci->config->item('db_table_prefix', 'permission').$this->table_ctx;
     }
     /**
      * Create a context
@@ -54,7 +54,7 @@ class Perms extends CI_Model
 
         if ($query->num_rows())
         {
-            $result = $query->result();
+            $result = $query->row();
             return $result->id;
         }
         else
@@ -77,23 +77,23 @@ class Perms extends CI_Model
     /**
      * Create a role
      * @param string $name name of the role
-     * @param int $weigth  weigth of the role, max 99
+     * @param int $weight  weight of the role, max 99
      * @param string $shortname shortname of the role
      * @param string $description optional description of the role
      * @return unknown|boolean the roleid if could create, otherwise returns false
      */
-    function create_role($name,$weigth,$shortname,$description='')
+    function create_role($name,$weight,$shortname,$description='')
     {
+        $role_id=false;
         $data['name'] = $name;
-        $data['weigth'] = $weigth;
+        $data['weight'] = $weight;
         $data['shortname'] = $shortname;
         $data['description'] = $description;
 
         if ($this->db->insert($this->table_roles, $data)) {
             $role_id = $this->db->insert_id();
-            return $role_id;
         }
-        return false;
+        return $role_id;
     }
     /**
      * Get a Role with a name
@@ -104,7 +104,7 @@ class Perms extends CI_Model
     function get_role_by_name($rolename,$create=false){
         $this->db->where('LOWER(name)=', strtolower($rolename));
          
-        $query = $this->db->get($this->table_name);
+        $query = $this->db->get($this->table_roles);
         if ($query->num_rows() == 1){
             return $query->row();
         }elseif($create){
@@ -124,7 +124,7 @@ class Perms extends CI_Model
     function get_role_by_id($roleid){
         $this->db->where('id=', strtolower($roleid));
          
-        $query = $this->db->get($this->table_name);
+        $query = $this->db->get($this->table_roles);
         if ($query->num_rows() == 1){
             return $query->row();
         }
@@ -149,8 +149,7 @@ class Perms extends CI_Model
         $this->db->where('roleid=', $roleid);
         $this->db->where('capabilityid=', $capabilityid);
         
-        $query=$this->db->get($this->table_enrolments);
-        
+        $query=$this->db->get($this->table_rolecaps);
         if ($query->num_rows() > 0){//update permission
             $roleperm= $query->row_array();
             
@@ -160,7 +159,7 @@ class Perms extends CI_Model
                     );
             
             $this->db->where('id', $roleperm['id']);
-            $this->db->update($this->table_enrolments, $roleupdate);
+            $this->db->update($this->table_rolecaps, $roleupdate);
         }else{//insert permission
             $roleperm=array(
                     'roleid'=>$roleid,
@@ -168,23 +167,21 @@ class Perms extends CI_Model
                     'position'=>$position,
                     'permission'=>$permission,
                     );
-            $this->db->insert($this->table_enrolments, $data);
+            $this->db->insert($this->table_rolecaps, $roleperm);
         }
-        
-        
     }
     
-    function set_capability($capability,$weigth,$context_level,$position,$visible){
+    function set_capability($capability,$weight,$context_level,$position,$visible){
         $this->db->where('capability=',$capability);
-        $this->db->where('context_level=',$context_level);
+        $this->db->where('contextlevel=',$context_level);
         $query=$this->db->get($this->table_caps);
         if ($query->num_rows() > 0){//update capability
             //TODO it never changues it's supossed, only for development
             $cap= $query->row_array();
             
             $capupdate = array(
-                    'weigth'=>$weigth,
-                    'context_level'=> $context_level,
+                    'weight'=>$weight,
+                    'contextlevel'=> $context_level,
                     'position'=>$position,
                     'visible'=> $visible,
             );
@@ -194,8 +191,8 @@ class Perms extends CI_Model
         }else{//insert capability
             $cap=array(
                     'capability'=>$capability,
-                    'weigth'=>$weigth,
-                    'context_level'=>$context_level,
+                    'weight'=>$weight,
+                    'contextlevel'=>$context_level,
                     'position'=>$position,
                     'visible'=>$visible
             );

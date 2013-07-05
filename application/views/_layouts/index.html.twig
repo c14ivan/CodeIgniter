@@ -108,12 +108,12 @@
 <!-- topbar ends -->
 <div class="container-fluid">
 <div class="row-fluid">
-{% set menus = CI.permissions.get_user_permissions(CI.session.userdata('user_id'),CI.session.userdata('context')) %}
+{% set topmenu = CI.permissions.get_user_menu(CI.session.userdata('user_id'),CI.session.userdata('context'),'top') %}
 <!-- left menu starts -->
 			<div class="span2 main-menu-span">
 				<div class="well nav-collapse sidebar-nav">
 					<ul class="nav nav-tabs nav-stacked main-menu">
-					{% for perm in menus %}
+					{% for perm in topmenu %}
 					<li><a href="{{ site_url(perm) }}">{{ lang(perm) }}</a></li>
 					{% endfor %}
 					</ul>

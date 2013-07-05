@@ -1,11 +1,25 @@
 <?php
 $config['db_table_prefix']='';
 
-define('CONTEXT_HOME',0);
-define('CONTEXT_SYSTEM', 10);
+if (!defined('CONTEXT_HOME')) {
+    define('CONTEXT_HOME',0);
+}
+if (!defined('CONTEXT_SYSTEM')) {
+    define('CONTEXT_SYSTEM',10);
+}
+if (!defined('CONTEXT_USER')) {
+    define('CONTEXT_USER',20);
+}
+if (!defined('CONTEXT_MODULE')) {
+    define('CONTEXT_MODULE',30);
+}
+if (!defined('CONTEXT_SUBMODULE')) {
+    define('CONTEXT_SUBMODULE',40);
+}
+/*define('CONTEXT_SYSTEM', 10);
 define('CONTEXT_USER', 20);
 define('CONTEXT_MODULE', 30);
-define('CONTEXT_SUBMODULE', 40);
+define('CONTEXT_SUBMODULE', 40);*/
 
 
 $config['menu_positions']=array('left-bar','top','bottom','mini-top','status');

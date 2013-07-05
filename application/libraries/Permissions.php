@@ -45,17 +45,17 @@ class Permissions {
         // init vars
         $this->ci =& get_instance();
 
-        $this->ci->load->config('permissions', TRUE);
+        $this->ci->load->config('permission', TRUE);
 
         $this->ci->load->library('session');
-        //$this->ci->load->database();
+        $this->ci->load->database();
 
         $this->ci->load->model('permissions/Perms');
 
     }
 
-    function set_capability($capability,$weigth,$context_level,$position,$visible){
-        return $this->perms->set_capability($capability,$weigth,$context_level,$position,$visible);
+    function set_capability($capability,$weight,$context_level,$position,$visible){
+        return $this->ci->Perms->set_capability($capability,$weight,$context_level,$position,$visible);
     }
     /**
      * Create a context if doesn't exist. otherwise return the id of the previous created
@@ -64,8 +64,8 @@ class Permissions {
      * @return unknown
      */
     function create_context($contextlevel,$instanceid){
-        if(!$prevcontext=$this->perms->get_context($contextlevel,$instanceid)){
-            $prevcontext=$this->perms->create_context($contextlevel,$instanceid);
+        if(!$prevcontext=$this->ci->Perms->get_context($contextlevel,$instanceid)){
+            $prevcontext=$this->ci->Perms->create_context($contextlevel,$instanceid);
         }
         return $prevcontext;
     }
@@ -73,29 +73,30 @@ class Permissions {
     /**
      * Create a role if doesn't exist another with the same name or shortname
      * @param string $name
-     * @param int $weigth max 99
+     * @param int $weight max 99
      * @param string $shortname
      * @param string $description
      * @return unknown
      */
-    function create_role($name,$weigth,$shortname,$description=''){
-        if($this->perms->valid_role($name,$shortname)){
-            $role=$this->perms->create_role($name,$weigth,$shortname,$description);
+    function create_role($name,$weight,$shortname,$description=''){
+        $role=false;
+        if($this->ci->Perms->valid_role($name,$shortname)){
+            $role=$this->ci->Perms->create_role($name,$weight,$shortname,$description);
             $this->init_role($role);
         }
         return $role;
     }
     /**
-     * Initialize a role, insert the default capabilities according with the weigth,
-     * insert all the capabilities but activate just the capabilities weigther than the role weigth
+     * Initialize a role, insert the default capabilities according with the weight,
+     * insert all the capabilities but activate just the capabilities weighter than the role weight
      * @param int $roleid
      */
     function init_role($roleid){
-        $role= $this->perms->get_role_by_id($roleid);
-        $capabilities = $this->perms->get_capabilities();
+        $role= $this->ci->Perms->get_role_by_id($roleid);
+        $capabilities = $this->ci->Perms->get_capabilities();
         foreach ($capabilities as $capability){
-            $permission=($role->weigth>$capability['weigth'])?1:0;
-            $this->perms->set_role_permission($roleid,$capability['id'],$permission,$capability['position']);
+            $permission=($role->weight > $capability['weight'])?1:0;
+            $this->ci->Perms->set_role_permission($roleid,$capability['id'],$permission,$capability['position']);
         }
     }
 
@@ -106,7 +107,7 @@ class Permissions {
      * @param int $contextlevel
      */
     function get_context($instanceid,$contextlevel){
-        return $this->perms->get_context($instanceid,$contextlevel);
+        return $this->ci->Perms->get_context($instanceid,$contextlevel);
     }
 
 
@@ -173,8 +174,13 @@ class Permissions {
 
     }
     // get permissions from for this group
-    function get_user_permissions($roleid,$contextid=0)
+    function get_user_menu($userid,$contextid=0,$position)
     {
+        //TODO aca voy
+        $role = $this->ci->Perms->get_user_role($userid,$contextid);
+        if($role){
+            $menu = $this->ci->Perms->get_menu($role,$position);
+        }
         // grab keys
         $this->ci->db->select('url');
         $this->ci->db->where('url !=','');
