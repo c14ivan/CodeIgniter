@@ -201,6 +201,97 @@ class Perms extends CI_Model
         }
         return false;
     }
+    /**
+     * get the user enrolment into a context
+     * @param $userid
+     * @param $contextid
+     * @return boolean
+     */
+    function get_user_enrolment($userid,$contextid,$timestart='',$timeend=''){
+        if($userid!=''){
+            $this->db->where('userid=',$userid);
+        }
+        $this->db->where('contextid',$contextid);
+        if($timestart!=''){
+            $this->db->where('timestart<',$timestart);
+        }
+        if($timeend!=''){
+            $this->db->where('timeend>',$timeend);
+        }
+        $this->db->or_where('timeend=','NULL');
+        $this->db->or_where('userid=',0);
+        
+        $this->db->order_by("userid", "desc");
+        $this->db->limit(1);
+        $query = $this->db->get($this->table_enrolments);
+        
+        if($query->num_rows()>0){
+            return $query->row_array();
+        }else{
+            return false;
+        }
+    }
+    /**
+     * enrol or update the enrolment of a user into a context
+     * @param int $userid the userid it never updates
+     * @param $contextid  the context id, it never updates
+     * @param $roleid the role id
+     * @param $timestart the timestart of the enrolment
+     * @param $timeend the timestart of the enrolment
+     */
+    function set_enrolment($userid,$contextid,$roleid,$timestart='',$timeend=''){
+        $enrolment=$this->get_user_enrolment($userid, $contextid,$timestart,$timeend);
+        
+        if($enrolment){
+            $enrolment['roleid']=$roleid;
+            if($timestart!=''){
+                $enrolment['timestart']=$timestart;
+            }
+            if($timeend=''){
+                $enrolment['timeend']=$timeend;
+            }
+            $this->db->where('id', $enrolment['id']);
+            $this->db->update($this->table_enrolments, $enrolment);
+        }else{
+            $enrolment=array(
+                    'userid'=>$userid,
+                    'contextid'=>$contextid,
+                    'roleid'=>$roleid
+                    );
+            if($timestart!=''){
+                $enrolment['timestart']=$timestart;
+            }
+            if($timeend=''){
+                $enrolment['timeend']=$timeend;
+            }
+            $this->db->insert($this->table_enrolments, $enrolment);
+        }
+        return true;
+    }
+    
+    function get_menu($role,$position){
+        $this->db->select('capability,parent');
+        $this->db->from($this->table_rolecaps);
+        $this->db->join($this->table_caps, "{$this->table_caps}.id = {$this->table_rolecaps}.capabilityid", 'inner');
+        $this->db->where('roleid=',$role);
+        $this->db->where($this->table_rolecaps.'.position=',$position);
+        $this->db->where('permission=',1);
+        $this->db->where('visible=',1);
+        $this->db->distinct();
+        
+        $query=$this->db->get();
+        
+        $menu_response=array();
+        foreach ($query->result_array() as $item){
+            if(isset($item['parent']) && $item['parent']!=''){
+                $menu_response[$item['parent']]['options'][$item['capability']]['url']=$item['capability'];
+                $menu_response[$item['parent']]['options'][$item['capability']]['label']=$item['capability'];
+            }else{
+                $menu_response[$item['capability']]=array('url'=>$item['capability'],'label'=>$item['capability']);
+            }
+        }
+        return $menu_response;
+    }
 }
 
 /* End of file perms.php */

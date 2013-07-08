@@ -6,6 +6,8 @@ SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 -- Table structure for table `ci_sessions`
 --
 
+DROP TABLE IF EXISTS `ci_sessions`;
+
 CREATE TABLE IF NOT EXISTS `ci_sessions` (
   `session_id` varchar(40) COLLATE utf8_bin NOT NULL DEFAULT '0',
   `ip_address` varchar(16) COLLATE utf8_bin NOT NULL DEFAULT '0',
@@ -20,6 +22,7 @@ CREATE TABLE IF NOT EXISTS `ci_sessions` (
 --
 -- Table structure for table `login_attempts`
 --
+DROP TABLE IF EXISTS `login_attempts`;
 
 CREATE TABLE IF NOT EXISTS `login_attempts` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -34,6 +37,8 @@ CREATE TABLE IF NOT EXISTS `login_attempts` (
 --
 -- Table structure for table `user_autologin`
 --
+
+DROP TABLE IF EXISTS `user_autologin`;
 
 CREATE TABLE IF NOT EXISTS `user_autologin` (
   `key_id` char(32) COLLATE utf8_bin NOT NULL,
@@ -50,6 +55,8 @@ CREATE TABLE IF NOT EXISTS `user_autologin` (
 -- Table structure for table `user_profiles`
 --
 
+DROP TABLE IF EXISTS `user_profiles`;
+
 CREATE TABLE IF NOT EXISTS `user_profiles` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) NOT NULL,
@@ -64,11 +71,14 @@ CREATE TABLE IF NOT EXISTS `user_profiles` (
 -- Table structure for table `users`
 --
 
+DROP TABLE IF EXISTS `users`;
+
 CREATE TABLE IF NOT EXISTS `users` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `username` varchar(50) COLLATE utf8_bin NOT NULL,
   `password` varchar(255) COLLATE utf8_bin NOT NULL,
   `email` varchar(100) COLLATE utf8_bin NOT NULL,
+  `appadmin` tinyint(1) NOT NULL DEFAULT '0',
   `activated` tinyint(1) NOT NULL DEFAULT '1',
   `banned` tinyint(1) NOT NULL DEFAULT '0',
   `ban_reason` varchar(255) COLLATE utf8_bin DEFAULT NULL,

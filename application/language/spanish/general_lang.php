@@ -1,6 +1,10 @@
 <?php
 $lang['error'] = 'Error';
+$lang['cancel'] = 'Cancelar';
 $lang['send'] = 'Enviar';
+$lang['install']='Instalación';
+$lang['logout']='Salir';
+$lang['login']='Ingresar';
 
 
 $lang['auth'] = 'Usuarios';

@@ -25,9 +25,7 @@ class Tank_auth
 		$this->ci =& get_instance();
 
 		$this->ci->load->config('tank_auth', TRUE);
-
-		/*$this->ci->load->library('session');*/
-		//$this->ci->load->database();
+		$this->ci->load->database();
 		$this->ci->load->model('tank_auth/users');
 
 		// Try to autologin
@@ -71,7 +69,6 @@ class Tank_auth
 						$this->ci->session->set_userdata(array(
 								'user_id'	=> $user->id,
 								'username'	=> $user->username,
-						        //'isadmin'	=> ($user->isadmin == 1)?1:0,
 								'status'	=> ($user->activated == 1) ? STATUS_ACTIVATED : STATUS_NOT_ACTIVATED,
 						));
 

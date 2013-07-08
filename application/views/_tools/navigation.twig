@@ -3,11 +3,11 @@
     {% for item in items %}
         {% if item.options %}
             <li class="dropdown">
-            <a class="dropdown-toggle" data-toggle="dropdown" href="#">{{ item.label }} <b class="caret"></b></a>
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#">{{ lang(item.label) }} <b class="caret"></b></a>
             {{ _self.dropdown_menu(items.options,vertical) }}
             </li>
         {% else %}
-            <li>{{ anchor(item.url,item.label) }}</li>
+            <li>{{ anchor(item.url,lang(item.label)) }}</li>
         {% endif %}
     {% endfor %}
     </ul>
@@ -22,7 +22,7 @@
                 {{ _self.dropdown_menu(items.options,true) }}
                 </li>
             {% else %}
-                <li>{{ anchor(item.url,item.label) }}</li>
+                <li>{{ anchor(item.url,lang(item.label)) }}</li>
             {% endif %}
         {% endfor %}
     </ul>

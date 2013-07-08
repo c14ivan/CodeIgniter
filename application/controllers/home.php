@@ -46,9 +46,10 @@ class Home extends CI_Controller {
     function __construct()
     {
         parent::__construct();
-    
+        $this->output->enable_profiler(TRUE);
         $this->load->helper('url');
         $this->load->library('tank_auth');
+        $this->load->library('permissions');
         $this->ci =& get_instance();
     }
     public function index()

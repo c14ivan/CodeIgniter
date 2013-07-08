@@ -21,6 +21,7 @@ define('CONTEXT_USER', 20);
 define('CONTEXT_MODULE', 30);
 define('CONTEXT_SUBMODULE', 40);*/
 
+$config['default_role']='Student';
 
 $config['menu_positions']=array('left-bar','top','bottom','mini-top','status');
 
@@ -48,10 +49,11 @@ $config['guest-capabilities']=array(
         );
 
 $config['default-capabilities']=array(
-        'auth/view' => array('weight'=>30, 'visible'=>true,'position'=>'left-bar','ctx_level'=>CONTEXT_SYSTEM),
-        'auth/add' => array('weight'=>30,'ctx_level'=>CONTEXT_SYSTEM),
-        'auth/enrolments' => array('weight'=>30,'ctx_level'=>CONTEXT_SYSTEM),
+        'auth/view' => array('weight'=>30, 'visible'=>true,'position'=>'left-bar','ctx_level'=>CONTEXT_HOME),
+        'auth/add' => array('weight'=>30,'ctx_level'=>CONTEXT_HOME),
+        'auth/enrolments' => array('weight'=>30,'ctx_level'=>CONTEXT_HOME),
         );
+//TODO implement capability parent
 
 
 //NOTAS

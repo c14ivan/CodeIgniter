@@ -21,7 +21,7 @@
     {# span: MUESTRA UN <span> CONTENIENDO EL TEXTO value Y APLICANDO LA CLASE class #}
     {# ----------------------------------------------------------------------------- #}
     {% macro span(value,class) %}
-        <span class="{{ class|default('') }}">{{ value }}</span>
+    <span class="{{ class|default('') }}">{{ value }}</span>
     {% endmacro %}
 {# TABLAS #}
     {% macro th(columnname) %}
@@ -49,6 +49,8 @@
             {{ _self.endfieldset(campo) }}
         {% elseif campo.tipo=='button' %}
             {{ _self.button(campo) }}
+        {% elseif campo.tipo=='icon' %}
+            {{ _self.icon(campo.name,campo.inverted) }}
         {% elseif campo.label=='label' %}
             {{ _self.label(campo.value,campo.class,campo.for) }}
         {% elseif campo.label=='span' %}

@@ -1,6 +1,12 @@
 {% extends '_layouts/index.html.twig' %}
 
+{% block headext %}
+    {{ css('jquery.validate.password.css') }}
+    <link rel="stylesheet" type="text/css" href="{{ asset_url()~'cssapp/general.css' }}" media="all">
+{% endblock %}	
+
 {% block content %}
+{% import '_tools/formElements.twig' as forms %}
 <div class="row-fluid sortable">
     <div class="box span12">
     
@@ -8,14 +14,14 @@
             <h2><i class="icon-{{ icon }}"></i> {{ title }}</h2>
         </div>
         <div class="box-content">
-            <form id="formulario" name="{{ table }}" class="form-horizontal" method="post" autocomplete="off">
+            <form id="formulario" class="form-horizontal" method="post" autocomplete="{% if noauto %}off{% endif %}">
                 <fieldset>
                     {% for campo in campos%}
                         {{ forms.campo(campo) }}
                     {% endfor %}
                 </fieldset>
                 <div class="form-actions">
-                    <button type="submit" name="submit" class="btn btn-primary" value="register">{{ lang('save') }}</button>
+                    <button type="submit" name="submit" class="btn btn-primary" value="send">{{ lang('send') }}</button>
                     <button class="btn cancelar">{{ lang('cancel') }}</button>
                 </div>
             </form>
@@ -25,10 +31,11 @@
 {% endblock %}
 
 {% block jscode %}
+{{ js('jquery.validate.password.js') }}
 <script type="text/javascript">
 $(document).ready(function() {
-    {% if jsCode.code is defined %}
-        {{ jsCode.code|raw }}
+    {% if jsCode is defined %}
+        {{ jsCode|raw }}
     {% endif %}
     $('#formulario').validate({
         errorClass:'errorlabelform',
@@ -39,8 +46,7 @@ $(document).ready(function() {
                 {% for key,value in reglas %}
                 {{ key }} : {
                     {% for keyr,valr in value %}
-                        {% if valr.val %}
-                            {{ keyr }} :{% if(valr.istring)%}'{%endif%}{% if keyr=='remote'%}{{ rutaBase }}{% endif %}{{ valr.val }}{% if(valr.istring)%}'{%endif%},
+                        {% if valr.val %}{{ keyr }} :{% if(valr.istring)%}'{%endif%}{% if keyr=='remote'%}{{ valr.route }}{% endif %}{{ valr.val }}{% if(valr.istring)%}'{%endif%},
                         {% endif %}
                     {% endfor %}
                     },
@@ -50,7 +56,9 @@ $(document).ready(function() {
                 {% for key,value in reglas %}
                 {{ key }}:{
                     {% for keyr,valr in value %}
-                        {{ keyr }} : '{{ valr.msj }}',
+                        {% if valr.msj %}
+                            {{ keyr }} : '{{ valr.msj }}',
+                        {% endif %}
                     {% endfor %}
                     },
                 {% endfor %}
@@ -58,5 +66,7 @@ $(document).ready(function() {
         {% endif %}
     });
     $('[data-rel="chosen"],[rel="chosen"]').chosen({"no_results_text":"{{ lang('noresults') }}"});
+    $('#formulario').showPassword();
 });
+</script>
 {% endblock %}

@@ -51,6 +51,11 @@ class Permissions {
         $this->ci->load->database();
 
         $this->ci->load->model('permissions/Perms');
+        
+        if(!$this->ci->session->userdata('context')){
+            $ctx=$this->get_context(0, CONTEXT_HOME);
+            $this->ci->session->set_userdata(array('context'=>$ctx));
+        }
 
     }
 
@@ -69,14 +74,21 @@ class Permissions {
         }
         return $prevcontext;
     }
+    /**
+     * get a role with its name
+     * @param $rolename
+     */
+    function get_role($rolename){
+        return $this->ci->Perms->get_role_by_name($rolename);
+    }
     
     /**
      * Create a role if doesn't exist another with the same name or shortname
-     * @param string $name
-     * @param int $weight max 99
-     * @param string $shortname
-     * @param string $description
-     * @return unknown
+     * @param $name
+     * @param $weight max 99
+     * @param $shortname
+     * @param $description
+     * @return array
      */
     function create_role($name,$weight,$shortname,$description=''){
         $role=false;
@@ -85,6 +97,17 @@ class Permissions {
             $this->init_role($role);
         }
         return $role;
+    }
+    /**
+     * TODO remove this funcion, in development only for add permissions and update profiles quickly
+     * @param unknown $name
+     * @param unknown $weigth
+     * @param unknown $shortname
+     * @param unknown $description
+     */
+    function update_role($name,$weigth,$shortname,$description){
+        $role=$this->get_role($name);
+        $this->init_role($role->id);
     }
     /**
      * Initialize a role, insert the default capabilities according with the weight,
@@ -110,6 +133,19 @@ class Permissions {
         return $this->ci->Perms->get_context($instanceid,$contextlevel);
     }
 
+    /**
+     * enrol a user into a context, if is already enrol the updates the rol and the time params
+     * @param $userid
+     * @param $contextid
+     * @param $roleid
+     * @param $timestart
+     * @param $timeend
+     */
+    function enrol_user($userid,$contextid,$roleid,$timestart='',$timeend=''){
+        $enrolment=$this->ci->Perms->set_enrolment($userid,$contextid,$roleid,$timestart,$timeend);
+        
+        return $enrolment;
+    }
 
 
 
@@ -166,45 +202,17 @@ class Permissions {
     }
     /**
      * get the menus for a user in determinated context and for some position
-     * @param unknown $userid
-     * @param unknown $contextid
-     * @param unknown $position the menu position.
+     * @param $userid
+     * @param $contextid
+     * @param $position the menu position.
      */
-    function get_menu_user($userid,$contextid,$position){
-
-    }
-    // get permissions from for this group
     function get_user_menu($userid,$contextid=0,$position)
     {
-        //TODO aca voy
-        $role = $this->ci->Perms->get_user_role($userid,$contextid);
+        $role = $this->ci->Perms->get_user_enrolment($userid,$contextid);
         if($role){
-            $menu = $this->ci->Perms->get_menu($role,$position);
+            $menu = $this->ci->Perms->get_menu($role['roleid'],$position);
         }
-        // grab keys
-        $this->ci->db->select('url');
-        $this->ci->db->where('url !=','');
-        $this->ci->db->where('permission',1);
-        $this->ci->db->where('roleid',$roleid);
-        $this->ci->db->where('contextid',$contextid);
-
-        // set permissions array and return
-        $query = $this->ci->db->get('role_capabilities');
-        $result = $query->result_array();
-
-        if ($query->num_rows())
-        {
-            foreach ($query->result_array() as $row)
-            {
-                $permissions[] = $row['url'];
-            }
-
-            return $permissions;
-        }
-        else
-        {
-            return false;
-        }
+        return $menu;
     }
     /*
      // get all permissions, or permissions from a group for the purposes of listing them in a form

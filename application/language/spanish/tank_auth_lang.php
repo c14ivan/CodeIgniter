@@ -103,5 +103,11 @@ $lang['auth_goto'] = 'Ir a %s';
 
 $lang['auth_resetpassword']="Haz cambiado tu contraseña!<br />
 Por favor conservala en un lugar seguro y no la olvides!";
+
+$lang['auth_adminname']="Login de cuenta Administrador";
+$lang['auth_adminname_holder']="Ingrese el login";
+$lang['auth_defaultrole']="Rol por defecto para los usuarios";
+
+$lang['auth_profile']="Perfil";
 /* End of file tank_auth_lang.php */
 /* Location: ./application/language/spanish/tank_auth_lang.php */

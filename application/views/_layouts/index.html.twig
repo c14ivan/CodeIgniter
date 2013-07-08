@@ -48,6 +48,7 @@
 
 {%  set config = get_config() %}
 {%  set CI = get_instance() %}
+{% import '_tools/navigation.twig' as nav %}
 <!-- topbar starts -->
 <div class="navbar">
     <div class="navbar-inner">
@@ -85,9 +86,14 @@
                     <span class="caret"></span>
                 </a>
                 <ul class="dropdown-menu">
-                    <li><a href="#">{{ 'Perfil' }}</a></li>
+                {% if CI.session.userdata('username') %}
+                    <li><a href="{{ site_url('auth/profile')}}">{{ lang('auth_profile') }}</a></li>
                     <li class="divider"></li>
-                    <li><a href="{{ site_url('auth/logout')}}"> Salir </a></li>
+                    <li><a href="{{ site_url('auth/logout')}}"> {{ lang('logout') }} </a></li>
+                {% else %}
+                    <li><a href="{{ site_url('auth/login')}}">{{ lang('login') }}</a></li>
+                {% endif %}
+                    
                 </ul>
             </div>
             <!-- user dropdown ends -->
@@ -108,18 +114,16 @@
 <!-- topbar ends -->
 <div class="container-fluid">
 <div class="row-fluid">
-{% set topmenu = CI.permissions.get_user_menu(CI.session.userdata('user_id'),CI.session.userdata('context'),'top') %}
+{% set topmenu = CI.permissions.get_user_menu(CI.session.userdata('user_id'),CI.session.userdata('context'),'left-bar') %}
 <!-- left menu starts -->
-			<div class="span2 main-menu-span">
-				<div class="well nav-collapse sidebar-nav">
-					<ul class="nav nav-tabs nav-stacked main-menu">
-					{% for perm in topmenu %}
-					<li><a href="{{ site_url(perm) }}">{{ lang(perm) }}</a></li>
-					{% endfor %}
-					</ul>
-				</div><!--/.well -->
-			</div><!--/span-->
-			<!-- left menu ends -->
+    {% if topmenu %}
+	<div class="span2 main-menu-span">
+		<div class="well nav-collapse sidebar-nav">
+			{{ nav.menu(topmenu) }}
+		</div><!--/.well -->
+	</div><!--/span-->
+	{% endif %}
+<!-- left menu ends -->
 
 <noscript>
     <div class="alert alert-block span10">

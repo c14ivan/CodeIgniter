@@ -79,7 +79,7 @@ $autoload['packages'] = array();
 |	$autoload['libraries'] = array('database', 'email', 'xmlrpc');
 */
 
-$autoload['libraries'] = array('twig');
+$autoload['libraries'] = array('twig','form_validation');
 
 
 /*
@@ -139,7 +139,7 @@ $autoload['config'] = array('twig','asset');
 |
 */
 
-$autoload['language'] = array('general');
+$autoload['language'] = array('general','tank_auth','menu');
 
 
 /*

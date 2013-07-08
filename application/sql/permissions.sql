@@ -20,10 +20,13 @@ CREATE TABLE `role_assignments` (
   `roleid` bigint(10) NOT NULL DEFAULT '0',
   `contextid` bigint(10) NOT NULL DEFAULT '0',
   `userid` bigint(10) NOT NULL DEFAULT '0',
-  `timemodified` bigint(10) NOT NULL DEFAULT '0',
+  `timestart` datetime DEFAULT NULL,
+  `timeend` datetime DEFAULT NULL,
   `modifierid` bigint(10) NOT NULL DEFAULT '0',
+  `timemodified` bigint(10) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_bin$$
+delimiter $$
 
 DROP TABLE IF EXISTS `capabilities` $$
 
@@ -34,6 +37,7 @@ CREATE TABLE `capabilities` (
   `contextlevel` bigint(10) NOT NULL DEFAULT '0',
   `visible` bigint(10) NOT NULL DEFAULT '0',
   `position` varchar(10) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `parent` varchar(45) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
   `timemodified` bigint(10) NOT NULL DEFAULT '0',
   `modifierid` bigint(10) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
