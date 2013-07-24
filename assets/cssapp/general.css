@@ -17,3 +17,31 @@ input .errorlabelform{
     float:none;
     margin-left:5px;
 }
+
+
+ul.wide-list li {
+	min-height:28px;
+	padding: 7px 0;
+	list-style: none;
+	border-bottom: 1px solid #EBEBEB;
+	border-top: 1px solid white;
+}
+
+ul.wide-list a:hover {
+	text-decoration: none;
+	width:100%;
+	cursor:default;
+}
+
+ul.wide-list {
+	margin: 0;
+}
+
+ul.wide-list li span {
+	display: inline-block;
+	margin-right: 10px;
+	text-align: left;
+}
+ul.wide-list li .action {
+	cursor:pointer;
+}

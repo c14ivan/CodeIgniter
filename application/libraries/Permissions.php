@@ -208,6 +208,7 @@ class Permissions {
      */
     function get_user_menu($userid,$contextid=0,$position)
     {
+    	$menu=false;
         $role = $this->ci->Perms->get_user_enrolment($userid,$contextid);
         if($role){
             $menu = $this->ci->Perms->get_menu($role['roleid'],$position);

@@ -2,6 +2,8 @@
 $lang['error'] = 'Error';
 $lang['cancel'] = 'Cancelar';
 $lang['send'] = 'Enviar';
+$lang['save'] = 'Guardar';
+$lang['description'] = 'Descripción';
 $lang['install']='Instalación';
 $lang['logout']='Salir';
 $lang['login']='Ingresar';

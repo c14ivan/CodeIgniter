@@ -70,7 +70,6 @@ class Permission extends CI_Controller {
     function install(){
         
         $post=$this->input->post();
-        echo var_dump($post);
         if (!empty($post)) {
 
             //1. crear las capabilities en DB

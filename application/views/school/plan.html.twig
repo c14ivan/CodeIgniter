@@ -1,0 +1,48 @@
+{% extends '_layouts/index.html.twig' %}
+
+{% block headext %}
+
+{% endblock %}
+{% block jscode %}
+<script type="text/javascript">
+
+</script>
+{% endblock %}
+{% block content %}
+{% import '_tools/formElements.twig' as forms %}
+<div class="row-fluid">
+	<div class="box span6 ">
+		{{ forms.campo({'tipo':'input','type':'text','name':'pl_name','label':lang('sc_plan'),'maxlength':45}) }}
+		{{ forms.campo({'tipo':'textarea','label':lang('description'),'name':'pl_description','cols':50}) }}
+		{{ forms.campo({'tipo':'select','label':lang('sc_enrolment'),'name':'pl_enrolment',
+						'opciones':{0:lang('sc_enrolmanual')} }) }}
+	</div>
+	<div class="box span6">
+		<div class="box-header well">
+			<h2>{{ lang('sc_versions') }}</h2>
+			<div class="box-icon">
+				<a href="#" class="btn btn-setting btn-round"><i class="icon-plus"></i></a>
+			</div>
+		</div>
+		<div class="box-content">
+			<ul>
+			
+			</ul>
+		</div>
+	</div>
+</div>
+<div class="row-fluid span12">
+	<div class="box-header well">
+		<h2><i class="icon-pencil"></i>{{ lang('sc_version') }}</h2>
+		<div class="box-icon">
+			<a href="#" class="btn btn-setting btn-round"><i class="icon-plus"></i></a>
+		</div>
+	</div>
+	<div class="box-content">
+		{{ forms.campo({'tipo':'input','type':'label','label':lang('sc_version'),'valor':''}) }}		
+		{{ forms.campo({'tipo':'input','type':'text','name':'sc_vername','label':lang('description'),'maxlength':45}) }}
+		
+		<!-- status label goes here -->
+	</div>
+</div>
+{% endblock %}
