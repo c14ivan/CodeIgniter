@@ -16,6 +16,7 @@ $lang['permissions/roles']='Roles de Usuarios';
 $lang['actions'] = "Acciones";
 $lang['edit']="Editar";
 $lang['delete']="Eliminar";
+$lang['ajaxerror']="Hubo un error en la operación";
 
 $lang['table_recordsperpage']="Mostrar _MENU_ registros por pagina";
 $lang['table_noregisters']="No existen Registros";

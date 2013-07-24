@@ -61,6 +61,7 @@ CREATE TABLE `sccicle` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `scsystemid` int(11) DEFAULT NULL,
   `name` varchar(255) DEFAULT NULL,
+  `abbr` varchar(5) DEFAULT NULL,
   `order` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;

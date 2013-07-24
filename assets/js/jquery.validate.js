@@ -1376,6 +1376,9 @@
                 },
                 $.validator.messages.captcha
             );
+        $.validator.addMethod("lettersNumber", function(value, element) {
+            return this.optional(element) || /^[a-z0-9\-]+$/i.test(value);
+        }, $.validator.messages.lettersNumber);
 }(jQuery));
 
 function isInteger(s)

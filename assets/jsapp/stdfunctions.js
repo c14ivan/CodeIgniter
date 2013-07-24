@@ -51,6 +51,11 @@ $.wait = function( callback, seconds){
     return window.setTimeout( callback, seconds * 1000 );
 }
 
+function resetForm($form) {
+    $form.find('input:text, input:password, input:file, select, textarea').val('');
+    $form.find('input:radio, input:checkbox')
+         .removeAttr('checked').removeAttr('selected');
+}
 var ua = navigator.userAgent,
 eventtrigger = (ua.match(/iPad/i)) ? "touchstart" : "click";
 

@@ -3,13 +3,7 @@
 {% block headext %}
 <link rel="stylesheet" type="text/css" href="{{ asset_url()~'cssapp/general.css' }}" media="all">
 {% endblock %}
-{% block jscode %}
-<script type="text/javascript">
-$('getsystem').on('click',function(){
-	
-});
-</script>
-{% endblock %}
+
 
 {% block content %}
 {% import '_tools/formElements.twig' as forms %}
@@ -19,31 +13,26 @@ $('getsystem').on('click',function(){
 		<div class="box-header well">
 			<h2>{{ lang('sc_systems') }}</h2>
 			<div class="box-icon">
-				<a href="#" class="btn btn-setting btn-round"><i class="icon-plus"></i></a>
+				<a href="#" class="btn addplan btn-round"><i class="icon-plus"></i></a>
 				<a href="#" class="btn btn-minimize btn-round"><i class="icon-chevron-up"></i></a>
 			</div>
 		</div>
 		<div class="box-content">
-			<ul class="wide-list">
-				{% for sys in systems%}
-					<li data-id="{{sys.id}}">
-							<span class="span2"><i class="icon-cog action getsystem"></i></span>                               
-							<span class="span3">{{ sys.name }} </span>
-							<span class="span4">{{ sys.description }}</span>
-					</li>
-				{% endfor %}
+			<ul class="wide-list systemlist">
 			</ul>
 		</div>
 	</div>
 </div>
 <div class="systemcont" style="display:none;">
 	<div class="row-fluid">
-		<div class="box span6 ">
+		<div class="box span6 systemform"  style="display:none;">
 			<div class="box-content">
-				<h2>{{ lang('sc_systemedt') }}</h2>
+				<h2 class="scadd" style="display:none;">{{ lang('sc_systemadd') }}</h2>
+				<h2 class="scedt" style="display:none;">{{ lang('sc_systemedt') }}</h2>
 				<form id="systemedt" class="form-horizontal" method="post">
+					{{ forms.campo({'tipo':'input','type':'hidden','name':'scid'}) }}
 					{{ forms.campo({'tipo':'input','type':'text','name':'scname','label':lang('sc_name'),'maxlength':45}) }}
-					{{ forms.campo({'tipo':'textarea','label':lang('sc_name'),'name':'scdescription','cols':50}) }}
+					{{ forms.campo({'tipo':'textarea','label':lang('description'),'name':'scdescription','cols':50}) }}
 					{{ forms.campo({'tipo':'select','label':lang('sc_duration'),'name':'scduration',
 						'opciones':{0:lang('sc_durundefined'),1:lang('sc_duryear'),2:lang('sc_dursemester'),3:lang('sc_durtrim'),
 						4:lang('sc_durbim'),5:lang('sc_durmonth')} }) }}
@@ -54,21 +43,29 @@ $('getsystem').on('click',function(){
 				</form>
 			</div>
 		</div>
-		<div class="box span6">
+		<div class="box span6 systemcicles" style="display:none;">
 			<div class="box-header well">
 				<h2>{{ lang('sc_cicles') }}</h2>
 				<div class="box-icon">
-					<a href="#" class="btn btn-setting btn-round"><i class="icon-plus"></i></a>
+					<a href="#" class="btn btn_addcicle btn-round"><i class="icon-plus"></i></a>
 				</div>
 			</div>
 			<div class="box-content">
+				<div class="cicleedt" style="display:none;">
+					<form id="cicleedit" class="form-horizontal">
+					{{ forms.campo({'tipo':'input','type':'hidden','name':'scsystemid'}) }}
+					{{ forms.campo({'tipo':'input','type':'hidden','name':'cicleid'}) }}
+					{{ forms.campo({tipo:'input','type':'text',name:'cicleabbr',label: lang('sc_abbr'),maxLength:5 }) }}
+					{{ forms.campo({tipo:'input','type':'text',name:'ciclename',label: lang('sc_cicle'),prepend:{tipo:'button',icon:'check','title':lang('save')}})}}
+					</form>
+				</div>
 				<ul>
 				
 				</ul>
 			</div>
 		</div>
 	</div>
-	<div class="row-fluid " style="display:block;">
+	<div class="row-fluid systeminplans" style="display:none;">
 		<div class="box span12">
 			<div class="box-header well">
 				<h2>{{ lang('sc_systeminplan') }}</h2>
@@ -84,4 +81,200 @@ $('getsystem').on('click',function(){
 		</div>
 	</div>
 </div>
+{% endblock %}
+
+{% block jscode %}
+<script type="text/javascript">
+loadsystems();
+$('.btn_addcicle').click(function(){
+	$('.cicleedt').slideDown();
+});
+$('#cicleabbr').keyup(function(){
+	$(this).val($(this).val().toUpperCase());
+});
+$('.addplan').click(function(){
+	$('.systemcont').slideUp();
+	$('.systemcicles').slideUp();
+	$('.systeminplans').slideUp();
+	$('.systemcicles').find('ul').children().remove();
+	$('.systemform').slideDown();
+	$('.systemform').find('input[name=scid]').val(0);
+	$('h2.scadd').slideDown();
+	$('h2.scedt').slideUp();
+	resetForm($('.systemcont').find('form'));
+	$('.systemcont').slideDown();
+});
+
+$('#cicleedit').validate({
+	errorClass:'errorlabelform',
+    elErrorClass:'errorlabel',
+    rules:{
+    	ciclename:{required:true},
+    	cicleabbr:{required:true,lettersNumber:true}
+    },
+    messages:{
+    	ciclename:{required:'{{ lang('required')|format('')}}'},
+    	cicleabbr:{required:'{{ lang('required')|format('')}}',lettersNumber:'{{ lang('alpha_numeric')|format('') }}'},
+    },
+    submitHandler: function(form) {
+    	// do other stuff for a valid form
+    	$.ajax({
+                type:"POST",
+                url: '{{ site_url('school/addcicle') }}',
+                dataType:'json',
+                data: $(form).serializeObject(),
+                error:function (jqXHR, textStatus, errorThrown) {
+                    console.log(JSON.stringify(jqXHR) + ' ' + textStatus + '  ' + errorThrown);
+                }
+            }).done(function (data) {
+            	if($('.systemcicles').find('ul').find('li[data-id='+data.cicle.id+']').length>0){
+            		$('.systemcicles').find('ul').find('li[data-id='+data.cicle.id+']').find('.span6').html(data.cicle.name);
+            		$('.systemcicles').find('ul').find('li[data-id='+data.cicle.id+']').find('.span4').html(data.cicle.abbr);
+            	}else{
+            		if($('.systemcicles').find('ul').append(
+            		'<li data-id="'+data.cicle.id+'"><span6>'+data.cicle.name+'</span>'+
+            		'<span4>'+data.cicle.abbr+'</span><span2><i class="icon-pencil"></i><i class="icon-remove"></i></span>';
+            		);
+            		
+            		$('.systemcicles').find('li').find('.icon-pencil').click(function(){
+            			$('.cicleedt').find('input[id=cicleid]').val($(this).closest('li').attr('data-id'))
+            			$('.cicleedt').find('input[id=cicleabbr]').val($(this).closest('li').find('.span4').html())
+            			$('.cicleedt').find('input[id=ciclename]').val($(this).closest('li').find('.span6').html())
+            		});
+            		$('.systemcicles').find('li').find('.icon-remove').click(function(){
+            			$.ajax({
+                			type:"POST",
+                			url: '{{ site_url('school/addcicle') }}',
+                			dataType:'json',
+                			data: $(form).serializeObject(),
+                			error:function (jqXHR, textStatus, errorThrown) {
+                    			console.log(JSON.stringify(jqXHR) + ' ' + textStatus + '  ' + errorThrown);
+                			}
+            				}).done(function(data){
+            					
+            				});
+            		});
+            	}
+            });
+    }
+});
+$('#systemedt').validate({
+   	errorClass:'errorlabelform',
+    elErrorClass:'errorlabel',
+    ignore:':hidden.chzn',
+    rules:{
+    	scname:{
+    		required: true,
+            minlength:5,
+    	},
+    	scdescription:{
+    		required: true,
+            minlength:5,
+    	}
+    },
+    messages:{
+    	scname:{
+    		required: '{{ lang('required')|format('')}}',
+    		minlength: '{{ lang('min_length')|format('',5)}}',
+    		
+    	},
+    	scdescription:{
+    		required: '{{ lang('required')|format('')}}',
+    		minlength: '{{ lang('min_length')|format('',5)}}',
+    		
+    	},
+    },
+    submitHandler: function(form) {
+    	// do other stuff for a valid form
+    	$.ajax({
+                type:"POST",
+                url: '{{ site_url('school/addsystem') }}',
+                dataType:'json',
+                data: $(form).serializeObject(),
+                error:function (jqXHR, textStatus, errorThrown) {
+                    console.log(JSON.stringify(jqXHR) + ' ' + textStatus + '  ' + errorThrown);
+                }
+            }).done(function (data) {
+            	if (data.ok){
+            		noty({text: '{{ lang('ajaxerror')}}',type:'sucess',timeout:500});
+            		$('.systemcicles').slideDown();
+            		$('.systeminplans').slideDown();
+            		loadsystems();
+            	}else{
+            		noty({text: '{{ lang('ajaxerror')}}',type:'error',timeout:500});
+            	}
+            });
+  	}
+});
+function loadsystems(){
+	$('systemlist').slideUp();
+	$.ajax({
+                type:"POST",
+                url: '{{ site_url('school/getsystems') }}',
+                dataType:'json',
+                error:function (jqXHR, textStatus, errorThrown) {
+                    console.log(JSON.stringify(jqXHR) + ' ' + textStatus + '  ' + errorThrown);
+                }
+            }).done(function (data) {
+            	$('.systemlist').empty();
+            	for (i in data.systems){
+            		$('.systemlist').append(
+            		'<li data-id="'+data.systems[i].id+'" class="getsystem">'+
+							'<span class="span2"><i class="icon-cog action "></i></span>'+                              
+							'<span class="span3">'+data.systems[i].name+' </span>'+
+							'<span class="span4">'+data.systems[i].description+'</span>'+
+					'</li>'
+            		);
+            	}
+            	$('.systemlist').slideDown();
+            	$('.getsystem').on('click',function(){
+					loadsystem($(this).attr('data-id'));
+				});
+            });
+}
+function loadsystem(sysid){
+	$('.systemcicles').find('ul').children().remove();
+	$.ajax({
+                type:"POST",
+                url: '{{ site_url('school/getsystem') }}',
+                dataType:'json',
+                data: {'sysid':sysid},
+                error:function (jqXHR, textStatus, errorThrown) {
+                    console.log(JSON.stringify(jqXHR) + ' ' + textStatus + '  ' + errorThrown);
+                }
+            }).done(function (data) {
+            	$('.systemform').find('input[name=scid]').val(data.id);
+            	$('.systemcont').find('input[name=scname]').val(data.sysdata.name);
+            	$('.systemcont').find('input[name=scdescription]').val(data.sysdata.description);
+            	$('.systemcont').find('select[name=scduration]').find('option').removeAttr('selected');
+            	$('.systemcont').find('select[name=scduration]').find('option[value='+data.sysdata.duration+']').attr('selected','selected');
+            	if(data.cicles.length>0){
+            		for (i in data.cicles){
+            			$('.systemcicles').find('ul').append('<li data-id="'+data.cicles[i].id+'">'+
+            				'<span4>'+data.cicles[i].name+'</span>'+
+            				'<span6>'+data.cicles[i].description+'</span>'+
+            				'<span2><i class="icon-pencil"></i><i class="icon-remove"></i></span>'
+           	 				);
+            		}
+            	}
+            	if(data.inplan.length>0){
+            		for (i in data.inplan){
+            			$('.systeminplans').find('ul').append('<li data-id="'+data.inplan[i].id+'">'+
+            				'<span4>'+data.inplan[i].name+'</span>'+
+            				'<span6>'+data.inplan[i].description+'</span>'+
+            				'<span2><i class="icon-arrow-right"></i></span>'
+            				);
+            		}
+            	}   	
+				$('h2.scadd').slideUp();
+				$('h2.scedt').slideDown();
+				$('.systemform').slideDown();
+				$('.systemcicles').slideDown();
+				$('.systeminplans').slideDown();
+				$('.systemcont').slideDown();
+				$('.systemcicles').find('ul').sortable();
+				$('.systeminplans').find('ul').sortable();
+            });
+}
+</script>
 {% endblock %}

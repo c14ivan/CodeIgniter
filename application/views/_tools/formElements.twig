@@ -119,7 +119,7 @@
                                     {% endfor %}
                                 {% endif %}
                             {% endif %}
-                        {% else if type=='label' %}
+                        {% elseif type=='label' %}
                         	{{ _self.label(valor,class,'') }}
                         {% else %}
                             <input type="{{ type|default('text') }}" name="{{ name }}" id="{{ id|default(name)}}"
