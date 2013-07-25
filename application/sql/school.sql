@@ -1,10 +1,11 @@
 DROP TABLE IF EXISTS `scsystem`;
 
 CREATE TABLE `scsystem` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(45) DEFAULT NULL,
   `description` TEXT DEFAULT NULL,
   `duration` int(4) DEFAULT NULL,
+  `status` int(4) DEFAULT 0,
   `creator` int(11) DEFAULT NULL,
   `timecreated` datetime DEFAULT NULL,
   `modifier` int(11) DEFAULT NULL,
@@ -15,10 +16,10 @@ CREATE TABLE `scsystem` (
 DROP TABLE IF EXISTS `scsystemdiv`;
 
 CREATE TABLE `scsystemdiv` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `scsystemid` int(11) DEFAULT NULL,
   `name` varchar(45) DEFAULT NULL,
-  `duration` int(4) DEFAULT NULL,
+  `order` int(11) DEFAULT NULL,
   `creator` int(11) DEFAULT NULL,
   `timecreated` datetime DEFAULT NULL,
   `modifier` int(11) DEFAULT NULL,
@@ -33,7 +34,6 @@ CREATE TABLE `scplan` (
   `scsystemid` int(11) DEFAULT NULL,
   `name` varchar(45) DEFAULT NULL,
   `description` TEXT DEFAULT NULL,
-  `enrol_method` int(4) DEFAULT NULL,
   `creator` int(11) DEFAULT NULL,
   `timecreated` datetime DEFAULT NULL,
   `modifier` int(11) DEFAULT NULL,
@@ -46,7 +46,9 @@ DROP TABLE IF EXISTS `scplanversion`;
 CREATE TABLE `scplanversion` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `planid` int(11) DEFAULT NULL,
+  `name` varchar(45) DEFAULT NULL,
   `description` TEXT DEFAULT NULL,
+  `version` int(4) DEFAULT NULL,
   `status` int(4) DEFAULT NULL,
   `creator` int(11) DEFAULT NULL,
   `timecreated` datetime DEFAULT NULL,
@@ -78,7 +80,7 @@ CREATE TABLE `scarea` (
 DROP TABLE IF EXISTS `scsubject`;
 
 CREATE TABLE `scsubject` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `scareaid` int(11) DEFAULT NULL,
   `name` varchar(100) DEFAULT NULL,
   `shortname` varchar(5) DEFAULT NULL,

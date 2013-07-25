@@ -1,22 +1,23 @@
 <?php
-$lang['error'] = 'Error';
-$lang['cancel'] = 'Cancelar';
-$lang['send'] = 'Enviar';
-$lang['save'] = 'Guardar';
-$lang['description'] = 'Descripción';
-$lang['install']='Instalación';
-$lang['logout']='Salir';
-$lang['login']='Ingresar';
+$lang['error'] = "Error";
+$lang['cancel'] = "Cancelar";
+$lang['send'] = "Enviar";
+$lang['save'] = "Guardar";
+$lang['description'] = "Descripción";
+$lang['install']="Instalación";
+$lang['logout']="Salir";
+$lang['login']="Ingresar";
+$lang['name']="Nombre";
 
-
-$lang['auth'] = 'Usuarios';
-$lang['auth/users']='Listado de Usuarios';
-$lang['permissions/roles']='Roles de Usuarios';
+$lang['auth'] = "Usuarios";
+$lang['auth/users']="Listado de Usuarios";
+$lang['permissions/roles']="Roles de Usuarios";
 
 $lang['actions'] = "Acciones";
 $lang['edit']="Editar";
 $lang['delete']="Eliminar";
 $lang['ajaxerror']="Hubo un error en la operación";
+$lang['ajaxok']="Operación exitosa";
 
 $lang['table_recordsperpage']="Mostrar _MENU_ registros por pagina";
 $lang['table_noregisters']="No existen Registros";

@@ -11,7 +11,9 @@ class School extends CI_Controller {
 		parent::__construct();
 	
 		$this->load->model('school/scsystem');
+		$this->load->model('school/scplan');
 		$this->lang->load('school');
+		$this->config->load('school');
 		$this->lang->load('form_validation');
         $this->output->enable_profiler(TRUE);
 		
@@ -21,18 +23,20 @@ class School extends CI_Controller {
      * systems administration
      */
     public function system(){
-    	$plans=$this->scsystem->getPlans(1);
         $this->twig->display('school/system',array());
     }
     public function plan(){
-    	$this->twig->display('school/adminsubjects');
+    	
+    	$this->twig->display('school/plan',array('get',$planid));
     }
     public function subjects(){
     	$this->twig->display('school/adminsubjects');
     }
     public function subject(){
-    	$this->twig->display('school/adminsubjects');
+    	$this->twig->display('school/subject');
     }
+    
+    
     
     public function addsystem(){
     	if(!$this->input->is_ajax_request()) redirect();
@@ -41,15 +45,15 @@ class School extends CI_Controller {
     	
     	$data=$this->input->post();
     	if(intval($data['scid'])>0){
-    		$id=$this->scsystem->addSystem($data['scname'],$data['scdescription'],$data['scduration']);
-    		if($id){
-    		$data['scid']=$id;
-    		$data['ok']=true;
+    		if($this->scsystem->updateSystem($data['scid'],$data['scname'],$data['scdescription'],$data['scduration'],$data['scstatus'])){
+    			$data['ok']=true;
     		}else{
     			$data['ok']=false;
     		}
     	}else{
-    		if($this->scsystem->updateSystem($data['scid'],$data['scname'],$data['scdescription'],$data['scduration'])){
+    		$id=$this->scsystem->addSystem($data['scname'],$data['scdescription'],$data['scduration'],$data['scstatus']);
+    		if($id){
+    			$data['scid']=$id;
     			$data['ok']=true;
     		}else{
     			$data['ok']=false;
@@ -72,9 +76,16 @@ class School extends CI_Controller {
     	$systemid=$this->input->post('sysid');
     	$systemdata=$this->scsystem->getsystems($systemid);
     	$cicles=$this->scsystem->getCicles($systemid);
-    	$plans=$this->scsystem->getPlans($systemid);
+    	$divs=$this->scsystem->getDivisions($systemid);
+    	$plans=$this->scplan->getPlans($systemid);
     	
-    	echo json_encode(array('post'=>$this->input->post(),'id'=>$systemid,'sysdata'=>$systemdata,'cicles'=>$cicles,'inplan'=>$plans));
+    	echo json_encode(array(
+    			'post'=>$this->input->post(),
+    			'id'=>$systemid,
+    			'sysdata'=>$systemdata,
+    			'cicles'=>$cicles,
+    			'divisions'=>$divs,
+    			'inplan'=>$plans));
     }
     public function addcicle(){
     	if(!$this->input->is_ajax_request()) redirect();
@@ -83,12 +94,83 @@ class School extends CI_Controller {
     	$cicledata=$this->input->post();
     	
     	if($cicledata['cicleid']>0){
-    		$cicledata['cicleid']=addCicle($cicledata['scsystemid'],$cicledata['ciclename'],$cicledata['cicleabbr']);
+    		$cicledata['cicleid']=$this->scsystem->updateCicle($cicledata['cicleid'],$cicledata['ciclename'],$cicledata['cicleabbr'],$cicledata['cicleorder']);
     	}else{
-    		$cicledata['cicleid']=addCicle($cicledata['cicleid'],$cicledata['ciclename'],$cicledata['cicleabbr']);
+    		$cicledata['cicleid']=$this->scsystem->addCicle($cicledata['scsystemid'],$cicledata['ciclename'],$cicledata['cicleabbr']);
     	}
     	 
     	echo json_encode(array('cicle'=>$cicledata));
+    }
+    public function ordercicles(){
+    	if(!$this->input->is_ajax_request()) redirect();
+    	$this->output->enable_profiler(FALSE);
+    	
+    	$postdata=$this->input->post();
+    	$cicles=$this->scsystem->getCicles($postdata['system']);
+    	$order=$postdata['order'];
+    	foreach ($cicles as $cicle){
+    		if($cicle['order']!=$order[$cicle['id']]){
+    			$this->scsystem->updateCicle($cicle['id'],$cicle['name'],$cicle['abbr'],$order[$cicle['id']]);
+    		}
+    	}
+    	$res=true;
+    	$cicles=$this->scsystem->getCicles($postdata['system']);
+    	foreach ($cicles as $cicle){
+    		if($cicle['order']!=$order[$cicle['id']]){
+    			$res=false;
+    		}
+    	}
+    	echo json_encode(array('ok'=>$res));
+    }
+    public function adddivision(){
+    	if(!$this->input->is_ajax_request()) redirect();
+    	$this->output->enable_profiler(FALSE);
+    	
+    	$divdata=$this->input->post();
+    	 
+    	if(intval($divdata['divid'])>0){
+    		$divdata['divid']=$this->scsystem->updateDivision($divdata['divid'],$divdata['divname'],$divdata['divorder']);
+    	}else{
+    		$divdata['divid']=$this->scsystem->addDivision($divdata['scsystemid'],$divdata['divname']);
+    	}
+    	
+    	echo json_encode(array('div'=>$divdata));
+    }
+    public function orderdivs(){
+    	if(!$this->input->is_ajax_request()) redirect();
+    	$this->output->enable_profiler(FALSE);
+    	 
+    	$postdata=$this->input->post();
+    	$divs=$this->scsystem->getDivisions($postdata['system']);
+    	$order=$postdata['order'];
+    	foreach ($divs as $div){
+    		if($div['order']!=$order[$div['id']]){
+    			$this->scsystem->updateDivision($div['id'],$div['name'],$order[$div['id']]);
+    		}
+    	}
+    	$res=true;
+    	$divs=$this->scsystem->getDivisions($postdata['system']);
+    	foreach ($divs as $div){
+    		if($div['order']!=$order[$div['id']]){
+    			$res=false;
+    		}
+    	}
+    	echo json_encode(array('ok'=>$res));
+    }
+    public function addplan(){
+    	if(!$this->input->is_ajax_request()) redirect();
+    	$this->output->enable_profiler(FALSE);
+    	
+    	$postdata=$this->input->post();
+    	 
+    	if($postdata['planid']>0){
+    		$postdata['planid']=$this->scplan->updatePlan($postdata['planid'],$postdata['planname'],$postdata['plandescription']);
+    	}else{
+    		$postdata['planid']=$this->scplan->addPlan($postdata['scsystemid'],$postdata['planname'],$postdata['plandescription']);
+    	}
+    	$postdata['url']=anchor('school/plan/'.$postdata['planid'],$postdata['planname']);
+    	echo json_encode(array('plan'=>$postdata));
+    	
     }
 }
 

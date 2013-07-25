@@ -3,9 +3,10 @@
 class Scsystem extends CI_Model{
 	private $table_name			= 'scsystem';		// systems table
 	private $table_cicles       = 'sccicle';
-	private $table_plans        = 'scplan';
-	private $table_planversion  = 'scplanversion';
-	private $table_subjectplan  = 'scsubjectplan';
+	//private $table_plans        = 'scplan';
+	//private $table_planversion  = 'scplanversion';
+	//private $table_subjectplan  = 'scsubjectplan';
+	private $table_divs			= 'scsystemdiv';
 	
 	function __construct()
 	{
@@ -35,7 +36,7 @@ class Scsystem extends CI_Model{
 				'description' => $desc,
 				'duration' => $duration,
 				'creator'  => 0,
-				'timecreated'=> time('Y-m-d H:i:s'),
+				'timecreated'=> date('Y-m-d H:i:s'),
 		);
 		
 		if($this->db->insert($this->table_name, $data)){
@@ -44,21 +45,42 @@ class Scsystem extends CI_Model{
 		return false;
 	}
 	//update a system
-	function updateSystem($id,$name,$desc,$duration){
-		$data = array(
-				'name' => $name,
-				'description' => $desc,
-				'duration' => $duration,
-				'modifier'  => 0,
-				'timemod'=> time('Y-m-d H:i:s'),
-		);
-		
+	function updateSystem($id,$name,$desc,$duration,$status){
+		$prev=$this->getsystems($id);
+		if($prev->status==0)
+		{
+			$data = array(
+					'name' => $name,
+					'description' => $desc,
+					'duration' => $duration,
+					'status'   => $status,
+					'modifier'  => 0,
+					'timemod'=> date('Y-m-d H:i:s'),
+			);
+		}elseif($prev->status==1 && $status>1){
+			$data = array(
+					'status'   => $status,
+					'modifier'  => 0,
+					'timemod'=> date('Y-m-d H:i:s'),
+			);
+		}else{
+			return false;
+		}
 		$this->db->where('id', $id);
 		$this->db->update($this->table_name, $data);
 		
 		return ($this->db->affected_rows()==1)?true:false;
 	}
 
+	function getDivisions($systemid){
+		$this->db->where('scsystemid',$systemid);
+		$this->db->order_by('order','ASC');
+		$query=$this->db->get($this->table_divs);
+		if ($query->num_rows() > 0){
+			return $query->result_array();
+		}
+		return array();
+	}
 	function getCicles($systemid){
 		//TODO verificar si los ciclos se estan usando en alguna asignación. si es asi agregar atributo para no permitir eliminar
 		$this->db->where('scsystemid',$systemid);
@@ -69,43 +91,19 @@ class Scsystem extends CI_Model{
 		}
 		return array();
 	}
-	function getPlans($systemid=0){
-		if($systemid>0){
-			$this->db->select("{$this->table_plans}.id,{$this->table_plans}.name,{$this->table_plans}.description,
-					{$this->table_plans}.enrol_method,count({$this->table_subjectplan}.id)");
-			$this->db->where('scsystemid',$systemid);
-			
-			$this->db->group_by("{$this->table_plans}.id,{$this->table_plans}.name,{$this->table_plans}.description,
-					{$this->table_plans}.enrol_method");
-		}else{
-			$this->db->select("{$this->table_name}.name,{$this->table_plans}.id,{$this->table_plans}.name,
-					{$this->table_plans}.description,{$this->table_plans}.enrol_method,count({$this->table_subjectplan}.id)");
-			$this->db->join($this->table_name,"{$this->table_name}.id={$this->table_plans}.scsystemid".'LEFT');
-			
-			$this->db->group_by("{$this->table_name}.name,{$this->table_plans}.id,{$this->table_plans}.name,
-					{$this->table_plans}.description,{$this->table_plans}.enrol_method");
-		}
-		$this->db->join($this->table_planversion,"{$this->table_plans}.id={$this->table_planversion}.planid",'LEFT');
-		$this->db->join($this->table_subjectplan,"{$this->table_subjectplan}.scplanversionid={$this->table_planversion}.id",'LEFT');
-		
-		$query=$this->db->get($this->table_plans);
-		if ($query->num_rows() > 0){
-			return $query->result_array();
-		}
-		return array();
-	}
+	//TODO en estas funciones verificar primero que el sistema este en diseño sino return false; prevenir perros
 	function addCicle($systemid,$ciclename,$cicleabbr){
-		$this->db->where('cssystemid',$systemid);
+		$this->db->where('scsystemid',$systemid);
 		$this->db->order_by('order','DESC');
-		$this->db->get($this->table_cicles);
+		$query=$this->db->get($this->table_cicles);
 		
-		$order=($query->row())?$query->row()->order+1:1;
+		$order=($query->num_rows() > 0)?$query->row()->order+1:1;
 		
 		$data = array(
 				'scsystemid' =>$systemid,
 				'name' => $ciclename,
 				'abbr' => $cicleabbr,
-				'duration' => $order,
+				'order' => $order,
 		);
 		
 		if($this->db->insert($this->table_cicles, $data)){
@@ -113,16 +111,48 @@ class Scsystem extends CI_Model{
 		}
 		return false;
 	}
-	function updateCicle($cicleid,$ciclename,$cicleabbr){
+	function updateCicle($cicleid,$ciclename,$cicleabbr,$cicleorder){
 	
 		$data = array(
 				'name' => $ciclename,
 				'abbr' => $cicleabbr,
+				'order'=> $cicleorder,
 		);
 	
 		$this->db->where('id', $cicleid);
 		if($this->db->update($this->table_cicles, $data)){
 			return $cicleid;
+		}
+		return false;
+	}
+	function addDivision($systemid,$divname){
+		$this->db->where('scsystemid',$systemid);
+		$this->db->order_by('order','DESC');
+		$query=$this->db->get($this->table_divs);
+	
+		$order=($query->num_rows() > 0)?$query->row()->order+1:1;
+	
+		$data = array(
+				'scsystemid' =>$systemid,
+				'name' => $divname,
+				'order' => $order,
+		);
+	
+		if($this->db->insert($this->table_divs, $data)){
+			return $this->db->insert_id();
+		}
+		return false;
+	}
+	function updateDivision($divid,$divname,$divorder){
+	
+		$data = array(
+				'name' => $divname,
+				'order'=> $divorder,
+		);
+	
+		$this->db->where('id', $divid);
+		if($this->db->update($this->table_divs, $data)){
+			return $divid;
 		}
 		return false;
 	}

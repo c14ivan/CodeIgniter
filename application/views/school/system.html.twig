@@ -34,12 +34,14 @@
 					{{ forms.campo({'tipo':'input','type':'text','name':'scname','label':lang('sc_name'),'maxlength':45}) }}
 					{{ forms.campo({'tipo':'textarea','label':lang('description'),'name':'scdescription','cols':50}) }}
 					{{ forms.campo({'tipo':'select','label':lang('sc_duration'),'name':'scduration',
-						'opciones':{0:lang('sc_durundefined'),1:lang('sc_duryear'),2:lang('sc_dursemester'),3:lang('sc_durtrim'),
-						4:lang('sc_durbim'),5:lang('sc_durmonth')} }) }}
+						'opciones':config.school.systemduration }) }}
+					{{ forms.campo({'tipo':'select','label':lang('sc_status'),'name':'scstatus',
+						'opciones':config.school.systemstatus }) }}
+					<div class="form-actions">
 						<p class="center span5">
-                        	<button type="submit" class="btn btn-primary">{{ lang('save') }}</button>
-                        	<button type="submit" class="btn btn-primary">{{ lang('cancel') }}</button>
+                       		<button type="submit" class="btn btn-primary">{{ lang('save') }}</button>
                     	</p>
+                    </div>
 				</form>
 			</div>
 		</div>
@@ -51,30 +53,68 @@
 				</div>
 			</div>
 			<div class="box-content">
-				<div class="cicleedt" style="display:none;">
+				<div class="cicleedt box box-content" style="display:none;">
+					<i class="icon-remove closeedtcicle" style="float:right"></i>
 					<form id="cicleedit" class="form-horizontal">
 					{{ forms.campo({'tipo':'input','type':'hidden','name':'scsystemid'}) }}
 					{{ forms.campo({'tipo':'input','type':'hidden','name':'cicleid'}) }}
+					{{ forms.campo({'tipo':'input','type':'hidden','name':'cicleorder'}) }}
 					{{ forms.campo({tipo:'input','type':'text',name:'cicleabbr',label: lang('sc_abbr'),maxLength:5 }) }}
 					{{ forms.campo({tipo:'input','type':'text',name:'ciclename',label: lang('sc_cicle'),prepend:{tipo:'button',icon:'check','title':lang('save')}})}}
 					</form>
 				</div>
-				<ul>
+				<ul class="wide-list">
 				
 				</ul>
 			</div>
 		</div>
 	</div>
-	<div class="row-fluid systeminplans" style="display:none;">
-		<div class="box span12">
+	<div class="row-fluid ">
+		<div class="box span6 systemdivs" style="display:none;">
 			<div class="box-header well">
-				<h2>{{ lang('sc_systeminplan') }}</h2>
+				<h2>{{ lang('sc_periods') }}</h2>
 				<div class="box-icon">
-					<a href="#" class="btn btn-setting btn-round"><i class="icon-plus"></i></a>
+					<a href="#" class="btn btn_adddiv btn-round"><i class="icon-plus"></i></a>
 				</div>
 			</div>
 			<div class="box-content">
-				<ul>
+				<div class="divedt box box-content" style="display:none;">
+					<i class="icon-remove closeedtdiv" style="float:right"></i>
+					<form id="divedit" class="form-horizontal">
+					{{ forms.campo({'tipo':'input','type':'hidden','name':'scsystemid'}) }}
+					{{ forms.campo({'tipo':'input','type':'hidden','name':'divid'}) }}
+					{{ forms.campo({'tipo':'input','type':'hidden','name':'divorder'}) }}
+					{{ forms.campo({tipo:'input','type':'text',name:'divname',label: lang('sc_period'),prepend:{tipo:'button',icon:'check','title':lang('save')}})}}
+					</form>
+				</div>
+				<ul class="wide-list">
+				
+				</ul>
+			</div>
+		</div>
+		<div class="box span6 systeminplans">
+			<div class="box-header well">
+				<h2>{{ lang('sc_systeminplan') }}</h2>
+				<div class="box-icon">
+					<a href="#" class="btn btn_addplan btn-round"><i class="icon-plus"></i></a>
+				</div>
+			</div>
+			<div class="box-content">
+				<div class="planedt box box-content" style="display:none;">
+					<i class="icon-remove closeedtplan" style="float:right"></i>
+					<form id="planedit" class="form-horizontal">
+						{{ forms.campo({'tipo':'input','type':'hidden','name':'scsystemid'}) }}
+						{{ forms.campo({'tipo':'input','type':'hidden','name':'planid'}) }}
+						{{ forms.campo({tipo:'input','type':'text',name:'planname',label: lang('name')})}}
+						{{ forms.campo({'tipo':'textarea','label':lang('description'),'name':'plandescription','cols':50}) }}
+						<div class="form-actions">
+							<p class="left">
+								{{ forms.campo({tipo:'button',value:lang('save'),icon:'check'}) }}
+							</p>
+						</div>
+					</form>
+				</div>
+				<ul class="wide-list">
 				
 				</ul>
 			</div>
@@ -88,7 +128,35 @@
 loadsystems();
 $('.btn_addcicle').click(function(){
 	$('.cicleedt').slideDown();
+	resetForm($('.cicleedt').find('form'));
+	$('.cicleedt').find('input[name=cicleid]').val(0);
 });
+$('.btn_adddiv').click(function(){
+	$('.divedt').slideDown();
+	resetForm($('.divedt').find('form'));
+	$('.divedt').find('input[name=divid]').val(0);
+});
+$('.btn_addplan').click(function(){
+	$('.planedt').slideDown();
+	resetForm($('.planedt').find('form'));
+	$('.planedt').find('input[name=planid]').val(0);
+});
+$('.closeedtdiv').click(function(){
+	$('.divedt').slideUp();
+	resetForm($('.divedt').find('form'));
+	$('.divedt').find('input[name=divid]').val(0);
+});
+$('.closeedtcicle').click(function(){
+	$('.cicleedt').slideUp();
+	resetForm($('.cicleedt').find('form'));
+	$('.cicleedt').find('input[name=cicleid]').val(0);
+});
+$('.closeedtplan').click(function(){
+	$('.planedt').slideUp();
+	resetForm($('.planedt').find('form'));
+	$('.planedt').find('input[name=planid]').val(0);
+});
+
 $('#cicleabbr').keyup(function(){
 	$(this).val($(this).val().toUpperCase());
 });
@@ -96,6 +164,7 @@ $('.addplan').click(function(){
 	$('.systemcont').slideUp();
 	$('.systemcicles').slideUp();
 	$('.systeminplans').slideUp();
+	$('.systemform').find('select[name="scstatus"]').closest('.control-group').slideUp();
 	$('.systemcicles').find('ul').children().remove();
 	$('.systemform').slideDown();
 	$('.systemform').find('input[name=scid]').val(0);
@@ -104,7 +173,76 @@ $('.addplan').click(function(){
 	resetForm($('.systemcont').find('form'));
 	$('.systemcont').slideDown();
 });
-
+$('#planedit').validate({
+	errorClass:'errorlabelform',
+    elErrorClass:'errorlabel',
+    rules:{
+    	planname:{required:true},
+    	plandescription:{required:true},
+    },
+    messages:{
+    	planname:{required:'{{ lang('required')|format('')}}'},
+    	plandescription:{required:'{{ lang('required')|format('')}}'},
+    },
+    submitHandler: function(form) {
+    	$.ajax({
+                type:"POST",
+                url: '{{ site_url('school/addplan') }}',
+                dataType:'json',
+                data: $(form).serializeObject(),
+                error:function (jqXHR, textStatus, errorThrown) {
+                    console.log(JSON.stringify(jqXHR) + ' ' + textStatus + '  ' + errorThrown);
+                }
+            }).done(function (data) {
+            
+            	resetForm($('form#planedit'));
+            	$('.planedt').slideUp();
+            					
+            	if($('.systemplans').find('ul').find('li[data-id='+data.plan.planid+']').length>0){
+            		$('.systemplans').find('ul').find('li[data-id='+data.plan.planid+']').find('.planname').html(data.plan.url);
+            		$('.systemplans').find('ul').find('li[data-id='+data.plan.planid+']').find('.plandesc').html(data.plan.plandescription);
+            	}else{
+            		addplan(data.plan.planid,data.plan.url,data.plan.plandescription);
+            	}
+            });
+    }
+});
+$('#divedit').validate({
+	errorClass:'errorlabelform',
+    elErrorClass:'errorlabel',
+    rules:{
+    	divname:{required:true}
+    },
+    messages:{
+    	divname:{required:'{{ lang('required')|format('')}}'},
+    },
+    submitHandler: function(form) {
+    	// do other stuff for a valid form
+    	var data= $(form).serializeObject();
+    	data.divorder=$('.systemdivs li').index($('.systemdivs').find('ul').find('li[data-id='+$(form).find('input[name=divid]').val()+']'))+1;
+    	$.ajax({
+                type:"POST",
+                url: '{{ site_url('school/adddivision') }}',
+                dataType:'json',
+                data: data,
+                error:function (jqXHR, textStatus, errorThrown) {
+                    console.log(JSON.stringify(jqXHR) + ' ' + textStatus + '  ' + errorThrown);
+                }
+            }).done(function (data) {
+            
+            	resetForm($('form#divedit'));
+            	$('.divedt').slideUp();
+            					
+            	if($('.systemdivs').find('ul').find('li[data-id='+data.div.divid+']').length>0){
+            		$('.systemdivs').find('ul').find('li[data-id='+data.div.divid+']').find('.divedtname').html(data.div.divname);
+            	}else{
+            		adddiv(data.div.divid,data.div.divname,true);
+            		sortable_divs();
+            		dom_divs();
+            	}
+            });
+    }
+});
 $('#cicleedit').validate({
 	errorClass:'errorlabelform',
     elErrorClass:'errorlabel',
@@ -118,42 +256,27 @@ $('#cicleedit').validate({
     },
     submitHandler: function(form) {
     	// do other stuff for a valid form
+    	var data= $(form).serializeObject();
+    	data.cicleorder=$('.systemcicles li').index($('.systemcicles').find('ul').find('li[data-id='+$(form).find('input[name=cicleid]').val()+']'))+1;
     	$.ajax({
                 type:"POST",
                 url: '{{ site_url('school/addcicle') }}',
                 dataType:'json',
-                data: $(form).serializeObject(),
+                data: data,
                 error:function (jqXHR, textStatus, errorThrown) {
                     console.log(JSON.stringify(jqXHR) + ' ' + textStatus + '  ' + errorThrown);
                 }
             }).done(function (data) {
-            	if($('.systemcicles').find('ul').find('li[data-id='+data.cicle.id+']').length>0){
-            		$('.systemcicles').find('ul').find('li[data-id='+data.cicle.id+']').find('.span6').html(data.cicle.name);
-            		$('.systemcicles').find('ul').find('li[data-id='+data.cicle.id+']').find('.span4').html(data.cicle.abbr);
-            	}else{
-            		if($('.systemcicles').find('ul').append(
-            		'<li data-id="'+data.cicle.id+'"><span6>'+data.cicle.name+'</span>'+
-            		'<span4>'+data.cicle.abbr+'</span><span2><i class="icon-pencil"></i><i class="icon-remove"></i></span>';
-            		);
-            		
-            		$('.systemcicles').find('li').find('.icon-pencil').click(function(){
-            			$('.cicleedt').find('input[id=cicleid]').val($(this).closest('li').attr('data-id'))
-            			$('.cicleedt').find('input[id=cicleabbr]').val($(this).closest('li').find('.span4').html())
-            			$('.cicleedt').find('input[id=ciclename]').val($(this).closest('li').find('.span6').html())
-            		});
-            		$('.systemcicles').find('li').find('.icon-remove').click(function(){
-            			$.ajax({
-                			type:"POST",
-                			url: '{{ site_url('school/addcicle') }}',
-                			dataType:'json',
-                			data: $(form).serializeObject(),
-                			error:function (jqXHR, textStatus, errorThrown) {
-                    			console.log(JSON.stringify(jqXHR) + ' ' + textStatus + '  ' + errorThrown);
-                			}
-            				}).done(function(data){
+            	resetForm($('form#cicleedit'));
+            	$('.cicleedt').slideUp();
             					
-            				});
-            		});
+            	if($('.systemcicles').find('ul').find('li[data-id='+data.cicle.cicleid+']').length>0){
+            		$('.systemcicles').find('ul').find('li[data-id='+data.cicle.cicleid+']').find('.cicleedtname').html(data.cicle.ciclename);
+            		$('.systemcicles').find('ul').find('li[data-id='+data.cicle.cicleid+']').find('.cicleedtabbr').html(data.cicle.cicleabbr);
+            	}else{
+            		addcicle(data.cicle.cicleid,data.cicle.cicleabbr,data.cicle.ciclename,true);
+            		sortable_cicles();
+            		dom_cicles();
             	}
             });
     }
@@ -196,10 +319,9 @@ $('#systemedt').validate({
                 }
             }).done(function (data) {
             	if (data.ok){
-            		noty({text: '{{ lang('ajaxerror')}}',type:'sucess',timeout:500});
-            		$('.systemcicles').slideDown();
-            		$('.systeminplans').slideDown();
+            		noty({text: '{{ lang('ajaxok')}}',type:'sucess',timeout:500});
             		loadsystems();
+            		loadsystem(data.scid);
             	}else{
             		noty({text: '{{ lang('ajaxerror')}}',type:'error',timeout:500});
             	}
@@ -234,6 +356,8 @@ function loadsystems(){
 }
 function loadsystem(sysid){
 	$('.systemcicles').find('ul').children().remove();
+	$('.systemdivs').find('ul').children().remove();
+	$('.systeminplans').find('ul').children().remove();
 	$.ajax({
                 type:"POST",
                 url: '{{ site_url('school/getsystem') }}',
@@ -243,38 +367,187 @@ function loadsystem(sysid){
                     console.log(JSON.stringify(jqXHR) + ' ' + textStatus + '  ' + errorThrown);
                 }
             }).done(function (data) {
+            	$('form#cicleedit').find('input[name=scsystemid]').val(data.id);
+            	$('form#divedit').find('input[name=scsystemid]').val(data.id);
+            	$('form#planedit').find('input[name=scsystemid]').val(data.id);
+            	
             	$('.systemform').find('input[name=scid]').val(data.id);
             	$('.systemcont').find('input[name=scname]').val(data.sysdata.name);
-            	$('.systemcont').find('input[name=scdescription]').val(data.sysdata.description);
+            	$('.systemcont').find('textarea[name=scdescription]').val(data.sysdata.description);
             	$('.systemcont').find('select[name=scduration]').find('option').removeAttr('selected');
-            	$('.systemcont').find('select[name=scduration]').find('option[value='+data.sysdata.duration+']').attr('selected','selected');
+            	$('.systemcont').find('select[name=scduration]').find('option[value='+data.sysdata.duration+']').attr('selected',true);
+            	$('.systemcont').find('select[name=scstatus]').find('option[value='+data.sysdata.status+']').attr('selected',true);
+            	
             	if(data.cicles.length>0){
             		for (i in data.cicles){
-            			$('.systemcicles').find('ul').append('<li data-id="'+data.cicles[i].id+'">'+
-            				'<span4>'+data.cicles[i].name+'</span>'+
-            				'<span6>'+data.cicles[i].description+'</span>'+
-            				'<span2><i class="icon-pencil"></i><i class="icon-remove"></i></span>'
-           	 				);
+            			addcicle(data.cicles[i].id,data.cicles[i].abbr,data.cicles[i].name,data.sysdata.status==0);
             		}
             	}
-            	if(data.inplan.length>0){
-            		for (i in data.inplan){
-            			$('.systeminplans').find('ul').append('<li data-id="'+data.inplan[i].id+'">'+
-            				'<span4>'+data.inplan[i].name+'</span>'+
-            				'<span6>'+data.inplan[i].description+'</span>'+
-            				'<span2><i class="icon-arrow-right"></i></span>'
-            				);
+            	if(data.divisions.length>0){
+            		for (i in data.divisions){
+            			adddiv(data.divisions[i].id,data.divisions[i].name,data.sysdata.status==0);
             		}
-            	}   	
+            	}
+            	
+            	if(data.sysdata.status==0){
+            		$('.systemcont').find('input[name=scname]').removeAttr('readonly');
+            		$('.systemcont').find('textarea[name=scdescription]').removeAttr('readonly');
+            		$('.systemcont').find('select[name=scduration]').closest('.control-group').slideDown();
+            		$('.systemcont').find('select[name=scduration]').removeAttr('disabled').trigger("liszt:updated");
+            		$('.systemcont').find('select[name=scstatus]').removeAttr('disabled').trigger("liszt:updated");
+            		sortable_cicles();
+            		dom_cicles();
+            		sortable_divs();
+            		dom_divs();
+            	}else if(data.sysdata.status==1){
+            		$('.systemcont').find('input[name=scname]').attr('readonly',true);
+            		$('.systemcont').find('textarea[name=scdescription]').attr('readonly',true);
+            		$('.systemcont').find('select[name=scduration]').attr('disabled', true).trigger("liszt:updated");
+            		
+            		$('.systemcont').find('select[name=scstatus]').find('option').filter(function(){return $(this).val()<data.sysdata.status}).attr('disabled', true);
+            		$('.systemcont').find('select[name=scstatus]').removeAttr('disabled').trigger("liszt:updated");
+            	}else{
+            		$('.systemcont').find('input[name=scname]').attr('readonly',true);
+            		$('.systemcont').find('textarea[name=scdescription]').attr('readonly',true);
+            		$('.systemcont').find('select[name=scduration]').attr('disabled', true).trigger("liszt:updated");
+            		$('.systemcont').find('select[name=scstatus]').attr('disabled', true).trigger("liszt:updated");
+            		$('.systemcont').find('button').attr('disabled', true);
+            	}
+            	
+            	if($(data.inplan).length>0){
+            		for (i in data.inplan){
+            			addplan(data.inplan[i].id,data.inplan[i].url,data.inplan[i].description);
+            		}
+            	}
+            	
 				$('h2.scadd').slideUp();
 				$('h2.scedt').slideDown();
 				$('.systemform').slideDown();
 				$('.systemcicles').slideDown();
+				$('.systemdivs').slideDown();
 				$('.systeminplans').slideDown();
 				$('.systemcont').slideDown();
-				$('.systemcicles').find('ul').sortable();
-				$('.systeminplans').find('ul').sortable();
             });
+}
+function adddiv(id,name,allowedit){
+	var addedit='';
+	if(allowedit){
+		addedit='<i class="icon-pencil edtdiv"></i><i class="delcicle icon-remove"></i>';
+	}
+	$('.systemdivs').find('ul').append('<li data-id="'+id+'">'+
+            				'<span class="span6 divedtname">'+name+'</span>'+
+            				'<span class="span2">'+addedit+'</span>'
+           	 				);
+}
+function sortable_divs(){
+	$('.systemdivs').find('ul').sortable({
+		update: function(event, ui) {
+			//create the array that hold the positions...
+            var order = []; 
+            //loop trought each li...
+            $(ui.item).closest('ul').find('li').each( function(e) {
+            	//add each li position to the array...     
+               	// the +1 is for make it start from 1 instead of 0
+               	order[parseInt($(this).attr('data-id'))]=$(this).index() + 1;
+            });
+			$.ajax({
+                type:"POST",
+                url: '{{ site_url('school/orderdivs') }}',
+                dataType:'json',
+                data: {'order':order,'system':$('#divedit').find('input[name=scsystemid]').val()},
+                error:function (jqXHR, textStatus, errorThrown) {
+                    console.log(JSON.stringify(jqXHR) + ' ' + textStatus + '  ' + errorThrown);
+                }
+            }).done(function(data){
+            	
+            });
+        }
+	});
+}
+function dom_divs(){
+	$('.systemdivs').find('li').find('.edtdiv').click(function(){
+        $('.divedt').find('input[id=divid]').val($(this).closest('li').attr('data-id'))
+        $('.divedt').find('input[id=divname]').val($(this).closest('li').find('.divedtname').html())
+        $('.divedt').slideDown();
+    });
+            		
+    $('.systemdivs').find('li').find('.icon-remove').click(function(){
+   		$.ajax({
+        	type:"POST",
+            url: '{{ site_url('school/delDivision') }}',
+            dataType:'json',
+            data: $(form).serializeObject(),
+            error:function (jqXHR, textStatus, errorThrown) {
+            	console.log(JSON.stringify(jqXHR) + ' ' + textStatus + '  ' + errorThrown);
+            }
+            }).done(function(data){
+            					
+            });
+    });
+}
+function addcicle(id,abbr,name,allowedit){
+	var addedit='';
+	if(allowedit){
+		addedit='<i class="icon-pencil edtcicle"></i><i class="delcicle icon-remove"></i>';
+	}
+	$('.systemcicles').find('ul').append('<li data-id="'+id+'">'+
+            				'<span class="span3 cicleedtabbr">'+abbr+'</span>'+
+            				'<span class="span6 cicleedtname">'+name+'</span>'+
+            				'<span class="span2">'+addedit+'</span>'
+           	 				);
+}
+function sortable_cicles(){
+	$('.systemcicles').find('ul').sortable({
+		update: function(event, ui) {
+			//create the array that hold the positions...
+            var order = []; 
+            //loop trought each li...
+            $(ui.item).closest('ul').find('li').each( function(e) {
+            	//add each li position to the array...     
+               	// the +1 is for make it start from 1 instead of 0
+               	order[parseInt($(this).attr('data-id'))]=$(this).index() + 1;
+            });
+			$.ajax({
+                type:"POST",
+                url: '{{ site_url('school/ordercicles') }}',
+                dataType:'json',
+                data: {'order':order,'system':$('#cicleedit').find('input[name=scsystemid]').val()},
+                error:function (jqXHR, textStatus, errorThrown) {
+                    console.log(JSON.stringify(jqXHR) + ' ' + textStatus + '  ' + errorThrown);
+                }
+            }).done(function(data){
+            	
+            });
+        }
+	});
+}
+function dom_cicles(){
+	$('.systemcicles').find('li').find('.edtcicle').click(function(){
+        $('.cicleedt').find('input[id=cicleid]').val($(this).closest('li').attr('data-id'))
+        $('.cicleedt').find('input[id=cicleabbr]').val($(this).closest('li').find('.cicleedtabbr').html())
+        $('.cicleedt').find('input[id=ciclename]').val($(this).closest('li').find('.cicleedtname').html())
+        $('.cicleedt').slideDown();
+    });
+            		
+    $('.systemcicles').find('li').find('.icon-remove').click(function(){
+   		$.ajax({
+        	type:"POST",
+            url: '{{ site_url('school/addcicle') }}',
+            dataType:'json',
+            data: $(form).serializeObject(),
+            error:function (jqXHR, textStatus, errorThrown) {
+            	console.log(JSON.stringify(jqXHR) + ' ' + textStatus + '  ' + errorThrown);
+            }
+            }).done(function(data){
+            					
+            });
+    });
+}
+function addplan(planid,planurl,plandescription){
+	$('.systeminplans').find('ul').append('<li data-id="'+planid+'">'+
+            				'<span class="span3 planname">'+planurl+'</span>'+
+            				'<span class="span6 plandesc">'+plandescription+'</span>'
+           	 				);
 }
 </script>
 {% endblock %}

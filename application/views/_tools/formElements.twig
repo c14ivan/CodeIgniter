@@ -77,6 +77,7 @@
         {% set append=campo.append %}
         {% set prepend=campo.prepend %}
         {% set opciones=campo.opciones %}
+        {% set estilo=campo.estilo %}
         {% set classappprep='' %}
         {% set class=campo.class %}
         {% if maxLength>20%}
@@ -98,7 +99,7 @@
             <input type="{{ type|default('text') }}" name="{{ name }}" id="{{ id|default(name)}}"
                value="{{ value }}" {% if onchange %} onchange="{{ onchange }}" {% endif %}/>
         {% else %}
-            <div class="control-group" {% if id %} id="div_{{id}}" {% endif %}>
+            <div class="control-group" {% if id %} id="div_{{id}}" {% endif %} {% if estilo %} style="{{ estilo }}" {% endif %}>
                 {% if label %}
                     {{ _self.label(label,'control-label',id|default(name)) }}
                 {% endif %}
@@ -122,7 +123,7 @@
                         {% elseif type=='label' %}
                         	{{ _self.label(valor,class,'') }}
                         {% else %}
-                            <input type="{{ type|default('text') }}" name="{{ name }}" id="{{ id|default(name)}}"
+                            <input type="{{ type|default('text') }}" name="{{ name }}" id="{{ id|default(name)}}" 
                                value="{{ value }}" {% if maxLength %} maxlength="{{ maxLength|default(20) }}" {% endif %}
                                class="{{ class }}" placeholder="{{ placeholder }}" {{extra}} {% if onchange %} onchange="{{ onchange }}" {% endif %}/>
                         {% endif %}
@@ -213,8 +214,9 @@
         {% set opciones=campo.opciones %}
         {% set extra=campo.extra %}
         {% set class=campo.class %}
+        {% set estilo=campo.estilo %}
         {% set placeholder=campo.placeholder %}
-        <div class="control-group" {% if id %} id="div_{{id}}" {% endif %}>
+        <div class="control-group" {% if id %} id="div_{{id}}" {% endif %} {% if estilo %} style="{{ estilo }}" {% endif %}>
             {% if label %}
                 {{ _self.label(label,'control-label',id|default(name)) }}
             {% endif %}
