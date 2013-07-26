@@ -12,6 +12,7 @@ class School extends CI_Controller {
 	
 		$this->load->model('school/scsystem');
 		$this->load->model('school/scplan');
+		$this->load->model('school/scsubject');
 		$this->lang->load('school');
 		$this->config->load('school');
 		$this->lang->load('form_validation');
@@ -25,9 +26,7 @@ class School extends CI_Controller {
     public function system(){
         $this->twig->display('school/system',array());
     }
-    public function plan($planid){
-        echo var_dump($planid);
-    	
+    public function plan($planid){    	
     	$this->twig->display('school/plan',array('get',$planid));
     }
     public function subjects(){
@@ -172,6 +171,63 @@ class School extends CI_Controller {
     	$postdata['url']=anchor('school/plan/'.$postdata['planid'],$postdata['planname']);
     	echo json_encode(array('plan'=>$postdata));
     	
+    }
+    public function addarea(){
+    	if(!$this->input->is_ajax_request()) redirect();
+    	$this->output->enable_profiler(FALSE);
+    	$postdata=$this->input->post();
+    	if(intval($postdata['scareaid'])>0){
+    		$areaid=$this->scsubject->updateArea($postdata['scareaid'],$postdata['scarea'],$postdata['scdescription'],isset($postdata['scblocked']));
+    	}else{
+    		$areaid=$this->scsubject->addArea($postdata['scarea'],$postdata['scdescription'],isset($postdata['scblocked']));	
+    		$postdata['scareaid']=$areaid;
+    	}
+    	
+    	echo json_encode(array('ok'=>($areaid!=false),'area'=>$postdata));
+    }
+    public function getareas(){
+    	$this->output->enable_profiler(FALSE);
+    	echo json_encode(array('areas'=>$this->scsubject->getAreas()));
+    }
+    public function getsubject(){
+    	if(!$this->input->is_ajax_request()) redirect();
+    	$this->output->enable_profiler(FALSE);
+    	echo json_encode($this->scsubject->getSubject($this->input->post('subjectid')));
+    }
+    public function getsubjects(){
+    	if(!$this->input->is_ajax_request()) redirect();
+    	$this->output->enable_profiler(FALSE);
+    	echo json_encode(array('subjects'=>$this->scsubject->getSubjects()));
+    }
+    public function getsubjectversions(){
+    	if(!$this->input->is_ajax_request()) redirect();
+    	$this->output->enable_profiler(FALSE);
+    	echo json_encode(array('versions'=>$this->scsubject->getVersions($this->input->post('subjectid'))));
+    }
+    public function addsubject(){
+    	if(!$this->input->is_ajax_request()) redirect();
+    	$this->output->enable_profiler(FALSE);
+    	
+    	$postdata=$this->input->post();
+    	if(intval($postdata['scsubjectid'])>0){
+    		$postdata['scsubjectid']=$this->scsubject->updateSubject($postdata['scsubjectid'],$postdata['scname'],
+    				$postdata['scabbr'],$postdata['scdescription'],isset($postdata['scblocked']));
+    	}else{
+    		$postdata['scsubjectid']=$this->scsubject->addSubject($postdata['scarea'],$postdata['scname'],
+    			$postdata['scabbr'],$postdata['scdescription'],isset($postdata['scblocked']));
+    	}
+    	echo json_encode(array('ok'=>(intval($postdata['scsubjectid'])>0),'subject'=>$postdata));
+    }
+    public function addsubjectversion(){
+    	$postdata=$this->input->post();
+    	if(intval($postdata['scsubjectversionid'])>0){
+    		$postdata['scsubjectversionid']=$this->scsubject->updateVersion($postdata['scsubjectversionid'],$postdata['scname'],
+    				$postdata['scdescription']);
+    	}else{
+    		$postdata['scsubjectversionid']=$this->scsubject->addVersion($postdata['scsubjectid'],$postdata['scname'],
+    				$postdata['scdescription']);
+    	}
+    	echo json_encode(array('ok'=>(intval($postdata['scsubjectversionid'])>0),'subject'=>array('id'=>$postdata['scsubjectid'])));
     }
 }
 

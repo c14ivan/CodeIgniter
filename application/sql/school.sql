@@ -73,7 +73,8 @@ DROP TABLE IF EXISTS `scarea`;
 CREATE TABLE `scarea` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(80) DEFAULT NULL,
-  `shortname` varchar(5) DEFAULT NULL,
+  `description` TEXT DEFAULT NULL,
+  `blocked` int(4) DEFAULT 0,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -85,6 +86,7 @@ CREATE TABLE `scsubject` (
   `name` varchar(100) DEFAULT NULL,
   `shortname` varchar(5) DEFAULT NULL,
   `description` text,
+  `blocked` int(4) DEFAULT 0,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -106,6 +108,7 @@ DROP TABLE IF EXISTS `scsubjectversion`;
 CREATE TABLE `scsubjectversion` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `scsubjectid` int(11) DEFAULT NULL,
+  `name` varchar(100) DEFAULT NULL,
   `version` int(11) DEFAULT NULL,
   `status` tinyint(4) DEFAULT NULL,
   `description` text,

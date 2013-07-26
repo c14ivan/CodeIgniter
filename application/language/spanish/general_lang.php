@@ -8,6 +8,7 @@ $lang['install']="Instalación";
 $lang['logout']="Salir";
 $lang['login']="Ingresar";
 $lang['name']="Nombre";
+$lang['selectanoption']="Seleccione...";
 
 $lang['auth'] = "Usuarios";
 $lang['auth/users']="Listado de Usuarios";

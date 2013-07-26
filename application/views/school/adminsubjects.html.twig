@@ -1,13 +1,484 @@
 {% extends '_layouts/index.html.twig' %}
 
 {% block headext %}
-
+<link rel="stylesheet" type="text/css" href="{{ asset_url()~'cssapp/general.css' }}" media="all">
 {% endblock %}
-{% block jscode %}
-<script type="text/javascript">
 
-</script>
-{% endblock %}
 {% block content %}
+{% import '_tools/formElements.twig' as forms %}
+<div class="row-fluid">
+	<div class="box span6 areascontainer">
+		<div class="box-header well">
+			<h2>{{ lang('sc_areas') }}</h2>
+			<div class="box-icon">
+				<a href="#" class="btn btn_addarea btn-round"><i class="icon-plus"></i></a>
+			</div>
+		</div>
+		<div class="box-content">
+			<div class="areaedt box box-content" style="display:none;">
+				<i class="icon-remove closeedtarea" style="float:right"></i>
+				<form id="scareaedt" class="form-horizontal" method="post">
+					{{ forms.campo({'tipo':'input','type':'hidden','name':'scareaid'}) }}
+					{{ forms.campo({'tipo':'input','type':'text','name':'scarea','label':lang('name'),'maxlength':45}) }}
+					{{ forms.campo({'tipo':'textarea','label':lang('description'),'name':'scdescription','cols':50}) }}
+					{{ forms.campo({tipo:'input',type:'checkbox',label:lang('sc_blockarea'),name:'scblocked'}) }}
+					<div class="form-actions">
+						<p class="center span5">
+                      		<button type="submit" class="btn btn-primary">{{ lang('save') }}</button>
+                   		</p>
+                   	</div>
+				</form>
+			</div>
+			<ul class="wide-list">
+				
+			</ul>
+		</div>
+	</div>
+	<div class="box span6 ">
+		<div class="box-header well">
+			<h2>{{ lang('sc_subjects') }}</h2>
+			<div class="box-icon">
+				<a href="#" class="btn btn_addsubject btn-round"><i class="icon-plus"></i></a>
+			</div>
+		</div>
+		<div class="box-content">
+			<div class="subjectedt box box-content" style="display:none;">
+				<i class="icon-remove closeedtsubject" style="float:right"></i>
+				<form id="subjectedt" class="form-horizontal" method="post">
+					{{ forms.campo({'tipo':'input','type':'hidden','name':'scsubjectid'}) }}
+					{{ forms.campo({'tipo':'input','type':'text','name':'scname','label':lang('name'),'maxlength':45}) }}
+					{{ forms.campo({'tipo':'input','type':'text','name':'scabbr','label':lang('sc_abbr'),'maxlength':5}) }}
+					{{ forms.campo({'tipo':'textarea','label':lang('description'),'name':'scdescription','cols':50}) }}
+					{{ forms.campo({'tipo':'select','label':lang('sc_area'),'name':'scarea',
+						'opciones':{}}) }}
+					{{ forms.campo({tipo:'input',type:'checkbox',label:lang('sc_blockarea'),name:'scblocked'}) }}
+					<div class="form-actions">
+						<p class="center span5">
+                      		<button type="submit" class="btn btn-primary">{{ lang('save') }}</button>
+                   		</p>
+                   	</div>
+				</form>
+			</div>
+			<table id="subjectable" class="table table-striped table-bordered bootstrap-datatable" style="width:100%;">
+				<thead>
+					<tr><th data-name='area'>{{ lang('sc_areacol') }}</th><th>{{ lang('sc_subject') }}</th><th>{{ lang('sc_abbr') }}</th><th></th></tr>
+				</thead>
+				<tbody>
+					
+				</tbody>
+				<tfoot>
+					<tr><th class="filter"></th><th></th><th></th><th></th></tr>				
+				</tfoot>
+			</table>
+		</div>
+	</div>
+	<div class="box span12 versionscontainer" style="display:none;">
+		<div class="box-header well">
+			<h2>{{ lang('sc_subject') }}: <span id="scname"></span></h2>
+			<div class="box-icon">
+				<a href="#" class="btn btn_addversion btn-round"><i class="icon-plus"></i></a>
+			</div>
+		</div>
+		<div class="box-content">
+			<div class="subjectversionedt box box-content" style="display:none;">
+				<i class="icon-remove closeedtsubjectversion" style="float:right"></i>
+				<h2 class="editversion" style="display:none;">{{ lang('sc_editversion') }}</h2>
+				<h2 class="addversion" style="display:none;">{{ lang('sc_addversion') }}</h2>
+				<form id="subjectversionedt" class="form-horizontal" method="post">
+					{{ forms.campo({'tipo':'input','type':'hidden','name':'scsubjectid'}) }}
+					{{ forms.campo({'tipo':'input','type':'hidden','name':'scsubjectversionid'}) }}
+					{{ forms.campo({'tipo':'input','type':'text','name':'scname','label':lang('name'),'maxlength':45}) }}
+					{{ forms.campo({'tipo':'textarea','label':lang('description'),'name':'scdescription','cols':50}) }}
+					<div class="form-actions">
+						<p class="center span5">
+                      		<button type="submit" class="btn btn-primary">{{ lang('save') }}</button>
+                   		</p>
+                   	</div>
+				</form>
+			</div>
+			<table id="subjectversiontable" class="table table-striped table-bordered bootstrap-datatable" style="width:100%;">
+				<thead>
+					<tr><th>{{ lang('sc_version') }}</th><th>{{ lang('name') }}</th><th>{{ lang('description') }}</th><th>{{ lang('sc_status') }}</th></tr>
+				</thead>
+				<tbody>
+					
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+{% endblock %}
 
+{% block jscode %}
+<script type="text/javascript" src="{{ asset_url()~'jsapp/tables.js' }}"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+var subjectversionstatus= {{ config.school.subjectversionstatus|json_encode() }} ;
+$('#subjectversionedt').validate({
+	errorClass:'errorlabelform',
+    elErrorClass:'errorlabel',
+    ignore:':hidden.chzn',
+    rules:{
+    	scname:{required: true,minlength:5,},
+    	scdescription:{required: true,minlength:5,},
+    },
+    messages:{
+    	scname:{
+    		required: '{{ lang('required')|format('')}}',
+    		minlength: '{{ lang('min_length')|format('',5)}}',
+    		
+    	},
+    	scdescription:{
+    		required: '{{ lang('required')|format('')}}',
+    		minlength: '{{ lang('min_length')|format('',5)}}',
+    		
+    	},
+    },
+    submitHandler: function(form) {
+    	$.ajax({
+                type:"POST",
+                url: '{{ site_url('school/addsubjectversion') }}',
+                dataType:'json',
+                data: $(form).serializeObject(),
+                error:function (jqXHR, textStatus, errorThrown) {
+                    console.log(JSON.stringify(jqXHR) + ' ' + textStatus + '  ' + errorThrown);
+                }
+            }).done(function (data) {
+            	if (data.ok){
+            		loadsubjectversion(data.subject.id);
+            		$('.closeedtsubjectversion').trigger('click');
+            	}else{
+            		noty({text: '{{ lang('ajaxerror')}}',type:'error',timeout:500});
+            	}
+            });
+    }
+});
+$('#subjectedt').validate({
+	errorClass:'errorlabelform',
+    elErrorClass:'errorlabel',
+    ignore:':hidden.chzn',
+    rules:{
+    	scname:{required: true,minlength:5,},
+    	scdescription:{required: true,minlength:5,},
+    	scabbr:{required:true,minlength:3,lettersNumber:true},
+    	scarea:{required:true}
+    },
+    messages:{
+    	scname:{
+    		required: '{{ lang('required')|format('')}}',
+    		minlength: '{{ lang('min_length')|format('',5)}}',
+    		
+    	},
+    	scdescription:{
+    		required: '{{ lang('required')|format('')}}',
+    		minlength: '{{ lang('min_length')|format('',5)}}',
+    		
+    	},
+    	scabbr:{
+    		required: '{{ lang('required')|format('')}}',
+    		minlength: '{{ lang('min_length')|format('',5)}}',
+    		lettersNumber:'{{ lang('alpha_numeric')|format('') }}'
+    	},
+    	scarea:{
+    		required: '{{ lang('required')|format('')}}',
+    	}
+    },
+    submitHandler: function(form) {
+    	// do other stuff for a valid form
+    	$.ajax({
+                type:"POST",
+                url: '{{ site_url('school/addsubject') }}',
+                dataType:'json',
+                data: $(form).serializeObject(),
+                error:function (jqXHR, textStatus, errorThrown) {
+                    console.log(JSON.stringify(jqXHR) + ' ' + textStatus + '  ' + errorThrown);
+                }
+            }).done(function (data) {
+            	if (data.ok){
+            		loadsubjects();
+            		$('.closeedtsubject').trigger('click');
+            	}else{
+            		noty({text: '{{ lang('ajaxerror')}}',type:'error',timeout:500});
+            	}
+            });
+  	}
+});
+$('#scareaedt').validate({
+	errorClass:'errorlabelform',
+    elErrorClass:'errorlabel',
+    ignore:':hidden.chzn',
+    rules:{
+    	scarea:{
+    		required: true,
+            minlength:5,
+    	},
+    	scdescription:{
+    		required: true,
+            minlength:5,
+    	}
+    },
+    messages:{
+    	scname:{
+    		required: '{{ lang('required')|format('')}}',
+    		minlength: '{{ lang('min_length')|format('',5)}}',
+    		
+    	},
+    	scdescription:{
+    		required: '{{ lang('required')|format('')}}',
+    		minlength: '{{ lang('min_length')|format('',5)}}',
+    		
+    	},
+    },
+    submitHandler: function(form) {
+    	// do other stuff for a valid form
+    	$.ajax({
+                type:"POST",
+                url: '{{ site_url('school/addarea') }}',
+                dataType:'json',
+                data: $(form).serializeObject(),
+                error:function (jqXHR, textStatus, errorThrown) {
+                    console.log(JSON.stringify(jqXHR) + ' ' + textStatus + '  ' + errorThrown);
+                }
+            }).done(function (data) {
+            	if (data.ok){
+            		loadareas();
+            		$('.closeedtarea').trigger('click');
+            	}else{
+            		noty({text: '{{ lang('ajaxerror')}}',type:'error',timeout:500});
+            	}
+            });
+  	}
+});
+var tablesubjects=$('#subjectable').dataTable({
+        "sDom": "<'row-fluid'<'span6'l><'span6'f>r>t<'row-fluid'<'span12'i><'span12 center'p>>",
+        "sPaginationType": "bootstrap",
+        "oLanguage": {
+            "sProcessing": "{{ lang('table_processing') }}",
+            "sLengthMenu": "{{ lang('table_recordsperpage') }}",
+            "sZeroRecords": "{{ lang('table_noregisters') }}",
+            "sEmptyTable": "{{ lang('table_empty') }}",
+            "sInfo": "{{ lang('table_pager') }}",
+            "sInfoEmpty": "{{ lang('table_pagerempty') }}",
+            "sInfoFiltered": "{{ lang('table_filtered') }}",
+            "sSearch": "{{ lang('table_search') }}",
+            "sLoadingRecords": "{{ lang('table_loading') }}",
+            "oAria": {
+                "sSortAscending": "{{ lang('table_sortAsc') }}",
+                "sSortDescending": "{{ lang('table_sortDesc') }}",
+            },
+            "oPaginate": {
+                "sFirst": "{{ lang('table_first') }}",
+                "sLast": "{{ lang('table_last') }}",
+                "sNext": "{{ lang('table_next') }}",
+                "sPrevious": "{{ lang('table_previous') }}",
+            },
+        }
+    });
+var tableversions=$('#subjectversiontable').dataTable({
+        "sDom": "<'row-fluid'<'span6'l><'span6'f>r>t<'row-fluid'<'span12'i><'span12 center'p>>",
+        "sPaginationType": "bootstrap",
+        "oLanguage": {
+            "sProcessing": "{{ lang('table_processing') }}",
+            "sLengthMenu": "{{ lang('table_recordsperpage') }}",
+            "sZeroRecords": "{{ lang('table_noregisters') }}",
+            "sEmptyTable": "{{ lang('table_empty') }}",
+            "sInfo": "{{ lang('table_pager') }}",
+            "sInfoEmpty": "{{ lang('table_pagerempty') }}",
+            "sInfoFiltered": "{{ lang('table_filtered') }}",
+            "sSearch": "{{ lang('table_search') }}",
+            "sLoadingRecords": "{{ lang('table_loading') }}",
+            "oAria": {
+                "sSortAscending": "{{ lang('table_sortAsc') }}",
+                "sSortDescending": "{{ lang('table_sortDesc') }}",
+            },
+            "oPaginate": {
+                "sFirst": "{{ lang('table_first') }}",
+                "sLast": "{{ lang('table_last') }}",
+                "sNext": "{{ lang('table_next') }}",
+                "sPrevious": "{{ lang('table_previous') }}",
+            },
+        }
+    });
+$('#scabbr').keyup(function(){
+	$(this).val($(this).val().toUpperCase());
+});
+$('.closeedtarea').click(function(){
+	$('.areaedt').slideUp();
+	resetForm($('.areaedt').find('form'));
+	$('.areaedt').find('input[name=scareaid]').val(0);
+});
+$('.closeedtsubject').click(function(){
+	$('.subjectedt').slideUp();
+	resetForm($('.subjectedt').find('form'));
+	$('.subjectedt').find('input[name=scsubjectid]').val(0);
+});
+$('.btn_addarea').click(function(){
+	$('.areaedt').slideDown();
+	resetForm($('.areaedt').find('form'));
+	$('.areaedt').find('input[name=scareaid]').val(0);
+});
+$('.btn_addsubject').click(function(){
+	$('.subjectedt').slideDown();
+	resetForm($('.subjectedt').find('form'));
+	$('.subjectedt').find('input[name=scsubjectid]').val(0);
+});
+$('.btn_addversion').click(function(){
+	$('.subjectversionedt').slideDown();
+	resetForm($('.subjectversionedt').find('form'));
+	$('.subjectversionedt').find('input[name=scsubjectversionid]').val(0);
+	$('.subjectversionedt').find('h2.addversion').slideDown();
+}); 
+function addarea(areaid,areaname,areadesc,allowedit){
+	addareaedt='';
+	if(allowedit){
+		addareaedt='<i class="icon-edit editarea"></i>'
+	}
+	if($('.areascontainer').find('ul').find('li[data-id='+areaid+']').length>0){
+    	$('.areascontainer').find('ul').find('li[data-id='+areaid+']').find('.areaname').html(areaname);
+    	return false;
+    }else{
+		$('.areascontainer').find('ul').append('<li data-id="'+areaid+'">'+
+            				'<span class="span3 areaname">'+areaname+'</span>'+
+            				'<span class="span6 areadesc">'+areadesc+'</span>'+
+            				'<span class="span2 plandesc"><i class="icon-eye-open viewarea"></i>'+addareaedt+'</span>'
+           	 				);
+        return true;
+    }        		
+}
+function loadareas(){
+	$.ajax({
+                type:"POST",
+                url: '{{ site_url('school/getareas') }}',
+                dataType:'json',
+                error:function (jqXHR, textStatus, errorThrown) {
+                    console.log(JSON.stringify(jqXHR) + ' ' + textStatus + '  ' + errorThrown);
+                }
+            }).done(function (data) {
+            	$('select#scarea').find('option').not('[value=0]').remove();
+            	$('.areascontainer').find('ul').empty();
+            	for (i in data.areas){
+            		$('select#scarea').append('<option value="'+i+'">'+data.areas[i].name+'</option>');
+            		addarea(data.areas[i].id,data.areas[i].name,data.areas[i].description,parseInt(data.areas[i].blocked)==0);
+            	}
+            	$('select#scarea').trigger("liszt:updated");
+				dom_areas();
+            });
+}
+function dom_areas(){
+	$('.editarea').click(function(){
+		$('.btn_addarea').trigger('click');
+		$('form#scareaedt').find('input[name=scarea]').val($(this).closest('li').find('.areaname').html());
+		$('form#scareaedt').find('textarea[name=scdescription]').val($(this).closest('li').find('.areadesc').html());
+		$('form#scareaedt').find('input[name=scblocked]').val(true);
+		$('form#scareaedt').find('input[name=scareaid]').val($(this).closest('li').attr('data-id'));
+	});
+	$('.viewarea').click(function(){
+		$(this).closest('table').find('tfoot').find('select#sel_area').find('select').find('option').removeAttr('selected');
+		$(this).closest('table').find('tfoot').find('select#sel_area').find('select').
+		find('option[value='+$(this).closest('li').attr('data-id')+']').attr('selected',true);
+	});
+}
+function loadsubjects(){
+	$.ajax({
+                type:"POST",
+                url: '{{ site_url('school/getsubjects') }}',
+                dataType:'json',
+                error:function (jqXHR, textStatus, errorThrown) {
+                    console.log(JSON.stringify(jqXHR) + ' ' + textStatus + '  ' + errorThrown);
+                }
+            }).done(function (data) {
+            	tablesubjects.fnClearTable();
+            	for (i in data.subjects){
+            		add_subject(data.subjects[i].areaname,data.subjects[i].name,data.subjects[i].shortname,
+            		parseInt(data.subjects[i].blocked)==0,data.subjects[i].id);
+            	}
+            	$('select#scarea').trigger("liszt:updated");
+				dom_tablesubjects();
+				tablesubjects.fnDraw();
+            });
+}
+function dom_tablesubjects(){
+	$("tfoot th.filter").each( function ( i ) {
+		if ($(this).hasClass('filter')){
+        	$(this).html(fnCreateSelect( tablesubjects.fnGetColumnData(i),'sel_'+$($('thead th')[i]).attr('data-name'),'{{ lang('selectanoption') }}') );
+        	if($(this).find('option').not([value=0]).length==0){
+        		$(this).slideUp();
+        	}
+       	 	$('select', this).change( function () {
+       	 		if($(this).val()!='{{ lang('selectanoption') }}'){
+       	 			tablesubjects.fnFilter( $(this).val(), i );
+       	 		}else{
+       	 			tablesubjects.fnFilter('',i);
+       	 			tablesubjects.fnFilter('');
+       	 		}
+            	
+        	});
+        }
+    });
+    $('.adminsubject').click(function(){
+    	$.ajax({
+                type:"POST",
+                url: '{{ site_url('school/getsubject') }}',
+                dataType:'json',
+                data:{subjectid:$(this).attr('data-id')},
+                error:function (jqXHR, textStatus, errorThrown) {
+                    console.log(JSON.stringify(jqXHR) + ' ' + textStatus + '  ' + errorThrown);
+                }
+            }).done(function (data) {
+				//TODO cargar la materia
+				if(data.subject.blocked==0){
+					$('.btn_addsubject').trigger('click');
+					$('form#subjectedt').find('input[name=scsubjectid]').val(data.subject.id);
+					$('form#subjectedt').find('input[name=scname]').val(data.subject.name);
+					$('form#subjectedt').find('input[name=scabbr]').val(data.subject.shortname);
+					$('form#subjectedt').find('textarea[name=scdescription]').val(data.subject.description);
+					$('form#subjectedt').find('select[name=scarea]').val(data.subject.scareaid);
+					$('select#scarea').trigger("liszt:updated");
+					$('.versionscontainer').slideUp();
+				}else{
+					$('.subjectversionedt').find('input[name=scsubjectid]').val(data.subject.id);
+					$('.subjectversionedt').find('h2 span#scname').html(data.subject.name);
+					loadsubjectversion(data.subject.id);
+				}
+            });
+    });
+    
+}
+function loadsubjectversion(subjectid){
+	$.ajax({
+                type:"POST",
+                url: '{{ site_url('school/getsubjectversions') }}',
+                dataType:'json',
+                data:{subjectid:$(this).attr('data-id')},
+                error:function (jqXHR, textStatus, errorThrown) {
+                    console.log(JSON.stringify(jqXHR) + ' ' + textStatus + '  ' + errorThrown);
+                }
+            }).done(function (data) {
+            	$('.versionscontainer').slideUp();
+            	tableversions.fnClearTable();
+				for (i in data.versions){
+					add_subjectversion(data.versions[i].version,data.versions[i].name,data.versions[i].description,
+					subjectversionstatus[data.versions[i].status]);
+				}
+				tablesubjects.fnDraw();
+				$('.versionscontainer').slideDown();
+            });
+}
+function add_subjectversion(version,name,description,status){
+	
+	tableversions.fnAddData( [version,name,description,status] );
+}
+function add_subject(area,name,abbr,allowedit,subjectid){
+	var htmledit='';
+	if(allowedit){
+		htmledit='<i class="icon-edit adminsubject" data-id="'+subjectid+'"></i>';
+	}else{
+		htmledit='<i class="icon-play-circle adminsubject" data-id="'+subjectid+'"></i>';
+	}
+	tablesubjects.fnAddData( [area,name,abbr,htmledit] );
+}	
+loadareas();
+loadsubjects();
+});
+</script>
 {% endblock %}

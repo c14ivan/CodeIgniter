@@ -12,6 +12,11 @@ $config['school']['systemstatus']=array(
 		1=>lang('sc_inuse'),
 		2=>lang('sc_deprecated')	
 );
+$config['school']['subjectversionstatus']=array(
+		0=>lang('sc_edition'),
+		1=>lang('sc_inuse'),
+		2=>lang('sc_deprecated')
+);
 $config['school']['enrolments']=array(
 		0=>lang('sc_enrolmanual'),
 		1=>lang('sc_enrolpass'),

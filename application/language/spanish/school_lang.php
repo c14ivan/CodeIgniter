@@ -18,6 +18,13 @@ $lang['sc_abbr'] = "Abreviatura";
 $lang['sc_status']="Estado";
 $lang['sc_periods']="Periodos";
 $lang['sc_period']="Periodo";
+$lang['sc_areas']="Áreas de Conocimiento";
+$lang['sc_areacol']="Área";
+$lang['sc_subjects']="Asignaturas";
+$lang['sc_subject']="Asignatura";
+$lang['sc_blockarea']="No permitir modificaciones";
+$lang['sc_editversion']="Editar Versión";
+$lang['sc_addversion']="Agregar Versión";
 //duration
 $lang['sc_duryear']="Año";
 $lang['sc_dursemester']="Semestre";
