@@ -25,7 +25,8 @@ class School extends CI_Controller {
     public function system(){
         $this->twig->display('school/system',array());
     }
-    public function plan(){
+    public function plan($planid){
+        echo var_dump($planid);
     	
     	$this->twig->display('school/plan',array('get',$planid));
     }

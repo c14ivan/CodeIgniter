@@ -164,7 +164,6 @@ $('.addplan').click(function(){
 	$('.systemcont').slideUp();
 	$('.systemcicles').slideUp();
 	$('.systeminplans').slideUp();
-	$('.systemform').find('select[name="scstatus"]').closest('.control-group').slideUp();
 	$('.systemcicles').find('ul').children().remove();
 	$('.systemform').slideDown();
 	$('.systemform').find('input[name=scid]').val(0);
@@ -172,6 +171,8 @@ $('.addplan').click(function(){
 	$('h2.scedt').slideUp();
 	resetForm($('.systemcont').find('form'));
 	$('.systemcont').slideDown();
+	$('.systemform').find('select[name="scstatus"]').closest('.control-group').slideUp();
+	$('.systemcont').find('select[name=scduration]').closest('.control-group').slideUp();
 });
 $('#planedit').validate({
 	errorClass:'errorlabelform',
@@ -197,7 +198,6 @@ $('#planedit').validate({
             
             	resetForm($('form#planedit'));
             	$('.planedt').slideUp();
-            					
             	if($('.systemplans').find('ul').find('li[data-id='+data.plan.planid+']').length>0){
             		$('.systemplans').find('ul').find('li[data-id='+data.plan.planid+']').find('.planname').html(data.plan.url);
             		$('.systemplans').find('ul').find('li[data-id='+data.plan.planid+']').find('.plandesc').html(data.plan.plandescription);
@@ -342,7 +342,7 @@ function loadsystems(){
             	for (i in data.systems){
             		$('.systemlist').append(
             		'<li data-id="'+data.systems[i].id+'" class="getsystem">'+
-							'<span class="span2"><i class="icon-cog action "></i></span>'+                              
+							'<span class="span2"><i class="icon-cog action "></i></span>'+
 							'<span class="span3">'+data.systems[i].name+' </span>'+
 							'<span class="span4">'+data.systems[i].description+'</span>'+
 					'</li>'
@@ -406,12 +406,15 @@ function loadsystem(sysid){
             		
             		$('.systemcont').find('select[name=scstatus]').find('option').filter(function(){return $(this).val()<data.sysdata.status}).attr('disabled', true);
             		$('.systemcont').find('select[name=scstatus]').removeAttr('disabled').trigger("liszt:updated");
+    				$('.systeminplans').slideDown();
             	}else{
             		$('.systemcont').find('input[name=scname]').attr('readonly',true);
             		$('.systemcont').find('textarea[name=scdescription]').attr('readonly',true);
             		$('.systemcont').find('select[name=scduration]').attr('disabled', true).trigger("liszt:updated");
             		$('.systemcont').find('select[name=scstatus]').attr('disabled', true).trigger("liszt:updated");
             		$('.systemcont').find('button').attr('disabled', true);
+    				$('.systeminplans').find('');//no mostrar boton de agregar nuevo plan
+    				$('.systeminplans').slideDown();
             	}
             	
             	if($(data.inplan).length>0){
@@ -425,7 +428,6 @@ function loadsystem(sysid){
 				$('.systemform').slideDown();
 				$('.systemcicles').slideDown();
 				$('.systemdivs').slideDown();
-				$('.systeminplans').slideDown();
 				$('.systemcont').slideDown();
             });
 }

@@ -16,18 +16,17 @@ class Scplan extends CI_Model{
 	function getPlans($systemid=0){
 		if($systemid>0){
 			$this->db->select("{$this->table_plan}.id,{$this->table_plan}.name,{$this->table_plan}.description,
-					{$this->table_plan}.enrol_method,count({$this->table_subjectplan}.id)");
+					count({$this->table_subjectplan}.id)");
 			$this->db->where('scsystemid',$systemid);
 			
-			$this->db->group_by("{$this->table_plan}.id,{$this->table_plan}.name,{$this->table_plan}.description,
-					{$this->table_plan}.enrol_method");
+			$this->db->group_by("{$this->table_plan}.id,{$this->table_plan}.name,{$this->table_plan}.description");
 		}else{
 			$this->db->select("{$this->table_name}.name,{$this->table_plan}.id,{$this->table_plan}.name,
-					{$this->table_plan}.description,{$this->table_plan}.enrol_method,count({$this->table_subjectplan}.id)");
+					{$this->table_plan}.description,count({$this->table_subjectplan}.id)");
 			$this->db->join($this->table_name,"{$this->table_name}.id={$this->table_plan}.scsystemid".'LEFT');
 			
 			$this->db->group_by("{$this->table_name}.name,{$this->table_plan}.id,{$this->table_plan}.name,
-					{$this->table_plan}.description,{$this->table_plan}.enrol_method");
+					{$this->table_plan}.description");
 		}
 		$this->db->join($this->table_planversion,"{$this->table_plan}.id={$this->table_planversion}.planid",'LEFT');
 		$this->db->join($this->table_subjectplan,"{$this->table_subjectplan}.scplanversionid={$this->table_planversion}.id",'LEFT');
