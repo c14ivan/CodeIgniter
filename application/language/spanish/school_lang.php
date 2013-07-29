@@ -1,6 +1,7 @@
 <?php
 
 $lang['sc_systems'] = "Sistemas Educativos";
+$lang['sc_system'] = "Sistema Educativo";
 $lang['sc_systemedt'] = "Editar Sistema Educativo";
 $lang['sc_systemadd'] = "Agregar Sistema Educativo";
 $lang['sc_name']="Nombre del Sistema";
@@ -9,6 +10,9 @@ $lang['sc_cicle']="Ciclo";
 $lang['sc_cicles']="Ciclos";
 $lang['sc_systeminplan']="Uso en los planes de Estudio";
 $lang['sc_plan']="Plan de Estudio";
+$lang['sc_plans']="Planes de Estudio";
+$lang['sc_editplan']="Editar Plan de Estudio";
+$lang['sc_addplan']="Agregar Plan de Estudio";
 $lang['sc_enrolment']="Matriculación";
 $lang['sc_enrolmanual']="Manual";
 $lang['sc_versions']="Versiones";

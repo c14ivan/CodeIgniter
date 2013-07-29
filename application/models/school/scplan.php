@@ -1,5 +1,6 @@
 <?php
 class Scplan extends CI_Model{
+	private $table_system       = 'scsystem';
 	private $table_plan			= 'scplan';
 	private $table_versions		= 'scplanversion';
 	private $table_subjectplan  = 'scsubjectplan';
@@ -21,11 +22,11 @@ class Scplan extends CI_Model{
 			
 			$this->db->group_by("{$this->table_plan}.id,{$this->table_plan}.name,{$this->table_plan}.description");
 		}else{
-			$this->db->select("{$this->table_name}.name,{$this->table_plan}.id,{$this->table_plan}.name,
+			$this->db->select("{$this->table_system}.name as sysname,{$this->table_plan}.id,{$this->table_plan}.name,
 					{$this->table_plan}.description,count({$this->table_subjectplan}.id)");
-			$this->db->join($this->table_name,"{$this->table_name}.id={$this->table_plan}.scsystemid".'LEFT');
+			$this->db->join($this->table_system,"{$this->table_system}.id={$this->table_plan}.scsystemid",'LEFT');
 			
-			$this->db->group_by("{$this->table_name}.name,{$this->table_plan}.id,{$this->table_plan}.name,
+			$this->db->group_by("{$this->table_system}.name,{$this->table_plan}.id,{$this->table_plan}.name,
 					{$this->table_plan}.description");
 		}
 		$this->db->join($this->table_planversion,"{$this->table_plan}.id={$this->table_planversion}.planid",'LEFT');
@@ -34,13 +35,9 @@ class Scplan extends CI_Model{
 		$query=$this->db->get($this->table_plan);
 		$response=array();
 		if ($query->num_rows() > 0){
-			foreach ($query->result_array() as $plan){
-				$response[$plan['id']]=$plan;
-				$response[$plan['id']]['url']=anchor('school/plan/'.$plan['id'],$plan['name']);
-			}
-			return $response;
+			$response = $query->result_array();
 		}
-		return array();
+		return $response;
 	}
 	function addPlan($system,$planname,$plandescription){
 		$planid=false;

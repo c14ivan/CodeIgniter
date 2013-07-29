@@ -366,6 +366,7 @@ function loadsystem(sysid){
 	$('.systemcicles').find('ul').children().remove();
 	$('.systemdivs').find('ul').children().remove();
 	$('.systeminplans').find('ul').children().remove();
+	$('.systemdivs').find('ul').sortable('cancel');
 	$.ajax({
                 type:"POST",
                 url: '{{ site_url('school/getsystem') }}',

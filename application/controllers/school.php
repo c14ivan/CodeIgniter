@@ -26,8 +26,8 @@ class School extends CI_Controller {
     public function system(){
         $this->twig->display('school/system',array());
     }
-    public function plan($planid){
-        $this->twig->display('school/plan',array('get',$planid));
+    public function plan(){
+        $this->twig->display('school/plan',array());
     }
     public function subjects(){
         $this->twig->display('school/adminsubjects');
@@ -171,6 +171,11 @@ class School extends CI_Controller {
         $postdata['url']=anchor('school/plan/'.$postdata['planid'],$postdata['planname']);
         echo json_encode(array('plan'=>$postdata));
          
+    }
+    public function getplans(){
+    	if(!$this->input->is_ajax_request()) redirect();
+    	$this->output->enable_profiler(FALSE);
+    	echo json_encode(array('plans'=>$this->scplan->getPlans()));
     }
     public function addarea(){
         if(!$this->input->is_ajax_request()) redirect();

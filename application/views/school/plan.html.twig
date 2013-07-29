@@ -3,20 +3,35 @@
 {% block headext %}
 
 {% endblock %}
-{% block jscode %}
-<script type="text/javascript">
 
-</script>
-{% endblock %}
 {% block content %}
 {% import '_tools/formElements.twig' as forms %}
 <div class="row-fluid">
 	<div class="box span6 ">
+		<div class="box-header well">
+			<h2>{{ lang('sc_plans') }}</h2>
+			<div class="box-icon">
+				<a href="#" class="btn btn_addform btn-round"><i class="icon-plus"></i></a>
+			</div>
+		</div>
 		<div class="box-content">
-			<form id="planform" class="form-horizontal">
-				{{ forms.campo({'tipo':'input','type':'text','name':'pl_name','label':lang('sc_plan'),'maxlength':45}) }}
-				{{ forms.campo({'tipo':'textarea','label':lang('description'),'name':'pl_description','cols':50}) }}
-			</form>
+			<div class="formcont box box-content" style="display:none;">
+				<i class="icon-remove closeform" style="float:right"></i>
+				<h2 class="edit" style="display:none;">{{ lang('sc_editplan') }}</h2>
+				<h2 class="add" style="display:none;">{{ lang('sc_addplan') }}</h2>
+				<form id="planform" class="form-horizontal">
+					{{ forms.campo({'tipo':'input','type':'text','name':'pl_name','label':lang('sc_plan'),'maxlength':45}) }}
+					{{ forms.campo({'tipo':'textarea','label':lang('description'),'name':'pl_description','cols':50}) }}
+				</form>
+			</div>
+			<table id="planstable" class="table table-striped table-bordered bootstrap-datatable" style="width:100%;">
+				<thead>
+					<tr><th>{{ lang('sc_system') }}</th><th>{{ lang('sc_plan') }}</th><th></th></tr>
+				</thead>
+				<tbody>
+					
+				</tbody>
+			</table>
 		</div>
 	</div>
 	<div class="box span6">
@@ -47,4 +62,65 @@
 		<!-- status label goes here -->
 	</div>
 </div>
+{% endblock %}
+{% block jscode %}
+<script type="text/javascript">
+$('.btn_addform').click(function(){
+	resetForm($(this).closest('box').find('form'));
+	$(this).closest('box').find('.formcont').slideDown();
+});
+$('.closeform').click(function(){
+	resetForm($(this).closest('box').find('form'));
+	$(this).closest('box').slideUp();
+});
+var tableplans=$('#planstable').dataTable({
+        "sDom": "<'row-fluid'<'span6'l><'span6'f>r>t<'row-fluid'<'span12'i><'span12 center'p>>",
+        "sPaginationType": "bootstrap",
+        "oLanguage": {
+            "sProcessing": "{{ lang('table_processing') }}",
+            "sLengthMenu": "{{ lang('table_recordsperpage') }}",
+            "sZeroRecords": "{{ lang('table_noregisters') }}",
+            "sEmptyTable": "{{ lang('table_empty') }}",
+            "sInfo": "{{ lang('table_pager') }}",
+            "sInfoEmpty": "{{ lang('table_pagerempty') }}",
+            "sInfoFiltered": "{{ lang('table_filtered') }}",
+            "sSearch": "{{ lang('table_search') }}",
+            "sLoadingRecords": "{{ lang('table_loading') }}",
+            "oAria": {
+                "sSortAscending": "{{ lang('table_sortAsc') }}",
+                "sSortDescending": "{{ lang('table_sortDesc') }}",
+            },
+            "oPaginate": {
+                "sFirst": "{{ lang('table_first') }}",
+                "sLast": "{{ lang('table_last') }}",
+                "sNext": "{{ lang('table_next') }}",
+                "sPrevious": "{{ lang('table_previous') }}",
+            },
+        }
+    });
+function addplan(planid,system,plan){
+	var htmledit='';
+	htmledit='<i class="icon-edit adminplan" data-id="'+planid+'"></i>';
+	tableplans.fnAddData( [system,plan,htmledit] );
+}
+function loadplans(){
+	$.ajax({
+                type:"POST",
+                url: '{{ site_url('school/getplans') }}',
+                dataType:'json',
+                error:function (jqXHR, textStatus, errorThrown) {
+                    console.log(JSON.stringify(jqXHR) + ' ' + textStatus + '  ' + errorThrown);
+                }
+            }).done(function (data) {
+            	tableplans.fnClearTable();
+            	for (i in data.plans){
+            		addplan(data.plans[i].id,data.plans[i].sysname,data.plans[i].name);
+            	}
+            	$('select#scarea').trigger("liszt:updated");
+				dom_tablesubjects();
+				tablesubjects.fnDraw();
+            });
+}
+loadplans();
+</script>
 {% endblock %}
