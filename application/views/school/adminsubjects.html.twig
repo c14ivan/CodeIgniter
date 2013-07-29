@@ -449,7 +449,7 @@ function loadsubjectversion(subjectid){
                 type:"POST",
                 url: '{{ site_url('school/getsubjectversions') }}',
                 dataType:'json',
-                data:{subjectid:$(this).attr('data-id')},
+                data:{subjectid:subjectid},
                 error:function (jqXHR, textStatus, errorThrown) {
                     console.log(JSON.stringify(jqXHR) + ' ' + textStatus + '  ' + errorThrown);
                 }

@@ -26,9 +26,14 @@
 <div class="systemcont" style="display:none;">
 	<div class="row-fluid">
 		<div class="box span6 systemform"  style="display:none;">
-			<div class="box-content">
+    		<div class="box-header well">
 				<h2 class="scadd" style="display:none;">{{ lang('sc_systemadd') }}</h2>
 				<h2 class="scedt" style="display:none;">{{ lang('sc_systemedt') }}</h2>
+    			<div class="box-icon">
+    				<a href="#" class="btn btn-minimize btn-round"><i class="icon-chevron-up"></i></a>
+    			</div>
+    		</div>
+			<div class="box-content">
 				<form id="systemedt" class="form-horizontal" method="post">
 					{{ forms.campo({'tipo':'input','type':'hidden','name':'scid'}) }}
 					{{ forms.campo({'tipo':'input','type':'text','name':'scname','label':lang('sc_name'),'maxlength':45}) }}
@@ -50,6 +55,7 @@
 				<h2>{{ lang('sc_cicles') }}</h2>
 				<div class="box-icon">
 					<a href="#" class="btn btn_addcicle btn-round"><i class="icon-plus"></i></a>
+					<a href="#" class="btn btn-minimize btn-round"><i class="icon-chevron-up"></i></a>
 				</div>
 			</div>
 			<div class="box-content">
@@ -75,6 +81,7 @@
 				<h2>{{ lang('sc_periods') }}</h2>
 				<div class="box-icon">
 					<a href="#" class="btn btn_adddiv btn-round"><i class="icon-plus"></i></a>
+					<a href="#" class="btn btn-minimize btn-round"><i class="icon-chevron-up"></i></a>
 				</div>
 			</div>
 			<div class="box-content">
@@ -97,6 +104,7 @@
 				<h2>{{ lang('sc_systeminplan') }}</h2>
 				<div class="box-icon">
 					<a href="#" class="btn btn_addplan btn-round"><i class="icon-plus"></i></a>
+					<a href="#" class="btn btn-minimize btn-round"><i class="icon-chevron-up"></i></a>
 				</div>
 			</div>
 			<div class="box-content">

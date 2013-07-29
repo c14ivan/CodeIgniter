@@ -109,10 +109,44 @@ class Scsubject extends CI_Model{
 		}
 		return $response;
 	}
-	function addVersion($subject,$name,$description){
-		
+	function addVersion($subject,$name,$description,$copyversion=0){
+	    $this->db->where('scsubjectid',$subject);
+	    $this->db->order_by('version','DESC');
+	    $query=$this->db->get($this->table_subversions);
+	    
+	    $version=($query->num_rows() > 0)?$query->row()->version+1:1;
+	    
+	    $subjectversionid=false;
+	    $data = array(
+	            'scsubjectid' => $subject,
+	            'name' => $name,
+	            'version' => $version,
+	            'description' => $description,
+	            'status' => 0,
+	    );
+	    
+	    if($this->db->insert($this->table_subversions, $data)){
+	        $subjectversionid= $this->db->insert_id();
+	    }
+	    if($copyversion>0 && $subjectversionid!=false){
+	        $this->copyVersion($subjectversionid, $copyversion);
+	    }
+	    return $subjectversionid;
 	}
-	function updateVersion($versionid,$name,$description){
-		
+	function updateVersion($versionid,$name,$description,$status){
+	    $data = array(
+	            'name' => $name,
+	            'description' => $description,
+	            'status' => $status,
+	    );
+	    $this->db->where('id', $versionid);
+	    if($this->db->update($this->table_subversions, $data)){
+	        return $versionid;
+	    }
+	    return false;
+	}
+	//TODO implement this function after or subject design
+	function copyVersion($newversion,$oldversion){
+	    
 	}
 }

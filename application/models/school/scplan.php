@@ -76,16 +76,17 @@ class Scplan extends CI_Model{
 	}
 	function createVersion($planid,$name,$description){
 		$this->db->where('planid',$planid);
-		$this->db->order_by('order','DESC');
+		$this->db->order_by('version','DESC');
 		$query=$this->db->get($this->table_versions);
 		
-		$version=($query->num_rows() > 0)?$query->row()->order+1:1;
+		$version=($query->num_rows() > 0)?$query->row()->version+1:1;
 		
 		$data = array(
 				'planid' => $planid,
 				'name' => $name,
 				'description' => $description,
 				'status'  => 0,
+		        'version'  => $version,
 				'creator'  => 0,
 				'timecreated'=> date('Y-m-d H:i:s'),
 		);
