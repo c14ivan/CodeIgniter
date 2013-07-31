@@ -45,3 +45,6 @@ ul.wide-list li span {
 ul.wide-list li .action {
 	cursor:pointer;
 }
+.selectedplan td{
+	background-color:#A4A4A4 !important;
+}

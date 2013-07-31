@@ -27,7 +27,14 @@ class School extends CI_Controller {
         $this->twig->display('school/system',array());
     }
     public function plan(){
-        $this->twig->display('school/plan',array());
+    	$availableplanssys=$this->scsystem->getAvailableSystems();
+    	$systems=array();
+    	foreach ($availableplanssys as $avsys){
+    		$systems[$avsys['id']]=$avsys['name'];
+    	}
+    	
+    	//TODO permitir editar planes de estudio, ya esta hecho en system, migrar
+        $this->twig->display('school/plan',array('systems'=>$systems));
     }
     public function subjects(){
         $this->twig->display('school/adminsubjects');
@@ -168,14 +175,36 @@ class School extends CI_Controller {
         }else{
             $postdata['planid']=$this->scplan->addPlan($postdata['scsystemid'],$postdata['planname'],$postdata['plandescription']);
         }
-        $postdata['url']=anchor('school/plan/'.$postdata['planid'],$postdata['planname']);
         echo json_encode(array('plan'=>$postdata));
          
+    }
+    public function addplanversion(){
+    	if(!$this->input->is_ajax_request()) redirect();
+    	$this->output->enable_profiler(FALSE);
+    	 
+    	$postdata=$this->input->post();
+    	
+    	if($postdata['scplanversionid']>0){
+    		$postdata['scplanversionid']=$this->scplan->updateVersion($postdata['scplanversionid'],$postdata['scname'],$postdata['scdescription'],$postdata['scstatus']);
+    	}else{
+    		$postdata['scplanversionid']=$this->scplan->createVersion($postdata['scplanid'],$postdata['scname'],$postdata['scdescription']);
+    	}
+    	echo json_encode(array('plan'=>$postdata));
     }
     public function getplans(){
     	if(!$this->input->is_ajax_request()) redirect();
     	$this->output->enable_profiler(FALSE);
     	echo json_encode(array('plans'=>$this->scplan->getPlans()));
+    }
+    public function getplan(){
+    	if(!$this->input->is_ajax_request()) redirect();
+    	$this->output->enable_profiler(FALSE);
+    	echo json_encode(array('plan'=>$this->scplan->getPlan($this->input->post('planid'))));
+    }
+    public function getplanversions(){
+    	if(!$this->input->is_ajax_request()) redirect();
+    	$this->output->enable_profiler(FALSE);
+    	echo json_encode(array('planversions'=>$this->scplan->getVersions($this->input->post('planid'))));
     }
     public function addarea(){
         if(!$this->input->is_ajax_request()) redirect();
@@ -236,6 +265,16 @@ class School extends CI_Controller {
                     $postdata['scdescription']);
         }
         echo json_encode(array('ok'=>(intval($postdata['scsubjectversionid'])>0),'subject'=>array('id'=>$postdata['scsubjectid'])));
+    }
+    public function  getdataversion(){
+    	if(!$this->input->is_ajax_request()) redirect();
+    	$this->output->enable_profiler(FALSE);
+    	$versionid=$this->input->post('versionid');
+    	$versiondata= $this->scplan->getVersion($versionid);
+    	$cicles=$this->scsystem->getCicles($versiondata->scsystemid);
+    	$subasigned= $this->scplan->getSubjectsAsigned($versionid);
+    	$response=array('versionid'=>$versionid,'versiondata'=>$versiondata,'cicles'=>$cicles,'subasigned'=>$subasigned);
+    	echo json_encode($response);
     }
 }
 

@@ -17,6 +17,8 @@ $lang['sc_enrolment']="Matriculación";
 $lang['sc_enrolmanual']="Manual";
 $lang['sc_versions']="Versiones";
 $lang['sc_version']="Versión";
+$lang['sc_editplanversion']="Editar Versión";
+$lang['sc_addplanversion']="Agregar Versión";
 $lang['sc_versionedit']="Edicion de versión de Plan de Estudio";
 $lang['sc_abbr'] = "Abreviatura";
 $lang['sc_status']="Estado";
@@ -29,6 +31,8 @@ $lang['sc_subject']="Asignatura";
 $lang['sc_blockarea']="No permitir modificaciones";
 $lang['sc_editversion']="Editar Versión";
 $lang['sc_addversion']="Agregar Versión";
+$lang['sc_versioncfg']="Configuración de la Versión";
+$lang['sc_chooseplan']="Debe elegir un plan de estudios";
 //duration
 $lang['sc_duryear']="Año";
 $lang['sc_dursemester']="Semestre";

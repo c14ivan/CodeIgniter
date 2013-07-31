@@ -29,6 +29,17 @@ class Scsystem extends CI_Model{
 		
 		return NULL;
 	}
+	function getAvailableSystems(){
+		$this->db->where('status',1);
+		$query = $this->db->get($this->table_name);
+		if ($query->num_rows() > 0){
+			return $query->result_array();
+		}elseif($id>0){
+			return $query->row();
+		}
+		
+		return NULL;
+	}
 	// add a new system
 	function addSystem($name,$desc,$duration){
 		$data = array(

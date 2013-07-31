@@ -39,16 +39,25 @@ $.fn.serializeObject = function()
     return o;
 };
 $.fn.extend({
-    resaltar: function(busqueda, claseCSSbusqueda){
-        var regex = new RegExp("(<[^>]*>)|("+ busqueda.replace(/([-.*+?^${}()|[\]\/\\])/g,"\\$1") +')', 'ig');
-        var nuevoHtml=this.html(this.html().replace(regex, function(a, b, c){
-            return (a.charAt(0) == "<") ? a : "<span class=\""+ claseCSSbusqueda +"\">" + c + "</span>";
+    resaltar:function (busqueda, claseCSSbusqueda) {
+        var regex = new RegExp("(<[^>]*>)|(" + busqueda.replace(/([-.*+?^${}()|[\]\/\\])/g, "\\$1") + ')', 'ig');
+        var nuevoHtml = this.html(this.html().replace(regex, function (a, b, c) {
+            return (a.charAt(0) == "<") ? a : "<span class=\"" + claseCSSbusqueda + "\">" + c + "</span>";
         }));
         return nuevoHtml;
     }
 });
-$.wait = function( callback, seconds){
-    return window.setTimeout( callback, seconds * 1000 );
+$.wait = function (callback, seconds) {
+    return window.setTimeout(callback, seconds * 1000);
+}
+$.clearwait = function (callback, seconds) {
+    return window.clearTimeout(callback);
+}
+$.clock = function (callback, seconds) {
+    return window.setInterval(callback, seconds * 1000);
+}
+$.clearclock = function (callback) {
+    return window.clearInterval(callback);
 }
 
 function resetForm($form) {
@@ -56,10 +65,13 @@ function resetForm($form) {
     $form.find('input:radio, input:checkbox')
          .removeAttr('checked').removeAttr('selected');
 }
+$(".cancelar").click(function () {
+    history.back();
+});
 var ua = navigator.userAgent,
 eventtrigger = (ua.match(/iPad/i)) ? "touchstart" : "click";
 
-function confirmdel(layout,oktext,canceltext,textlabel,id,urlgo,callback) {
+function confirmdel(layout,oktext,canceltext,textlabel,data,urlgo,callback) {
     
     var n = noty({
       text: textlabel,
@@ -70,9 +82,10 @@ function confirmdel(layout,oktext,canceltext,textlabel,id,urlgo,callback) {
       buttons: [
         {type: 'btn btn-primary', text: oktext, click: function($noty) {
                 $.ajax({
-                    type:"GET",
+                    type:"POST",
                     url:urlgo,
                     dataType: 'json',
+                    data: data,
                     error:function (jqXHR, textStatus, errorThrown){
                         console.log(JSON.stringify(jqXHR) + ' ' + textStatus +'  '+errorThrown );
                      }
@@ -89,3 +102,22 @@ function confirmdel(layout,oktext,canceltext,textlabel,id,urlgo,callback) {
       ]
     });
   }
+function showMsj(layout,textLabel) {
+    noty({
+      text: textLabel,
+      type: 'confirm',
+      dismissQueue: true,
+      layout: layout,
+      theme: 'noty_theme_default'
+    });
+  }
+
+function showNotification(mensaje) {
+    noty({
+        text:mensaje,
+        type:'information',
+        dismissQueue:true,
+        layout:'topCenter',
+        theme:'noty_theme_default'
+    });
+}

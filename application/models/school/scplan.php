@@ -5,6 +5,8 @@ class Scplan extends CI_Model{
 	private $table_versions		= 'scplanversion';
 	private $table_subjectplan  = 'scsubjectplan';
 	private $table_planversion  = 'scplanversion';
+	private $table_subjects		= 'scsubject';
+	private $table_subversions	= 'scsubjectversion';
 	
 	function __construct()
 	{
@@ -108,5 +110,45 @@ class Scplan extends CI_Model{
 			return $planversionid;
 		}
 		return false;
+	}
+	function getVersions($planid){
+		$this->db->where('planid',$planid);
+		$response=array();
+		$query=$this->db->get($this->table_planversion);
+		if ($query->num_rows() > 0){
+			$response = $query->result_array();
+		}
+		return $response;
+	}
+	function getPlan($planid){
+		$this->db->where('id',$planid);
+		$response=array();
+		$query=$this->db->get($this->table_plan);
+		if ($query->num_rows() > 0){
+			$response = $query->row();
+		}
+		return $response;
+	}
+	function getVersion($versionid){
+		$this->db->select("{$this->table_planversion}.name,{$this->table_planversion}.description,{$this->table_planversion}.status,
+		{$this->table_plan}.scsystemid");
+		$this->db->join($this->table_plan,"{$this->table_planversion}.planid={$this->table_plan}.id");
+		$this->db->where($this->table_planversion.".id",$versionid);
+		
+		$query= $this->db->get($this->table_planversion);
+		$response=false;
+		if ($query->num_rows() > 0){
+			$response = $query->row();
+		}
+		return $response;
+	}
+	function getSubjectsAsigned($versionid){
+		$this->db->select("{$this->table_subversions}.id,{$this->table_subjects}.name,{$this->table_subversions}.name as vername,
+		{$this->table_subversions}.status");
+		$this->db->where($this->table_subjectplan.".scplanversionid",$versionid);
+		$this->db->join($this->table_subversions,"{$this->table_subversions}.id={$this->table_subjectplan}.scsubjectversionid");
+		$this->db->join($this->table_subjects,"{$this->table_subjects}.id={$this->table_subversions}.scsubjectid");
+		$query = $this->db->get($this->table_subjectplan);
+		$response = $query->result_array();
 	}
 }

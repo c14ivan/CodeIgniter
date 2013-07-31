@@ -1,7 +1,7 @@
 {% extends '_layouts/index.html.twig' %}
 
 {% block headext %}
-
+<link rel="stylesheet" type="text/css" href="{{ asset_url()~'cssapp/general.css' }}" media="all">
 {% endblock %}
 
 {% block content %}
@@ -20,13 +20,20 @@
 				<h2 class="edit" style="display:none;">{{ lang('sc_editplan') }}</h2>
 				<h2 class="add" style="display:none;">{{ lang('sc_addplan') }}</h2>
 				<form id="planform" class="form-horizontal">
-					{{ forms.campo({'tipo':'input','type':'text','name':'pl_name','label':lang('sc_plan'),'maxlength':45}) }}
-					{{ forms.campo({'tipo':'textarea','label':lang('description'),'name':'pl_description','cols':50}) }}
+					{{ forms.campo({'tipo':'input','type':'hidden','name':'planid'}) }}
+					{{ forms.campo({'tipo':'input','type':'text','name':'planname','label':lang('sc_plan'),'maxlength':45}) }}
+					{{ forms.campo({'tipo':'textarea','label':lang('description'),'name':'plandescription','cols':50}) }}
+					{{ forms.campo({'tipo':'select','label':lang('sc_system'),'name':'plansystem','opciones':systems}) }}
+					<div class="form-actions">
+						<p class="center span5">
+                      		<button type="submit" class="btn btn-primary">{{ lang('save') }}</button>
+                   		</p>
+                   	</div>
 				</form>
 			</div>
 			<table id="planstable" class="table table-striped table-bordered bootstrap-datatable" style="width:100%;">
 				<thead>
-					<tr><th>{{ lang('sc_system') }}</th><th>{{ lang('sc_plan') }}</th><th></th></tr>
+					<tr><th>{{ lang('sc_system') }}</th><th>{{ lang('sc_plan') }}</th><th style="min-width:30px;"></th></tr>
 				</thead>
 				<tbody>
 					
@@ -38,43 +45,164 @@
 		<div class="box-header well">
 			<h2>{{ lang('sc_versions') }}</h2>
 			<div class="box-icon">
-				<a href="#" class="btn btn-setting btn-round"><i class="icon-plus"></i></a>
+				<a href="#" class="btn btn_addversion btn-round"><i class="icon-plus"></i></a>
 			</div>
 		</div>
 		<div class="box-content">
-			<ul>
-			
-			</ul>
+		<div class="formversioncont box box-content" style="display:none;">
+				<i class="icon-remove closeform" style="float:right"></i>
+				<h2 class="edit" style="display:none;">{{ lang('sc_editplanversion') }}</h2>
+				<h2 class="add" style="display:none;">{{ lang('sc_addplanversion') }}</h2>
+				<form id="planversionform" class="form-horizontal">
+					{{ forms.campo({'tipo':'input','type':'hidden','name':'scplanid'}) }}
+					{{ forms.campo({'tipo':'input','type':'hidden','name':'scplanversionid'}) }}
+					{{ forms.campo({'tipo':'input','type':'text','name':'scname','label':lang('sc_plan'),'maxlength':45}) }}
+					{{ forms.campo({'tipo':'textarea','label':lang('description'),'name':'scdescription','cols':50}) }}
+					{{ forms.campo({'tipo':'select','label':lang('sc_status'),'name':'scstatus',
+						'opciones':config.school.systemstatus }) }}
+					<div class="form-actions">
+						<p class="center span5">
+                      		<button type="submit" class="btn btn-primary">{{ lang('save') }}</button>
+                   		</p>
+                   	</div>
+				</form>
+			</div>
+			<table id="planversionstable" class="table table-striped table-bordered bootstrap-datatable" style="width:100%;">
+				<thead>
+					<tr><th>{{ lang('name') }}</th><th>{{ lang('description') }}</th><th>{{ lang('sc_status') }}</th><th></th></tr>
+				</thead>
+				<tbody>
+					
+				</tbody>
+			</table>
 		</div>
 	</div>
 </div>
-<div class="row-fluid span12">
+<div class="row-fluid">
 	<div class="box-header well">
-		<h2><i class="icon-pencil"></i>{{ lang('sc_version') }}</h2>
+		<h2><i class="icon-pencil"></i>{{ lang('sc_versioncfg') }}</h2>
 		<div class="box-icon">
 			<a href="#" class="btn btn-setting btn-round"><i class="icon-plus"></i></a>
 		</div>
 	</div>
 	<div class="box-content">
-		{{ forms.campo({'tipo':'input','type':'label','label':lang('sc_version'),'valor':''}) }}		
-		{{ forms.campo({'tipo':'input','type':'text','name':'sc_vername','label':lang('description'),'maxlength':45}) }}
-		
-		<!-- status label goes here -->
+	
 	</div>
 </div>
 {% endblock %}
 {% block jscode %}
 <script type="text/javascript">
+
+var versionstatus= {{ config.school.subjectversionstatus|json_encode() }} ;
+
 $('.btn_addform').click(function(){
-	resetForm($(this).closest('box').find('form'));
-	$(this).closest('box').find('.formcont').slideDown();
+	$(this).closest('.box').find('.formcont').slideDown();
+	resetForm($(this).closest('.box').find('form'));
+	$('form#planform').find('input[name=planid]').val(0);
+	$('form#planform').find('select[name=plansystem]').closest('.control-group').slideDown();
+    $('form#planform').find('select[name=plansystem]').find('option').removeAttr('selected');
+    $('form#planform').find('select[name=plansystem]').trigger("liszt:updated");
+});
+$('.btn_addversion').click(function(){
+	if ($(this).closest('.box').find('form').find('input[name=scplanid]').val()>0){
+		$(this).closest('.box').find('.formversioncont').slideDown();
+		resetForm($(this).closest('.box').find('form'));
+		if ($(this).closest('.box').find('form').find('input[name=scplanversionid]').val()>0){
+			$(this).closest('.box').find('form').find('input[name=scplanversionid]').closest('.control-group').slideUp();
+		}else{
+			$(this).closest('.box').find('form').find('input[name=scplanversionid]').closest('.control-group').slideDown();
+		}
+	}else{
+		showNotification('{{ lang('sc_chooseplan') }}');
+	}
 });
 $('.closeform').click(function(){
-	resetForm($(this).closest('box').find('form'));
-	$(this).closest('box').slideUp();
+	resetForm($(this).closest('.box').find('form'));
+	$(this).closest('.box').slideUp();
+});
+$('#planversionform').validate({
+	errorClass:'errorlabelform',
+    elErrorClass:'errorlabel',
+    rules:{
+    	scname:{required:true},
+    	scdescription:{required:true},
+    },
+    messages:{
+    	scname:{required:'{{ lang('required')|format('')}}'},
+    	scdescription:{required:'{{ lang('required')|format('')}}'},
+    },
+    submitHandler: function(form) {
+    	$.ajax({
+                type:"POST",
+                url: '{{ site_url('school/addplanversion') }}',
+                dataType:'json',
+                data: $(form).serializeObject(),
+                error:function (jqXHR, textStatus, errorThrown) {
+                    console.log(JSON.stringify(jqXHR) + ' ' + textStatus + '  ' + errorThrown);
+                }
+            }).done(function (data) {
+            
+            	resetForm($('form#planversionform'));
+            	dom_tableversions();
+            	loadplanversion(data.planid);
+            });
+    }
+});
+$('#planform').validate({
+	errorClass:'errorlabelform',
+    elErrorClass:'errorlabel',
+    rules:{
+    	planname:{required:true},
+    	plandescription:{required:true},
+    },
+    messages:{
+    	planname:{required:'{{ lang('required')|format('')}}'},
+    	plandescription:{required:'{{ lang('required')|format('')}}'},
+    },
+    submitHandler: function(form) {
+    	$.ajax({
+                type:"POST",
+                url: '{{ site_url('school/addplan') }}',
+                dataType:'json',
+                data: $(form).serializeObject(),
+                error:function (jqXHR, textStatus, errorThrown) {
+                    console.log(JSON.stringify(jqXHR) + ' ' + textStatus + '  ' + errorThrown);
+                }
+            }).done(function (data) {
+            
+            	resetForm($('form#planform'));
+            	$('form#planform').closest('.row-fluid').find('.closeform').trigger('click');
+            	loadplans();
+            });
+    }
 });
 var tableplans=$('#planstable').dataTable({
-        "sDom": "<'row-fluid'<'span6'l><'span6'f>r>t<'row-fluid'<'span12'i><'span12 center'p>>",
+        "sDom": "<'row-fluid'<'span12'f>r>t<'row-fluid'<'span12'i><'span12 center'p>>",
+        "sPaginationType": "bootstrap",
+        "oLanguage": {
+            "sProcessing": "{{ lang('table_processing') }}",
+            "sLengthMenu": "{{ lang('table_recordsperpage') }}",
+            "sZeroRecords": "{{ lang('table_noregisters') }}",
+            "sEmptyTable": "{{ lang('table_empty') }}",
+            "sInfo": "{{ lang('table_pager') }}",
+            "sInfoEmpty": "{{ lang('table_pagerempty') }}",
+            "sInfoFiltered": "{{ lang('table_filtered') }}",
+            "sSearch": "{{ lang('table_search') }}",
+            "sLoadingRecords": "{{ lang('table_loading') }}",
+            "oAria": {
+                "sSortAscending": "{{ lang('table_sortAsc') }}",
+                "sSortDescending": "{{ lang('table_sortDesc') }}",
+            },
+            "oPaginate": {
+                "sFirst": "{{ lang('table_first') }}",
+                "sLast": "{{ lang('table_last') }}",
+                "sNext": "{{ lang('table_next') }}",
+                "sPrevious": "{{ lang('table_previous') }}",
+            },
+        }
+    });
+var tableplanversions=$('#planversionstable').dataTable({
+        "sDom": "<'row-fluid'<'span12'f>r>t<'row-fluid'<'span12'i><'span12 center'p>>",
         "sPaginationType": "bootstrap",
         "oLanguage": {
             "sProcessing": "{{ lang('table_processing') }}",
@@ -100,7 +228,7 @@ var tableplans=$('#planstable').dataTable({
     });
 function addplan(planid,system,plan){
 	var htmledit='';
-	htmledit='<i class="icon-edit adminplan" data-id="'+planid+'"></i>';
+	htmledit='<i class="icon-edit editplan" data-id="'+planid+'"></i><i class="icon-chevron-right adminplan" data-id="'+planid+'"></i>';
 	tableplans.fnAddData( [system,plan,htmledit] );
 }
 function loadplans(){
@@ -117,8 +245,83 @@ function loadplans(){
             		addplan(data.plans[i].id,data.plans[i].sysname,data.plans[i].name);
             	}
             	$('select#scarea').trigger("liszt:updated");
-				dom_tablesubjects();
-				tablesubjects.fnDraw();
+				dom_tablesplans();
+				tableplans.fnDraw();
+            });
+}
+function addplanversion(planversionid,name,description,status){
+	var htmledit='';
+	htmledit='<i class="icon-edit adminplanversion" data-id="'+planversionid+'"></i>';
+	tableplanversions.fnAddData( [name,description,status,htmledit] );
+}
+function dom_tableversions(){
+	$('.adminplanversion').click(function(){
+		loadplanversion($(this).attr('data-id'));
+	});
+}
+function dom_tablesplans(){
+	$('.adminplan').click(function(){
+		$('form#planversionform').find('input[name=scplanid]').val($(this).attr('data-id'));
+		$(this).closest('table').find('tr.selectedplan').removeClass('selectedplan');
+		$(this).closest('tr').addClass('selectedplan');
+		$.ajax({
+                type:"POST",
+                url: '{{ site_url('school/getplanversions') }}',
+                dataType:'json',
+                data:{planid:$(this).attr('data-id')},
+                error:function (jqXHR, textStatus, errorThrown) {
+                    console.log(JSON.stringify(jqXHR) + ' ' + textStatus + '  ' + errorThrown);
+                }
+            }).done(function (data) {
+            	tableplanversions.fnClearTable();
+            	for (i in data.planversions){
+            		addplanversion(data.planversions[i].id,data.planversions[i].name,data.planversions[i].description,
+            		versionstatus[data.planversions[i].status]);
+            	}
+            	$('select#scarea').trigger("liszt:updated");
+				dom_tableversions();
+				tableplanversions.fnDraw();
+            });
+	});
+	$('.editplan').click(function(){
+		$('form#planversionform').find('input[name=scplanid]').val($(this).attr('data-id'));
+		$(this).closest('table').find('tr.selectedplan').removeClass('selectedplan');
+		$(this).closest('tr').addClass('selectedplan');
+		$.ajax({
+                type:"POST",
+                url: '{{ site_url('school/getplan') }}',
+                dataType:'json',
+                data:{planid:$(this).attr('data-id')},
+                error:function (jqXHR, textStatus, errorThrown) {
+                    console.log(JSON.stringify(jqXHR) + ' ' + textStatus + '  ' + errorThrown);
+                }
+            }).done(function (data) {
+            	//$('form#planform').closest('.row-fluid').find('.closeform').trigger('click');
+            	$('form#planform').closest('.row-fluid').find('.btn_addform').trigger('click');
+            	$('form#planform').find('input[name=planid]').val(data.plan.id);
+            	$('form#planform').find('input[name=planname]').val(data.plan.name);
+            	
+            	$('form#planform').find('select[name=plansystem]').closest('.control-group').slideUp();
+            	$('form#planform').find('select[name=plansystem]').find('option').removeAttr('selected');
+            	$('form#planform').find('select[name=plansystem]').find('option[value='+data.plan.cssystemid+']').attr('selected',true);
+            	
+            	$('form#planform').find('select[name=plansystem]').trigger("liszt:updated");
+            	$('form#planform').find('textarea[name=plandescription]').val(data.plan.description);
+            	
+            });
+	});
+}
+function loadplanversion(planversionid){
+	$.ajax({
+                type:"POST",
+                url: '{{ site_url('school/getdataversion') }}',
+                dataType:'json',
+                data:{versionid:planversionid},
+                error:function (jqXHR, textStatus, errorThrown) {
+                    console.log(JSON.stringify(jqXHR) + ' ' + textStatus + '  ' + errorThrown);
+                }
+            }).done(function (data) {
+				console.log(data);            	
             });
 }
 loadplans();
