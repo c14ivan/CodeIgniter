@@ -33,6 +33,9 @@ $lang['sc_editversion']="Editar Versión";
 $lang['sc_addversion']="Agregar Versión";
 $lang['sc_versioncfg']="Configuración de la Versión";
 $lang['sc_chooseplan']="Debe elegir un plan de estudios";
+$lang['sc_asignsubject']="Asignar Asignatura";
+$lang['sc_ih']="Intensidad Horaria";
+$lang['sc_credits']="Creditos";
 //duration
 $lang['sc_duryear']="Año";
 $lang['sc_dursemester']="Semestre";

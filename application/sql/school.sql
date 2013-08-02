@@ -95,7 +95,7 @@ DROP TABLE IF EXISTS `scsubjectplan`;
 CREATE TABLE `scsubjectplan` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `sccicleid` int(11) DEFAULT NULL,
-  `scsubjectversionid` int(11) DEFAULT NULL,
+  `scsubjectid` int(11) DEFAULT NULL,
   `scplanversionid` int(11) DEFAULT NULL,
   `order` int(11) DEFAULT NULL,
   `ih` int(11) DEFAULT NULL,

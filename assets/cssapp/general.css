@@ -48,3 +48,13 @@ ul.wide-list li .action {
 .selectedplan td{
 	background-color:#A4A4A4 !important;
 }
+.etiqueta{
+	padding-top: 5px;
+}
+.ciclecontent{
+	min-height: 200px;
+}
+.dragsubject{
+	cursor:move;
+	z-index:10;
+}

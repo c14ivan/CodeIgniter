@@ -16,7 +16,7 @@
     {# label: MUESTRA UN <DIV> CONTENIENDO EL TEXTO value Y APLICANDO LA CLASE class #}
     {# ----------------------------------------------------------------------------- #}
     {% macro label(value,class,for) %}
-        <div class="{{ class|default('Etiqueta') }}"><label for="{{ for }}">{{ value }}</div>
+        <div class="{{ class|default('etiqueta') }}"><label for="{{ for }}">{{ value }}</div>
     {% endmacro %}
     {# span: MUESTRA UN <span> CONTENIENDO EL TEXTO value Y APLICANDO LA CLASE class #}
     {# ----------------------------------------------------------------------------- #}
@@ -69,7 +69,7 @@
         {% set type=campo.type %}
         {% set name=campo.name %}
         {% set id=campo.id %}
-        {% set value=campo.value %}
+        {% set valor=campo.value %}
         {% set maxLength=campo.maxLength %}
         {% set extra=campo.extra %}
         {% set placeholder=campo.placeholder %}
@@ -97,7 +97,7 @@
         {% endif %}
         {% if type=='hidden' %}
             <input type="{{ type|default('text') }}" name="{{ name }}" id="{{ id|default(name)}}"
-               value="{{ value }}" {% if onchange %} onchange="{{ onchange }}" {% endif %}/>
+               value="{{ valor }}" {% if onchange %} onchange="{{ onchange }}" {% endif %}/>
         {% else %}
             <div class="control-group" {% if id %} id="div_{{id}}" {% endif %} {% if estilo %} style="{{ estilo }}" {% endif %}>
                 {% if label %}
@@ -111,7 +111,7 @@
                         {% if opciones is iterable %}
                             {% if type=='radio' %}
                                 {% for key,valor in opciones %}
-                                    {{ _self.radio(name,key,class,valor,value) }}
+                                    {{ _self.radio(name,key,class,valor,valor) }}
                                 {% endfor %}
                             {% elseif type=='checkbox' %}
                                 {% if opciones is not empty %}
@@ -124,7 +124,7 @@
                         	{{ _self.label(valor,class,'') }}
                         {% else %}
                             <input type="{{ type|default('text') }}" name="{{ name }}" id="{{ id|default(name)}}" 
-                               value="{{ value }}" {% if maxLength %} maxlength="{{ maxLength|default(20) }}" {% endif %}
+                               value="{{ valor }}" {% if maxLength %} maxlength="{{ maxLength|default(20) }}" {% endif %}
                                class="{{ class }}" placeholder="{{ placeholder }}" {{extra}} {% if onchange %} onchange="{{ onchange }}" {% endif %}/>
                         {% endif %}
                         {% if prepend or type=='password' %}
@@ -284,7 +284,7 @@
         {% endif %}
         
     {% endmacro %}
-    {# select: MUESTRA UN </FIELSET> #}
+    {# select: MUESTRA UN </FIELDSET> #}
     {# --------------------------- #}
     {% macro endfieldset(campo) %}
         </fieldset>

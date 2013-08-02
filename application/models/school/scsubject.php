@@ -84,7 +84,7 @@ class Scsubject extends CI_Model{
 		return false;
 	}
 	function getSubjects(){
-		$this->db->select("{$this->table_subjects}.id,{$this->table_subjects}.name,{$this->table_subjects}.shortname,
+		$this->db->select("{$this->table_subjects}.id,{$this->table_areas}.name as areaname,{$this->table_subjects}.name,{$this->table_subjects}.shortname,
 			{$this->table_subjects}.blocked,{$this->table_areas}.name as areaname");
 		$this->db->join($this->table_areas,"{$this->table_areas}.id={$this->table_subjects}.scareaid");
 		$query=$this->db->get($this->table_subjects);

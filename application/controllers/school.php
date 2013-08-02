@@ -32,9 +32,9 @@ class School extends CI_Controller {
     	foreach ($availableplanssys as $avsys){
     		$systems[$avsys['id']]=$avsys['name'];
     	}
-    	
+    	$subjects=$this->scsubject->getSubjects();
     	//TODO permitir editar planes de estudio, ya esta hecho en system, migrar
-        $this->twig->display('school/plan',array('systems'=>$systems));
+        $this->twig->display('school/plan',array('systems'=>$systems,'subjects'=>$subjects));
     }
     public function subjects(){
         $this->twig->display('school/adminsubjects');
@@ -275,6 +275,27 @@ class School extends CI_Controller {
     	$subasigned= $this->scplan->getSubjectsAsigned($versionid);
     	$response=array('versionid'=>$versionid,'versiondata'=>$versiondata,'cicles'=>$cicles,'subasigned'=>$subasigned);
     	echo json_encode($response);
+    }
+    public function asignsubject(){
+    	if(!$this->input->is_ajax_request()) redirect();
+    	$this->output->enable_profiler(FALSE);
+    	
+    	$subjectid=$this->input->post('subject');
+    	$planversionid=$this->input->post('version');
+    	$sccicleid=$this->input->post('cicle');
+    	$ih=$this->input->post('ih');
+    	$credits=$this->input->post('credits');
+    	$asignment=$this->scplan->asignSubject($sccicleid,$subjectid,$planversionid,$ih,$credits);
+    	$subject=$this->scsubject->getSubject($subjectid);
+    	$subject=$subject['subject'];
+    	echo json_encode(array('ih'=>$ih,'cicle'=>$sccicleid,'credits'=>$credits,'subjectid'=>$subjectid,'subject'=>$subject->name,'shortname'=>$subject->shortname));
+    	
+    }
+    public function ordersubjects(){
+    	if(!$this->input->is_ajax_request()) redirect();
+    	$this->output->enable_profiler(FALSE);
+    	$orderid=$this->input->post('order');
+    	$planversionid=$this->input->post('version');
     }
 }
 

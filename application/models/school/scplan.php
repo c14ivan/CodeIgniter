@@ -143,12 +143,42 @@ class Scplan extends CI_Model{
 		return $response;
 	}
 	function getSubjectsAsigned($versionid){
-		$this->db->select("{$this->table_subversions}.id,{$this->table_subjects}.name,{$this->table_subversions}.name as vername,
-		{$this->table_subversions}.status");
+		$this->db->select("{$this->table_subjects}.id,{$this->table_subjects}.name,{$this->table_subjects}.name as vername");
 		$this->db->where($this->table_subjectplan.".scplanversionid",$versionid);
-		$this->db->join($this->table_subversions,"{$this->table_subversions}.id={$this->table_subjectplan}.scsubjectversionid");
-		$this->db->join($this->table_subjects,"{$this->table_subjects}.id={$this->table_subversions}.scsubjectid");
+		$this->db->join($this->table_subjects,"{$this->table_subjects}.id={$this->table_subjectplan}.scsubjectid");
+		$this->db->order_by("{$this->table_subjectplan}.order","ASC");
 		$query = $this->db->get($this->table_subjectplan);
 		$response = $query->result_array();
+	}
+	function asignSubject($sccicleid,$subjectid,$planversionid,$ih,$credits){
+		$this->db->where('sccicleid',$sccicleid);
+		$this->db->where('scsubjectid',$subjectid);
+		$this->db->where('scplanversionid',$planversionid);
+		$query= $this->db->get($this->table_subjectplan);
+		$prev=$query->row();
+		if($prev){
+			$this->db->where('id', $prev->id);
+			$data=array('ih'=>$ih,'credits'=>$credits);
+			if($this->db->update($this->table_subjectplan, $data)){
+				return $prev->id;
+			}
+		}else{
+			$this->db->where('scplanversionid',$planversionid);
+			$this->db->order_by("order","DESC");
+			$query= $this->db->get($this->table_subjectplan);
+			$prev=$query->row();
+			
+			$data=array(
+					'sccicleid'=>$sccicleid,
+					'scsubjectid'=>$subjectid,
+					'scplanversionid'=>$planversionid,
+					'order'=>($prev)?$prev->order+1:1,
+					'ih'=>0,
+					'credits'=>0,
+			);
+			if($this->db->insert($this->table_subjectplan, $data)){
+				return $this->db->insert_id();
+			}
+		}
 	}
 }
