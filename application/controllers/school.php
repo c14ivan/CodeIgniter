@@ -33,6 +33,7 @@ class School extends CI_Controller {
     		$systems[$avsys['id']]=$avsys['name'];
     	}
     	$subjects=$this->scsubject->getSubjects();
+    	
     	//TODO permitir editar planes de estudio, ya esta hecho en system, migrar
         $this->twig->display('school/plan',array('systems'=>$systems,'subjects'=>$subjects));
     }

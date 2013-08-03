@@ -100,9 +100,6 @@
 						<tr><th data-name='area'>{{ lang('sc_areacol') }}</th><th>{{ lang('sc_subject') }}</th><th>{{ lang('sc_abbr') }}</th></tr>
 					<thead>
 					<tbody>
-						{% for sub in subjects %}
-							<tr data-id="{{ sub.id }}"><td>{{ sub.areaname }}</td><td>{{ sub.name }}</td><td class="dragsubject">{{ sub.shortname }}</td></tr>
-						{% endfor %}
 					</tbody>
 					<tfoot>
 						<tr><th class="filter"></th><th></th><th></th></tr>	
@@ -173,23 +170,6 @@ $(document).ready(function() {
             },
         }
     });
-    $("#subjectable tfoot th.filter").each( function ( i ) {
-		if ($(this).hasClass('filter')){
-        	$(this).html(fnCreateSelect( tablesubjects.fnGetColumnData(i),'sel_'+$($('thead th')[i]).attr('data-name'),'{{ lang('selectanoption') }}') );
-        	if($(this).find('option').not([value=0]).length==0){
-        		$(this).slideUp();
-        	}
-       	 	$('select', this).change( function () {
-       	 		if($(this).val()!='{{ lang('selectanoption') }}'){
-       	 			tablesubjects.fnFilter( $(this).val(), i );
-       	 		}else{
-       	 			tablesubjects.fnFilter('',i);
-       	 			tablesubjects.fnFilter('');
-       	 		}
-            	
-        	});
-        }
-    });
 	$('.btn_addform').click(function(){
 		$(this).closest('.box').find('.formcont').slideDown();
 		resetForm($(this).closest('.box').find('form'));
@@ -236,19 +216,16 @@ $(document).ready(function() {
                     console.log(JSON.stringify(jqXHR) + ' ' + textStatus + '  ' + errorThrown);
                 }
             }).done(function(data){
-            	$('.ciclecontent[data-id='+data.cicle+']').append(
-            			'<li data-id="'+data.subjectid+'">'+
-            				'<a href="#" data-rel="popover" data-content="<b>{{ lang('sc_ih')}}:</b> '+data.ih+'<br>'+
-            				'<b>{{ lang('sc_credits')}}:</b> '+data.credits+'<br>" title="'+data.subject+'">'+data.shortname+
-            				'<i class="icon-edit editasign"></i>'+
-            				'<i class="icon-remove removeasign"></i>'+
-            			'</li>');
-            	var rowindex=tablesubjects.fnGetPosition($('#subjectable').find('tr[data-id='+data.subjectid+']')[0]);
-            	if(rowindex>0){
-					tablesubjects.fnDeleteRow(rowindex);
-				}
+            	asignsubjectli(data.cicle,data.subjectid,data.ih,data.credits,data.subject,data.shortname);
+            	
 				dom_asignments();
 				$('#asignsubject').find('button.close').trigger('click');
+				
+				resetForm($('#asignsubjectform'));
+				$('#asignsubjectform').find('input[name=subject]').val(0);
+				$('#asignsubjectform').find('input[name=version]').val(0);
+				$('#asignsubjectform').find('input[name=cicle]').val(0);
+				
 			});
     	}
 	});
@@ -443,7 +420,33 @@ $(document).ready(function() {
             });
 		});
 	}
+	function dom_asignments(){
+		$('.editasign').click(function(){
+			
+		});
+		$('.editasign').click(function(){
+			
+		});
+	}
+	function asignsubjectli(cicle,subjectid,ih,credits,subject,shortname){
+		var htmlli='<a href="#" data-rel="popover" data-content="<b>{{ lang('sc_ih')}}:</b> '+ih+'<br>'+
+            				'<b>{{ lang('sc_credits')}}:</b> '+credits+'<br>" title="'+subject+'">'+shortname+'</a>'+
+            				'<i class="icon-edit editasign"></i>'+
+            				'<i class="icon-remove removeasign"></i>';
+        if($('.ciclecontent[data-id='+cicle+']').find('li[data-id='+subjectid+']').length>0){
+            $('.ciclecontent[data-id='+cicle+']').find('li[data-id='+subjectid+']').html(htmlli)
+        }else{
+            $('.ciclecontent[data-id='+cicle+']').append('<li data-id="'+subjectid+'">'+htmlli+'</li>');
+        }
+        
+        if($('#subjectable').find('tr[data-id='+subjectid+']').length>0){
+			tablesubjects.fnDeleteRow(tablesubjects.fnGetPosition($('#subjectable').find('tr[data-id='+subjectid+']')[0]));
+    		loadfilters();
+		}
+        $('[rel="popover"],[data-rel="popover"]').popover();
+	}
 	function loadplanversion(planversionid){
+		loadsubjects();
 		$.ajax({
                 type:"POST",
                 url: '{{ site_url('school/getdataversion') }}',
@@ -454,7 +457,7 @@ $(document).ready(function() {
                 }
             }).done(function (data) {
 				console.log(data);
-				$('.versioncontent').find('input[name=versionid]').val(data.versiondata.id);
+				$('.versioncontent').find('input[name=versionid]').val(data.versionid);
 				$('#div_versionname').find('.etiqueta label').html(data.versiondata.name)
 				$('#div_versiondesc').find('.etiqueta label').html(data.versiondata.description)
 				$('#div_versionstatus').find('.etiqueta label').html(versionstatus[data.versiondata.status])
@@ -466,9 +469,13 @@ $(document).ready(function() {
 					$('#plancontent').append(
 					'<div class="column width_1/'+data.cicles.length+' '+oddeven+'">'+
 					'<div class="colheader">'+data.cicles[i].name+'</div>'+
-					'<ul class="ciclecontent widelist" data-id="'+data.cicles[i].id+'"></ul>'+
+					'<ul class="ciclecontent wide-list" data-id="'+data.cicles[i].id+'"></ul>'+
 					'</div>');
 				}
+				for (i in data.subasigned){
+					asignsubjectli(data.subasigned[i].sccicleid,data.subasigned[i].id,data.subasigned[i].ih,data.subasigned[i].credits,data.subasigned[i].name,data.subasigned[i].shortname)
+				}
+				dom_asignments();
 				$('.ciclecontent').droppable({
 					accept: ".dragsubject",
 					drop: function( event, ui ) {
@@ -504,15 +511,72 @@ $(document).ready(function() {
 				$('.dragsubject').draggable({helper:'clone'});
             });
 	}
-	loadplans();
-	function dom_asignments(){
-		$('.editasign').click(function(){
-			
-		});
-		$('.editasign').click(function(){
-			
-		});
+	function loadfilters(){
+    	$("#subjectable tfoot th.filter").each( function ( i ) {
+			if ($(this).hasClass('filter')){
+        		$(this).html(fnCreateSelect( tablesubjects.fnGetColumnData(i),'sel_'+$($('thead th')[i]).attr('data-name'),'{{ lang('selectanoption') }}') );
+        		if($(this).find('option').not([value=0]).length==0){
+        			$(this).slideUp();
+        		}
+       	 		$('select', this).change( function () {
+       	 			if($(this).val()!='{{ lang('selectanoption') }}'){
+       	 				tablesubjects.fnFilter( $(this).val(), i );
+       	 			}else{
+       	 				tablesubjects.fnFilter('',i);
+       	 				tablesubjects.fnFilter('');
+       	 			}
+        		});
+        	}
+    	});
 	}
+	function loadsubjects(){
+		$.ajax({
+        	type:"POST",
+            url: '{{ site_url('school/getsubjects') }}',
+            dataType:'json',
+            error:function (jqXHR, textStatus, errorThrown) {
+            	console.log(JSON.stringify(jqXHR) + ' ' + textStatus + '  ' + errorThrown);
+            }
+            }).done(function(data){
+            	tablesubjects.fnDestroy();
+				$('#subjectable').find('tbody').empty();
+				for (i in data.subjects){
+					$('#subjectable').find('tbody').append(
+						'<tr data-id="'+data.subjects[i].id+'">'+
+							'<td>'+data.subjects[i].areaname+'</td>'+
+							'<td>'+data.subjects[i].name+'</td>'+
+							'<td class="dragsubject">'+data.subjects[i].shortname+'</td></tr>'
+					);
+				}
+				tablesubjects=$('#subjectable').dataTable({
+        			"sDom": "<'row-fluid'<'span12'f>r>t<'row-fluid'<'span12'i><'span12 center'p>>",
+        			"sPaginationType": "bootstrap",
+        			"oLanguage": {
+       			     "sProcessing": "{{ lang('table_processing') }}",
+       			     "sLengthMenu": "{{ lang('table_recordsperpage') }}",
+     			     "sZeroRecords": "{{ lang('table_noregisters') }}",
+     			     "sEmptyTable": "{{ lang('table_empty') }}",
+            		 "sInfo": "{{ lang('table_pager') }}",
+            		 "sInfoEmpty": "{{ lang('table_pagerempty') }}",
+            		 "sInfoFiltered": "{{ lang('table_filtered') }}",
+            		 "sSearch": "{{ lang('table_search') }}",
+            		 "sLoadingRecords": "{{ lang('table_loading') }}",
+            		 "oAria": {
+                		"sSortAscending": "{{ lang('table_sortAsc') }}",
+                		"sSortDescending": "{{ lang('table_sortDesc') }}",
+            		 },
+            		 "oPaginate": {
+                	 	"sFirst": "{{ lang('table_first') }}",
+                		"sLast": "{{ lang('table_last') }}",
+                		"sNext": "{{ lang('table_next') }}",
+                		"sPrevious": "{{ lang('table_previous') }}",
+            		},
+        		}
+    		});
+    		loadfilters();
+        });
+	}
+	loadplans();
 });
 </script>
 {% endblock %}

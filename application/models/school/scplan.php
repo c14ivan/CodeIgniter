@@ -143,12 +143,13 @@ class Scplan extends CI_Model{
 		return $response;
 	}
 	function getSubjectsAsigned($versionid){
-		$this->db->select("{$this->table_subjects}.id,{$this->table_subjects}.name,{$this->table_subjects}.name as vername");
+		$this->db->select("{$this->table_subjects}.id,{$this->table_subjects}.name,{$this->table_subjects}.shortname,
+			{$this->table_subjectplan}.sccicleid,{$this->table_subjectplan}.ih,{$this->table_subjectplan}.credits");
 		$this->db->where($this->table_subjectplan.".scplanversionid",$versionid);
 		$this->db->join($this->table_subjects,"{$this->table_subjects}.id={$this->table_subjectplan}.scsubjectid");
 		$this->db->order_by("{$this->table_subjectplan}.order","ASC");
 		$query = $this->db->get($this->table_subjectplan);
-		$response = $query->result_array();
+		return $query->result_array();
 	}
 	function asignSubject($sccicleid,$subjectid,$planversionid,$ih,$credits){
 		$this->db->where('sccicleid',$sccicleid);
@@ -173,8 +174,8 @@ class Scplan extends CI_Model{
 					'scsubjectid'=>$subjectid,
 					'scplanversionid'=>$planversionid,
 					'order'=>($prev)?$prev->order+1:1,
-					'ih'=>0,
-					'credits'=>0,
+					'ih'=>$ih,
+					'credits'=>$credits,
 			);
 			if($this->db->insert($this->table_subjectplan, $data)){
 				return $this->db->insert_id();
