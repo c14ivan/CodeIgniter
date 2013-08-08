@@ -1,0 +1,83 @@
+{% extends '_layouts/index.html.twig' %}
+
+{% block headext %}
+<link rel="stylesheet" type="text/css" href="{{ asset_url()~'cssapp/general.css' }}" media="all">
+{% endblock %}
+
+{% block content %}
+<div class="row-fluid">
+    <div class="box span3">
+        <div class="box-header well">
+			<h2>{{ lang('lbcategories') }}</h2>
+			<div class="box-icon">
+				<a href="#" class="btn btn_addarea btn-round"><i class="icon-plus"></i></a>
+			</div>
+		</div>
+		<div class="box-content">
+			<div class="areaedt box box-content" style="display:none;">
+				<i class="icon-remove closeedtarea" style="float:right"></i>
+				<form id="scareaedt" class="form-horizontal" method="post">
+					{{ forms.campo({'tipo':'input','type':'hidden','name':'scareaid'}) }}
+					{{ forms.campo({'tipo':'input','type':'text','name':'scarea','label':lang('name'),'maxlength':45}) }}
+					<div class="form-actions">
+						<p class="center span5">
+                      		<button type="submit" class="btn btn-primary">{{ lang('save') }}</button>
+                   		</p>
+                   	</div>
+				</form>
+			</div>
+            <div id="treecontrol">
+        		<a title="{{ lang('tree_collapse_title') }}" href="#"><img src="{{ img_url() }}tree/minus.gif" />{{ lang('tree_collapse') }}</a>
+        		<a title="{{ lang('tree_expand_title') }}" href="#"><img src="{{ img_url() }}tree/plus.gif" /> {{ lang('tree_expand') }}</a>
+        		<a title="{{ lang('tree_expand_title') }}" href="#">{{ lang('tree_toggle') }}</a>
+        	</div>
+            <ul id="cattree" class="treeview-black">
+            
+            </ul>
+            </div>
+    </div>
+    <div class="box span9">
+    
+    </div>
+</div>
+{% endblock %}
+ {% block jscode %}
+<script type="text/javascript">
+$(document).ready(function() {
+    function addparent(catid,catname){
+        $('#cattree').append('<li data-id="'+catid+'"><span class="folder">'+catname+
+                '<span"><i class="icon-chevron-right viewcat"></i></span></span><ul></ul></li>');
+    }
+    function addchildren(catid,subcatid,subcatname){
+        $('#cattree').find('li[data-id='+catid+']').find('ul').append('<li data-id='+subcatid+'><span class="folder">'+
+                subcatname+'<span"><i class="icon-chevron-right viewcat"></i></span></span></li>');
+    }
+    function loadcategories(){
+    	$.ajax({
+        	type:"POST",
+            url: '{{ site_url('library/loadcategories') }}',
+            dataType:'json',
+            data: {cicle:$(this).closest('li').attr('data-id'),system:$(this).closest('.systemcicles').find('form#cicleedit').find('input[name="scsystemid"]').val()},
+            error:function (jqXHR, textStatus, errorThrown) {
+            	console.log(JSON.stringify(jqXHR) + ' ' + textStatus + '  ' + errorThrown);
+            }
+            }).done(function(data){
+                console.log(data);
+                for (i in data.cats){
+                    addparent(data.cats[i].id,data.cats[i].name);
+                    for (j in data.cats[i].childrens){
+                        addchildren(data.cats[i].id,data.cats[i].childrens[j].id,data.cats[i].childrens[j].name);
+                    }
+                }
+                $("#cattree").treeview({
+                	control: "#treecontrol",
+            		persist: "cookie",
+            		cookieId: "treeview-black"
+            	});
+            });
+    }
+
+    loadcategories();
+});
+</script>
+{% endblock %}
