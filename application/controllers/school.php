@@ -109,6 +109,17 @@ class School extends CI_Controller {
 
         echo json_encode(array('cicle'=>$cicledata));
     }
+    public function delcicle(){
+        if(!$this->input->is_ajax_request()) redirect();
+        $this->output->enable_profiler(FALSE);
+        
+        if(!$this->input->is_ajax_request()) redirect();
+        $this->output->enable_profiler(FALSE);
+    
+        $cicledata=$this->input->post();
+    
+        echo json_encode(array('cicle'=>$cicledata['cicle'],'ok'=>$this->scsystem->delCicle($cicledata['cicle'],$cicledata['system'])));
+    }
     public function ordercicles(){
         if(!$this->input->is_ajax_request()) redirect();
         $this->output->enable_profiler(FALSE);
@@ -164,6 +175,17 @@ class School extends CI_Controller {
             }
         }
         echo json_encode(array('ok'=>$res));
+    }
+    public function deldivision(){
+        if(!$this->input->is_ajax_request()) redirect();
+        $this->output->enable_profiler(FALSE);
+    
+        if(!$this->input->is_ajax_request()) redirect();
+        $this->output->enable_profiler(FALSE);
+    
+        $cicledata=$this->input->post();
+    
+        echo json_encode(array('division'=>$cicledata['division'],'ok'=>$this->scsystem->delDivision($cicledata['division'],$cicledata['system'])));
     }
     public function addplan(){
         if(!$this->input->is_ajax_request()) redirect();
@@ -291,6 +313,16 @@ class School extends CI_Controller {
     	$subject=$subject['subject'];
     	echo json_encode(array('ih'=>$ih,'cicle'=>$sccicleid,'credits'=>$credits,'subjectid'=>$subjectid,'subject'=>$subject->name,'shortname'=>$subject->shortname));
     	
+    }
+    public function unasignsubject(){
+        if(!$this->input->is_ajax_request()) redirect();
+        $this->output->enable_profiler(FALSE);
+         
+        $subjectid=$this->input->post('subject');
+        $planversionid=$this->input->post('version');
+        $sccicleid=$this->input->post('cicle');
+        echo json_encode(array('cicle'=>$sccicleid,'subjectid'=>$subjectid,'ok'=>$this->scplan->unasignSubject($sccicleid,$subjectid,$planversionid)));
+         
     }
     public function ordersubjects(){
     	if(!$this->input->is_ajax_request()) redirect();

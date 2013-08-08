@@ -1,20 +1,18 @@
-{% extends '_layouts/index.html.twig' %}
-
-{% block headext %}
-<link rel="stylesheet" type="text/css" href="{{ asset_url()~'cssapp/general.css' }}" media="all">
-{% endblock %}
-
-
-{% block content %}
-{% import '_tools/formElements.twig' as forms %}
+{% extends '_layouts/index.html.twig' %} {% block headext %}
+<link
+	rel="stylesheet" type="text/css"
+	href="{{ asset_url()~'cssapp/general.css' }}" media="all">
+{% endblock %} {% block content %} {% import '_tools/formElements.twig'
+as forms %}
 
 <div class="row-fluid">
 	<div class="box span12">
 		<div class="box-header well">
 			<h2>{{ lang('sc_systems') }}</h2>
 			<div class="box-icon">
-				<a href="#" class="btn addplan btn-round"><i class="icon-plus"></i></a>
-				<a href="#" class="btn btn-minimize btn-round"><i class="icon-chevron-up"></i></a>
+				<a href="#" class="btn addplan btn-round"><i class="icon-plus"></i>
+				</a> <a href="#" class="btn btn-minimize btn-round"><i
+					class="icon-chevron-up"></i> </a>
 			</div>
 		</div>
 		<div class="box-content">
@@ -23,115 +21,96 @@
 		</div>
 	</div>
 </div>
-<div class="systemcont" style="display:none;">
+<div class="systemcont" style="display: none;">
 	<div class="row-fluid">
-		<div class="box span6 systemform"  style="display:none;">
-    		<div class="box-header well">
-				<h2 class="scadd" style="display:none;">{{ lang('sc_systemadd') }}</h2>
-				<h2 class="scedt" style="display:none;">{{ lang('sc_systemedt') }}</h2>
-    			<div class="box-icon">
-    				<a href="#" class="btn btn-minimize btn-round"><i class="icon-chevron-up"></i></a>
-    			</div>
-    		</div>
+		<div class="box span4 systemform" style="display: none;">
+			<div class="box-header well">
+				<h2 class="scadd" style="display: none;">{{ lang('sc_systemadd') }}</h2>
+				<h2 class="scedt" style="display: none;">{{ lang('sc_systemedt') }}</h2>
+				<div class="box-icon">
+					<a href="#" class="btn btn-minimize btn-round"><i
+						class="icon-chevron-up"></i> </a>
+				</div>
+			</div>
 			<div class="box-content">
 				<form id="systemedt" class="form-horizontal" method="post">
 					{{ forms.campo({'tipo':'input','type':'hidden','name':'scid'}) }}
-					{{ forms.campo({'tipo':'input','type':'text','name':'scname','label':lang('sc_name'),'maxlength':45}) }}
-					{{ forms.campo({'tipo':'textarea','label':lang('description'),'name':'scdescription','cols':50}) }}
-					{{ forms.campo({'tipo':'select','label':lang('sc_duration'),'name':'scduration',
-						'opciones':config.school.systemduration }) }}
-					{{ forms.campo({'tipo':'select','label':lang('sc_status'),'name':'scstatus',
-						'opciones':config.school.systemstatus }) }}
+					{{
+					forms.campo({'tipo':'input','type':'text','name':'scname','label':lang('sc_name'),'maxlength':45})
+					}} {{
+					forms.campo({'tipo':'textarea','label':lang('description'),'name':'scdescription','cols':50})
+					}} {{
+					forms.campo({'tipo':'select','label':lang('sc_duration'),'name':'scduration',
+					'opciones':config.school.systemduration }) }} {{
+					forms.campo({'tipo':'select','label':lang('sc_status'),'name':'scstatus',
+					'opciones':config.school.systemstatus }) }}
 					<div class="form-actions">
 						<p class="center span5">
-                       		<button type="submit" class="btn btn-primary">{{ lang('save') }}</button>
-                    	</p>
-                    </div>
+							<button type="submit" class="btn btn-primary">{{ lang('save') }}</button>
+						</p>
+					</div>
 				</form>
 			</div>
 		</div>
-		<div class="box span6 systemcicles" style="display:none;">
+		<div class="box span4 systemcicles" style="display: none;">
 			<div class="box-header well">
 				<h2>{{ lang('sc_cicles') }}</h2>
 				<div class="box-icon">
-					<a href="#" class="btn btn_addcicle btn-round"><i class="icon-plus"></i></a>
-					<a href="#" class="btn btn-minimize btn-round"><i class="icon-chevron-up"></i></a>
+					<a href="#" class="btn btn_addcicle btn-round"><i class="icon-plus"></i>
+					</a> <a href="#" class="btn btn-minimize btn-round"><i
+						class="icon-chevron-up"></i> </a>
 				</div>
 			</div>
 			<div class="box-content">
-				<div class="cicleedt box box-content" style="display:none;">
-					<i class="icon-remove closeedtcicle" style="float:right"></i>
-					<form id="cicleedit" class="form-horizontal">
-					{{ forms.campo({'tipo':'input','type':'hidden','name':'scsystemid'}) }}
-					{{ forms.campo({'tipo':'input','type':'hidden','name':'cicleid'}) }}
-					{{ forms.campo({'tipo':'input','type':'hidden','name':'cicleorder'}) }}
-					{{ forms.campo({tipo:'input','type':'text',name:'cicleabbr',label: lang('sc_abbr'),maxLength:5 }) }}
-					{{ forms.campo({tipo:'input','type':'text',name:'ciclename',label: lang('sc_cicle'),prepend:{tipo:'button',icon:'check','title':lang('save')}})}}
+				<div class="cicleedt box box-content" style="display: none;">
+					<i class="icon-remove closeedtcicle" style="float: right"></i>
+					<form id="cicleedit" class="form-horizontal">{{
+						forms.campo({'tipo':'input','type':'hidden','name':'scsystemid'})
+						}} {{
+						forms.campo({'tipo':'input','type':'hidden','name':'cicleid'}) }}
+						{{
+						forms.campo({'tipo':'input','type':'hidden','name':'cicleorder'})
+						}} {{
+						forms.campo({tipo:'input','type':'text',name:'cicleabbr',label:
+						lang('sc_abbr'),maxLength:5 }) }} {{
+						forms.campo({tipo:'input','type':'text',name:'ciclename',label:
+						lang('sc_cicle'),prepend:{tipo:'button',icon:'check','title':lang('save')}})}}
 					</form>
 				</div>
 				<ul class="wide-list">
-				
+
 				</ul>
 			</div>
 		</div>
-	</div>
-	<div class="row-fluid ">
-		<div class="box span6 systemdivs" style="display:none;">
+		<div class="box span4 systemdivs" style="display: none;">
 			<div class="box-header well">
 				<h2>{{ lang('sc_periods') }}</h2>
 				<div class="box-icon">
-					<a href="#" class="btn btn_adddiv btn-round"><i class="icon-plus"></i></a>
-					<a href="#" class="btn btn-minimize btn-round"><i class="icon-chevron-up"></i></a>
+					<a href="#" class="btn btn_adddiv btn-round"><i class="icon-plus"></i>
+					</a> <a href="#" class="btn btn-minimize btn-round"><i
+						class="icon-chevron-up"></i> </a>
 				</div>
 			</div>
 			<div class="box-content">
-				<div class="divedt box box-content" style="display:none;">
-					<i class="icon-remove closeedtdiv" style="float:right"></i>
-					<form id="divedit" class="form-horizontal">
-					{{ forms.campo({'tipo':'input','type':'hidden','name':'scsystemid'}) }}
-					{{ forms.campo({'tipo':'input','type':'hidden','name':'divid'}) }}
-					{{ forms.campo({'tipo':'input','type':'hidden','name':'divorder'}) }}
-					{{ forms.campo({tipo:'input','type':'text',name:'divname',label: lang('sc_period'),prepend:{tipo:'button',icon:'check','title':lang('save')}})}}
+				<div class="divedt box box-content" style="display: none;">
+					<i class="icon-remove closeedtdiv" style="float: right"></i>
+					<form id="divedit" class="form-horizontal">{{
+						forms.campo({'tipo':'input','type':'hidden','name':'scsystemid'})
+						}} {{ forms.campo({'tipo':'input','type':'hidden','name':'divid'})
+						}} {{
+						forms.campo({'tipo':'input','type':'hidden','name':'divorder'}) }}
+						{{ forms.campo({tipo:'input','type':'text',name:'divname',label:
+						lang('sc_period'),prepend:{tipo:'button',icon:'check','title':lang('save')}})}}
 					</form>
 				</div>
 				<ul class="wide-list">
-				
-				</ul>
-			</div>
-		</div>
-		<div class="box span6 systeminplans">
-			<div class="box-header well">
-				<h2>{{ lang('sc_systeminplan') }}</h2>
-				<div class="box-icon">
-					<a href="#" class="btn btn_addplan btn-round"><i class="icon-plus"></i></a>
-					<a href="#" class="btn btn-minimize btn-round"><i class="icon-chevron-up"></i></a>
-				</div>
-			</div>
-			<div class="box-content">
-				<div class="planedt box box-content" style="display:none;">
-					<i class="icon-remove closeedtplan" style="float:right"></i>
-					<form id="planedit" class="form-horizontal">
-						{{ forms.campo({'tipo':'input','type':'hidden','name':'scsystemid'}) }}
-						{{ forms.campo({'tipo':'input','type':'hidden','name':'planid'}) }}
-						{{ forms.campo({tipo:'input','type':'text',name:'planname',label: lang('name')})}}
-						{{ forms.campo({'tipo':'textarea','label':lang('description'),'name':'plandescription','cols':50}) }}
-						<div class="form-actions">
-							<p class="left">
-								{{ forms.campo({tipo:'button',value:lang('save'),icon:'check'}) }}
-							</p>
-						</div>
-					</form>
-				</div>
-				<ul class="wide-list">
-				
+
 				</ul>
 			</div>
 		</div>
 	</div>
 </div>
-{% endblock %}
-
-{% block jscode %}
+{% endblock %} {% block jscode %}
 <script type="text/javascript">
 loadsystems();
 $('.btn_addcicle').click(function(){
@@ -144,11 +123,6 @@ $('.btn_adddiv').click(function(){
 	resetForm($('.divedt').find('form'));
 	$('.divedt').find('input[name=divid]').val(0);
 });
-$('.btn_addplan').click(function(){
-	$('.planedt').slideDown();
-	resetForm($('.planedt').find('form'));
-	$('.planedt').find('input[name=planid]').val(0);
-});
 $('.closeedtdiv').click(function(){
 	$('.divedt').slideUp();
 	resetForm($('.divedt').find('form'));
@@ -159,11 +133,6 @@ $('.closeedtcicle').click(function(){
 	resetForm($('.cicleedt').find('form'));
 	$('.cicleedt').find('input[name=cicleid]').val(0);
 });
-$('.closeedtplan').click(function(){
-	$('.planedt').slideUp();
-	resetForm($('.planedt').find('form'));
-	$('.planedt').find('input[name=planid]').val(0);
-});
 
 $('#cicleabbr').keyup(function(){
 	$(this).val($(this).val().toUpperCase());
@@ -171,49 +140,22 @@ $('#cicleabbr').keyup(function(){
 $('.addplan').click(function(){
 	$('.systemcont').slideUp();
 	$('.systemcicles').slideUp();
-	$('.systeminplans').slideUp();
 	$('.systemcicles').find('ul').children().remove();
+	
+	$('.systemdivs').slideUp();
+	$('.systemdivs').find('ul').children().remove();
+	
 	$('.systemform').slideDown();
 	$('.systemform').find('input[name=scid]').val(0);
 	$('h2.scadd').slideDown();
 	$('h2.scedt').slideUp();
 	resetForm($('.systemcont').find('form'));
+	$('.systemcont').find('form').find('input[name=scname]').removeAttr('readonly');
+	$('.systemcont').find('form').find('textarea[name=scdescription]').removeAttr('readonly');
+	
 	$('.systemcont').slideDown();
 	$('.systemform').find('select[name="scstatus"]').closest('.control-group').slideUp();
 	$('.systemcont').find('select[name=scduration]').closest('.control-group').slideUp();
-});
-$('#planedit').validate({
-	errorClass:'errorlabelform',
-    elErrorClass:'errorlabel',
-    rules:{
-    	planname:{required:true},
-    	plandescription:{required:true},
-    },
-    messages:{
-    	planname:{required:'{{ lang('required')|format('')}}'},
-    	plandescription:{required:'{{ lang('required')|format('')}}'},
-    },
-    submitHandler: function(form) {
-    	$.ajax({
-                type:"POST",
-                url: '{{ site_url('school/addplan') }}',
-                dataType:'json',
-                data: $(form).serializeObject(),
-                error:function (jqXHR, textStatus, errorThrown) {
-                    console.log(JSON.stringify(jqXHR) + ' ' + textStatus + '  ' + errorThrown);
-                }
-            }).done(function (data) {
-            
-            	resetForm($('form#planedit'));
-            	$('.planedt').slideUp();
-            	if($('.systemplans').find('ul').find('li[data-id='+data.plan.planid+']').length>0){
-            		$('.systemplans').find('ul').find('li[data-id='+data.plan.planid+']').find('.planname').html(data.plan.url);
-            		$('.systemplans').find('ul').find('li[data-id='+data.plan.planid+']').find('.plandesc').html(data.plan.plandescription);
-            	}else{
-            		addplan(data.plan.planid,data.plan.url,data.plan.plandescription);
-            	}
-            });
-    }
 });
 $('#divedit').validate({
 	errorClass:'errorlabelform',
@@ -327,11 +269,11 @@ $('#systemedt').validate({
                 }
             }).done(function (data) {
             	if (data.ok){
-            		noty({text: '{{ lang('ajaxok')}}',type:'sucess',timeout:500});
+            		showNotification('{{ lang('ajaxok') }}');
             		loadsystems();
             		loadsystem(data.scid);
             	}else{
-            		noty({text: '{{ lang('ajaxerror')}}',type:'error',timeout:500});
+            		showNotification('{{ lang('ajaxerror') }}');
             	}
             });
   	}
@@ -365,7 +307,6 @@ function loadsystems(){
 function loadsystem(sysid){
 	$('.systemcicles').find('ul').children().remove();
 	$('.systemdivs').find('ul').children().remove();
-	$('.systeminplans').find('ul').children().remove();
 	$('.systemdivs').find('ul').sortable('cancel');
 	$.ajax({
                 type:"POST",
@@ -378,7 +319,6 @@ function loadsystem(sysid){
             }).done(function (data) {
             	$('form#cicleedit').find('input[name=scsystemid]').val(data.id);
             	$('form#divedit').find('input[name=scsystemid]').val(data.id);
-            	$('form#planedit').find('input[name=scsystemid]').val(data.id);
             	
             	$('.systemform').find('input[name=scid]').val(data.id);
             	$('.systemcont').find('input[name=scname]').val(data.sysdata.name);
@@ -415,21 +355,12 @@ function loadsystem(sysid){
             		
             		$('.systemcont').find('select[name=scstatus]').find('option').filter(function(){return $(this).val()<data.sysdata.status}).attr('disabled', true);
             		$('.systemcont').find('select[name=scstatus]').removeAttr('disabled').trigger("liszt:updated");
-    				$('.systeminplans').slideDown();
             	}else{
             		$('.systemcont').find('input[name=scname]').attr('readonly',true);
             		$('.systemcont').find('textarea[name=scdescription]').attr('readonly',true);
             		$('.systemcont').find('select[name=scduration]').attr('disabled', true).trigger("liszt:updated");
             		$('.systemcont').find('select[name=scstatus]').attr('disabled', true).trigger("liszt:updated");
             		$('.systemcont').find('button').attr('disabled', true);
-    				$('.systeminplans').find('');//no mostrar boton de agregar nuevo plan
-    				$('.systeminplans').slideDown();
-            	}
-            	
-            	if($(data.inplan).length>0){
-            		for (i in data.inplan){
-            			addplan(data.inplan[i].id,data.inplan[i].url,data.inplan[i].description);
-            		}
             	}
             	
 				$('h2.scadd').slideUp();
@@ -470,7 +401,7 @@ function sortable_divs(){
                     console.log(JSON.stringify(jqXHR) + ' ' + textStatus + '  ' + errorThrown);
                 }
             }).done(function(data){
-            	
+            	showNotification('{{ lang('sc_divssort') }}');
             });
         }
 	});
@@ -487,12 +418,15 @@ function dom_divs(){
         	type:"POST",
             url: '{{ site_url('school/delDivision') }}',
             dataType:'json',
-            data: $(form).serializeObject(),
+            data: {division:$(this).closest('li').attr('data-id'),system:$(this).closest('.systemdivs').find('form#divedit').find('input[name="scsystemid"]').val()},
             error:function (jqXHR, textStatus, errorThrown) {
             	console.log(JSON.stringify(jqXHR) + ' ' + textStatus + '  ' + errorThrown);
             }
             }).done(function(data){
-            					
+            	if (data.ok){
+                	showNotification('{{ lang('deleteok') }}');
+                    $('.systemdivs').find('li[data-id='+data.division+']').remove();
+                }
             });
     });
 }
@@ -527,7 +461,7 @@ function sortable_cicles(){
                     console.log(JSON.stringify(jqXHR) + ' ' + textStatus + '  ' + errorThrown);
                 }
             }).done(function(data){
-            	
+            	showNotification('{{ lang('sc_ciclessort') }}');
             });
         }
 	});
@@ -543,22 +477,19 @@ function dom_cicles(){
     $('.systemcicles').find('li').find('.icon-remove').click(function(){
    		$.ajax({
         	type:"POST",
-            url: '{{ site_url('school/addcicle') }}',
+            url: '{{ site_url('school/delcicle') }}',
             dataType:'json',
-            data: $(form).serializeObject(),
+            data: {cicle:$(this).closest('li').attr('data-id'),system:$(this).closest('.systemcicles').find('form#cicleedit').find('input[name="scsystemid"]').val()},
             error:function (jqXHR, textStatus, errorThrown) {
             	console.log(JSON.stringify(jqXHR) + ' ' + textStatus + '  ' + errorThrown);
             }
             }).done(function(data){
-            					
+                if (data.ok){
+                	showNotification('{{ lang('deleteok') }}');
+                    $('.systemcicles').find('li[data-id='+data.cicle+']').remove();
+                }
             });
     });
-}
-function addplan(planid,planurl,plandescription){
-	$('.systeminplans').find('ul').append('<li data-id="'+planid+'">'+
-            				'<span class="span3 planname">'+planurl+'</span>'+
-            				'<span class="span6 plandesc">'+plandescription+'</span>'
-           	 				);
 }
 </script>
 {% endblock %}

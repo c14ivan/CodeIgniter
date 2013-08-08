@@ -1,5 +1,6 @@
+{%  set config = get_config() %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ config.language }}">
 <head>
 	<!--
 		Charisma v1.0.0
@@ -12,7 +13,7 @@
 		http://twitter.com/halalit_usman
 	-->
 	<meta charset="utf-8">
-	<title>App Title</title>
+	<title>{{ config.appname }}</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta name="description" content="Charisma, a fully featured, responsive, HTML5, Bootstrap admin template.">
 	<meta name="author" content="Muhammad Usman">
@@ -57,7 +58,6 @@
 
 <body>
 
-{%  set config = get_config('appname') %}
 		<div class="container-fluid">
 		<div class="row-fluid">
 			{% block content %}

@@ -67,7 +67,7 @@
 					
 				</tbody>
 				<tfoot>
-					<tr><th class="filter"></th><th></th><th></th><th></th></tr>				
+					<tr><th class="filter"></th><th></th><th></th><th></th></tr>
 				</tfoot>
 			</table>
 		</div>
@@ -113,6 +113,10 @@
 <script type="text/javascript" src="{{ asset_url()~'jsapp/tables.js' }}"></script>
 <script type="text/javascript">
 $(document).ready(function() {
+    $('.closeedtsubjectversion').click(function(){
+    	resetForm($(this).closest('.box').find('form'));
+		$(this).closest('.box').slideUp();
+    });
 var subjectversionstatus= {{ config.school.subjectversionstatus|json_encode() }} ;
 $('#subjectversionedt').validate({
 	errorClass:'errorlabelform',
@@ -437,7 +441,7 @@ function dom_tablesubjects(){
 					$('.versionscontainer').slideUp();
 				}else{
 					$('.subjectversionedt').find('input[name=scsubjectid]').val(data.subject.id);
-					$('.subjectversionedt').find('h2 span#scname').html(data.subject.name);
+					$('.versionscontainer').find('h2').find('span#scname').html(data.subject.name);
 					loadsubjectversion(data.subject.id);
 				}
             });

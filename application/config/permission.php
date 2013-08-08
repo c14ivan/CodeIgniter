@@ -16,17 +16,16 @@ if (!defined('CONTEXT_MODULE')) {
 if (!defined('CONTEXT_SUBMODULE')) {
     define('CONTEXT_SUBMODULE',40);
 }
-/*define('CONTEXT_SYSTEM', 10);
-define('CONTEXT_USER', 20);
-define('CONTEXT_MODULE', 30);
-define('CONTEXT_SUBMODULE', 40);*/
-
-$config['default_role']='Student';
 
 $config['menu_positions']=array('left-bar','top','bottom','mini-top','status');
 
-$config['context']=array();
-$config['default-roles']=array(
+// used to defined the mode of installation.
+$config['permission']['permissions_mode']='weight';//role,weight
+
+//default role for everybody in home
+$config['default-role']='visitor';
+
+$config['roles']=array(
         array('name'=>'Superuser','weight'=>50,'shortname'=>'super','description'=>''),
         array('name'=>'Administrator','weight'=>40,'shortname'=>'admin','description'=>''),
         array('name'=>'Editing Teacher','weight'=>30,'shortname'=>'teacheredt','description'=>''),
@@ -34,29 +33,11 @@ $config['default-roles']=array(
         array('name'=>'Student','weight'=>10,'shortname'=>'student','description'=>'')
         );
 
-$config['guest-capabilities']=array(
-        'auth/login' => array('visible'=>true,'position'=>'status'),
-        'auth/register' => array(),
-        'auth/send_again' => array(),
-        'auth/activate' => array(),
-        'auth/forgot_password' => array(),
-        'auth/reset_password' => array(),
-        'auth/change_password' => array(),
-        'auth/change_email' => array(),
-        'auth/reset_password' => array(),
-        'auth/reset_email' => array(),
-        'auth/unregister' => array(),
-        );
-
-$config['default-capabilities']=array(
+$config['capabilities']=array(
         'auth/view' => array('weight'=>30, 'visible'=>true,'position'=>'left-bar','ctx_level'=>CONTEXT_HOME),
         'auth/add' => array('weight'=>30,'ctx_level'=>CONTEXT_HOME),
         'auth/enrolments' => array('weight'=>30,'ctx_level'=>CONTEXT_HOME),
+        'school/system' => array('weight'=>30,'ctx_level'=>CONTEXT_HOME),
+        'school/plan' => array('weight'=>30,'ctx_level'=>CONTEXT_HOME),
+        'school/subjects' => array('weight'=>30,'ctx_level'=>CONTEXT_HOME),
         );
-//TODO implement capability parent
-
-
-//NOTAS
-// en las capacidades la posicion solo se usaria si el menu es visible y es un valor por defecto para 
-// al asignar los menus a los roles en un contexto indicar en que posicion debe ponerse
-//permitiendo mover los menus entre las locaciones que se consideren

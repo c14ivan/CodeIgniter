@@ -71,9 +71,9 @@ $(".cancelar").click(function () {
 var ua = navigator.userAgent,
 eventtrigger = (ua.match(/iPad/i)) ? "touchstart" : "click";
 
-function confirmdel(layout,oktext,canceltext,textlabel,data,urlgo,callback) {
+function confirmDel(layout,oktext,canceltext,textlabel,data,urlgo,callback) {
     
-    var n = noty({
+    noty({
       text: textlabel,
       type: 'confirm',
       dismissQueue: true,
@@ -90,7 +90,7 @@ function confirmdel(layout,oktext,canceltext,textlabel,data,urlgo,callback) {
                         console.log(JSON.stringify(jqXHR) + ' ' + textStatus +'  '+errorThrown );
                      }
                 }).done(function(data) {
-                    callback(data)
+                    callback(data);
                 });
                 $noty.close();
             }
@@ -117,7 +117,8 @@ function showNotification(mensaje) {
         text:mensaje,
         type:'information',
         dismissQueue:true,
-        layout:'topCenter',
+        layout:'center',
+        timeout:'500',
         theme:'noty_theme_default'
     });
 }

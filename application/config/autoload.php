@@ -156,7 +156,7 @@ $autoload['language'] = array('general','tank_auth','menu');
 |	$autoload['model'] = array('first_model' => 'first');
 */
 
-$autoload['model'] = array();
+$autoload['model'] = array('permissions');
 
 
 /* End of file autoload.php */

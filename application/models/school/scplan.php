@@ -182,4 +182,18 @@ class Scplan extends CI_Model{
 			}
 		}
 	}
+	function unasignSubject($sccicleid,$subjectid,$planversionid){
+	    $this->db->where('sccicleid',$sccicleid);
+	    $this->db->where('scsubjectid',$subjectid);
+	    $this->db->where('scplanversionid',$planversionid);
+	    $query= $this->db->get($this->table_subjectplan);
+	    $prev=$query->row();
+	    if($prev){
+	        $this->db->where('id', $prev->id);
+	        $this->db->delete($this->table_subjectplan);
+	        return $this->db->affected_rows()==1?true:false;
+	    }else{
+	        return false;
+	    }
+	}
 }

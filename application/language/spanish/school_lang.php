@@ -48,4 +48,8 @@ $lang['sc_edition']="En Edición";
 $lang['sc_inuse']="En uso";
 $lang['sc_deprecated']="Obsoleto";
 
+//actions
+$lang['sc_ciclessort']="Ciclos Reordenados";
+$lang['sc_divssort']="Divisiones Reordenadas";
+$lang['sc_subjectsort']="Asignaturas Reordenadas";
 

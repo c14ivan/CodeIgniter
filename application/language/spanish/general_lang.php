@@ -4,6 +4,10 @@ $lang['cancel'] = "Cancelar";
 $lang['send'] = "Enviar";
 $lang['save'] = "Guardar";
 $lang['description'] = "Descripción";
+$lang['confirmdelete']="¿Esta seguro de eliminar la información seleccionada?";
+$lang['deleteok']="Información Eliminada Satisfactoriamente";
+$lang['operationfails']="La operación ha fallado";
+$lang['confirm']="Confirmar";
 $lang['install']="Instalación";
 $lang['logout']="Salir";
 $lang['login']="Ingresar";
@@ -35,3 +39,11 @@ $lang['table_search']="Buscar:";
 $lang['table_sortAsc']="Ordenar Ascendentemente";
 $lang['table_sortDesc']="Ordernar Descendentemente";
 $lang['table_empty']="No existen Registros";
+
+//tree view
+$lang['tree_collapse']="Minimizar Todos";
+$lang['tree_collapse_title']="Minimizar Todas las bifurcaciones del arbol";
+$lang['tree_expand']="Expandir Todos";
+$lang['tree_expand_title']="Expandir Todas las bifurcaciones del arbol";
+$lang['tree_toggle']="Invertir";
+$lang['tree_toggle_title']="Las bifucaciones Abiertas las cierra y viceversa";
