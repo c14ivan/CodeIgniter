@@ -58,3 +58,6 @@ ul.wide-list li .action {
 	cursor:move;
 	z-index:10;
 }
+.selected{
+	background-color:#A4A4A4 !important;
+}

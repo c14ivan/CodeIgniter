@@ -2,57 +2,128 @@
 
 {% block headext %}
 <link rel="stylesheet" type="text/css" href="{{ asset_url()~'cssapp/general.css' }}" media="all">
+{{ css('jquery.tagsinput.css') }}
 {% endblock %}
-
+{% import '_tools/library.twig' as library %}
 {% block content %}
+{% import '_tools/formElements.twig' as forms %}
 <div class="row-fluid">
-    <div class="box span3">
+    <div class="box span12">
         <div class="box-header well">
 			<h2>{{ lang('lbcategories') }}</h2>
 			<div class="box-icon">
-				<a href="#" class="btn btn_addarea btn-round"><i class="icon-plus"></i></a>
+				<a href="#" class="btn btn_addcat btn-round"><i class="icon-plus"></i></a>
 			</div>
 		</div>
 		<div class="box-content">
-			<div class="areaedt box box-content" style="display:none;">
-				<i class="icon-remove closeedtarea" style="float:right"></i>
-				<form id="scareaedt" class="form-horizontal" method="post">
-					{{ forms.campo({'tipo':'input','type':'hidden','name':'scareaid'}) }}
-					{{ forms.campo({'tipo':'input','type':'text','name':'scarea','label':lang('name'),'maxlength':45}) }}
-					<div class="form-actions">
-						<p class="center span5">
-                      		<button type="submit" class="btn btn-primary">{{ lang('save') }}</button>
-                   		</p>
-                   	</div>
-				</form>
-			</div>
-            <div id="treecontrol">
-        		<a title="{{ lang('tree_collapse_title') }}" href="#"><img src="{{ img_url() }}tree/minus.gif" />{{ lang('tree_collapse') }}</a>
-        		<a title="{{ lang('tree_expand_title') }}" href="#"><img src="{{ img_url() }}tree/plus.gif" /> {{ lang('tree_expand') }}</a>
-        		<a title="{{ lang('tree_expand_title') }}" href="#">{{ lang('tree_toggle') }}</a>
-        	</div>
-            <ul id="cattree" class="treeview-black">
-            
-            </ul>
-            </div>
-    </div>
-    <div class="box span9">
-    
+		    <div class="box span5">
+                <div id="treecontrol">
+            		<a title="{{ lang('tree_collapse_title') }}" href="#"><img src="{{ img_url() }}tree/minus.gif" />{{ lang('tree_collapse') }}</a>
+            		<a title="{{ lang('tree_expand_title') }}" href="#"><img src="{{ img_url() }}tree/plus.gif" /> {{ lang('tree_expand') }}</a>
+            		<a title="{{ lang('tree_expand_title') }}" href="#">{{ lang('tree_toggle') }}</a>
+            		<a title="{{ lang('lbaddcategories') }}" href="#" style="float:right"><i class="icon-plus btn_addcat"></i></a>
+            		
+            	</div>
+                <ul id="cattree" class="treeview-gray">
+                
+                </ul>
+		    </div>
+		    <div class="box span7">
+    			<div class="areaedt box span12" style="display:none;">
+    				<i class="icon-remove closeedtarea" style="float:right"></i>
+    				<form id="libcatedt" class="form-horizontal" method="post">
+    					{{ forms.campo({'tipo':'input','type':'hidden','name':'libcatid'}) }}
+    					{{ forms.campo({'tipo':'input','type':'text','name':'libname','label':lang('name'),'maxlength':45}) }}
+    					{{ forms.campo({'tipo':'input','type':'text','name':'libident','label':lang('lbcatident'),'maxlength':2}) }}
+    					{{ forms.campo({'tipo':'select','name':'lbcatparent','label':lang('lbcatparent'),'opciones':{0:lang('noone')}}) }}
+    					<div class="form-actions">
+    						<p class="center">
+                          		<button type="submit" class="btn btn-primary">{{ lang('save') }}</button>
+                       		</p>
+                       	</div>
+    				</form>
+    			</div>
+                <div class="box span9">
+                    {{ library.searchbook() }}
+                </div>
+    		</div>
+        </div>
     </div>
 </div>
 {% endblock %}
  {% block jscode %}
+{{ js('jquery.tagsinput.js') }}
 <script type="text/javascript">
 $(document).ready(function() {
-    function addparent(catid,catname){
-        $('#cattree').append('<li data-id="'+catid+'"><span class="folder">'+catname+
-                '<span"><i class="icon-chevron-right viewcat"></i></span></span><ul></ul></li>');
+	$('.btn_addcat').click(function(){
+		$('.areaedt').slideDown();
+		resetForm($('.areaedt').find('form'));
+		$('.areaedt').find('input[name=libcatid]').val(0);
+	});
+	$('.closeedtarea').click(function(){
+		$('.areaedt').slideUp();
+		resetForm($('.areaedt').find('form'));
+		$('.areaedt').find('input[name=libcatid]').val(0);
+	});
+	$('#libcatedt').validate({
+		errorClass:'errorlabelform',
+	    elErrorClass:'errorlabel',
+	    ignore:':hidden.chzn',
+	    rules:{
+	    	libname:{required: true,minlength:5,},
+	    	libident:{required: true,minlength:1},
+	    },
+	    messages:{
+	    	libname:{
+	    		required: '{{ lang('required')|format('')}}',
+	    		minlength: '{{ lang('min_length')|format('',5)}}',
+	    		
+	    	},
+	    	libident:{
+	    		required: '{{ lang('required')|format('')}}',
+	    		minlength: '{{ lang('min_length')|format('',5)}}',
+	    		
+	    	},
+	    },
+	    submitHandler: function(form) {
+	    	$.ajax({
+	                type:"POST",
+	                url: '{{ site_url('library/addcategorie') }}',
+	                dataType:'json',
+	                data: $(form).serializeObject(),
+	                error:function (jqXHR, textStatus, errorThrown) {
+	                    console.log(JSON.stringify(jqXHR) + ' ' + textStatus + '  ' + errorThrown);
+	                }
+	            }).done(function (data) {
+	            	if (data.catid){
+	            		loadcategories();
+	            		$('.closeedtarea').trigger('click');
+	            	}else{
+	            		showNotification('{{ lang('ajaxerror') }}');
+	            	}
+	            });
+	    }
+	});
+    function addparent(catid,catname,ident){
+        $('#cattree').append('<li data-id="'+catid+'"><span class="folder">'+ident+'00-'+catname+
+                '<span"><i class="icon-chevron-right viewcat" title="{{ lang('lbadminbooks') }}"></i></span></span><ul></ul></li>');
     }
-    function addchildren(catid,subcatid,subcatname){
-        $('#cattree').find('li[data-id='+catid+']').find('ul').append('<li data-id='+subcatid+'><span class="folder">'+
-                subcatname+'<span"><i class="icon-chevron-right viewcat"></i></span></span></li>');
+    function addchildren(catid,subcatid,subcatname,ident,haschild){
+        var thirdhtml=(haschild)?'<ul></ul>':'';
+        $('#cattree').find('li[data-id='+catid+']').children('ul').append('<li data-id='+subcatid+'><span class="folder">'+
+                ident+'-'+subcatname+'<span><i class="icon-chevron-right viewcat" title="{{ lang('lbadminbooks') }}"></i></span></span>'+thirdhtml+'</li>');
+    }
+    function dom_tree(){
+        $('.viewcat').click(function(){
+        	$('#cattree').find('span').removeClass('selected');
+            $(this).closest('span.folder').addClass('selected');
+        });
+        $('.editcat').click(function(){
+            
+        });
     }
     function loadcategories(){
+    	$('#cattree').empty();
     	$.ajax({
         	type:"POST",
             url: '{{ site_url('library/loadcategories') }}',
@@ -63,21 +134,36 @@ $(document).ready(function() {
             }
             }).done(function(data){
                 console.log(data);
+                var firstsum=null;
+                var secondsum=null;
+                $('form#libcatedt').find('select[name=lbcatparent]').find('option').not('[value=0]').remove();
                 for (i in data.cats){
-                    addparent(data.cats[i].id,data.cats[i].name);
-                    for (j in data.cats[i].childrens){
-                        addchildren(data.cats[i].id,data.cats[i].childrens[j].id,data.cats[i].childrens[j].name);
+                    firstsum=data.cats[i];
+                    addparent(firstsum.id,firstsum.name,firstsum.ident);
+                    $('form#libcatedt').find('select[name=lbcatparent]').append('<option value="'+firstsum.id+'">'+firstsum.ident+'00 -'+firstsum.name+'</option>');
+                    for (j in firstsum.childrens){
+                        secondsum=firstsum.childrens[j];
+                        console.log(firstsum.id);
+                        addchildren(firstsum.id,secondsum.id,secondsum.name,firstsum.ident+secondsum.ident+'0',true);
+                        $('form#libcatedt').find('select[name=lbcatparent]').append('<option value="'+secondsum.id+'">- '+firstsum.ident+secondsum.ident+'0 -'+secondsum.name+'</option>');
+                        for(k in secondsum.childrens){
+                            thirdsum=secondsum.childrens[k];
+                            addchildren(secondsum.id,thirdsum.id,thirdsum.name,firstsum.ident+secondsum.ident+thirdsum.ident,false);
+                        }
                     }
                 }
+                $('form#libcatedt').find('select[name=lbcatparent]').trigger("liszt:updated");
                 $("#cattree").treeview({
                 	control: "#treecontrol",
             		persist: "cookie",
             		cookieId: "treeview-black"
             	});
+                dom_tree();
             });
     }
 
     loadcategories();
 });
 </script>
+{{ library.searchbookjs() }}
 {% endblock %}

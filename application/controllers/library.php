@@ -21,6 +21,7 @@ class Library extends CI_Controller {
         parent::__construct();
         $this->load->model('library/Lblibrary');
         $this->lang->load('library');
+        $this->lang->load('form_validation');
     }
     public function index()
     {
@@ -32,7 +33,15 @@ class Library extends CI_Controller {
     public function adminbooks(){
         
     }
-    
+    public function addcategorie(){
+        if(!$this->input->is_ajax_request()) redirect();
+        
+        $this->output->enable_profiler(FALSE);
+        $post=$this->input->post();
+        $catid=$this->Lblibrary->addcategorie($post['libname'],$post['libident'],$post['lbcatparent']);
+        $post['catid']=$catid;
+        echo json_encode($post);
+    }
     public function loadcategories(){
         if(!$this->input->is_ajax_request()) redirect();
         

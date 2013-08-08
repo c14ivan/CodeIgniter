@@ -1,6 +1,6 @@
 {#GENERICOS#}
-    {% macro icon(name, inverted) %}
-        <i class="icon-{{ name }}{% if inverted|default(false) %} icon-white{% endif %}"></i>
+    {% macro icon(name, inverted,class) %}
+        <i class="icon-{{ name }}{% if inverted|default(false) %} icon-white{% endif %} {% if class %}{{ class }}{% endif %}"></i>
     {% endmacro %}
     {# img: MUESTRA UNA IMAGEN #}
     {% macro img(url,width,height,alt) %}
@@ -50,13 +50,23 @@
         {% elseif campo.tipo=='button' %}
             {{ _self.button(campo) }}
         {% elseif campo.tipo=='icon' %}
-            {{ _self.icon(campo.name,campo.inverted) }}
+            {{ _self.icon(campo.name,campo.inverted,campo.class) }}
         {% elseif campo.label=='label' %}
             {{ _self.label(campo.value,campo.class,campo.for) }}
         {% elseif campo.label=='span' %}
             {{ _self.span(campo.value,campo.class) }}
         {% elseif campo is iterable %}
-            {{ campo.value }}
+            {% if campo.value %}
+                {{ campo.value }}
+            {% else %}
+                {% for valor in campo %}
+                    {% if valor.tipo%}
+                        {{ _self.campo(valor) }}
+                    {% else %}
+                        {{ valor }}
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
         {% else %}
             {{ campo }}
         {% endif %}
@@ -80,6 +90,8 @@
         {% set estilo=campo.estilo %}
         {% set classappprep='' %}
         {% set class=campo.class %}
+        {% set style = campo.style %}
+        {% set classprep=campo.classprep|default(true) %}
         {% if maxLength>20%}
             {% set class=class ~'input-xlarge' %}
         {% endif %}
@@ -92,7 +104,7 @@
         {% if append%}
             {% set classappprep= classappprep ~' input-append' %}
         {% endif %}
-        {% if prepend or (type=='password' and class=="passmeter") %}
+        {% if (prepend or (type=='password' and class=="passmeter")) and classprep!='false' %}
             {% set classappprep= classappprep ~' input-prepend' %}
         {% endif %}
         {% if type=='hidden' %}
@@ -103,7 +115,7 @@
                 {% if label %}
                     {{ _self.label(label,'control-label',id|default(name)) }}
                 {% endif %}
-                <div class="controls">
+                <div class="{% if label %}controls{% endif %}">
                     <div class="{{ classappprep }}">
                         {% if append%}
                             <span class="add-on">{{ _self.campo(append) }}</span>
@@ -123,12 +135,13 @@
                         {% elseif type=='label' %}
                         	{{ _self.label(valor,class,'') }}
                         {% else %}
-                            <input type="{{ type|default('text') }}" name="{{ name }}" id="{{ id|default(name)}}" 
+                            <input type="{{ type|default('text') }}" name="{{ name }}" id="{{ id|default(name)}}"  {% if style %} style="{{ style }}" {% endif %}
                                value="{{ valor }}" {% if maxLength %} maxlength="{{ maxLength|default(20) }}" {% endif %}
                                class="{{ class }}" placeholder="{{ placeholder }}" {{extra}} {% if onchange %} onchange="{{ onchange }}" {% endif %}/>
                         {% endif %}
                         {% if prepend or type=='password' %}
                             {% if prepend%}
+                                <span class="add-on">
                                 {% if prepend.tipo or prepend is not iterable %}
                                     {{ _self.campo(prepend) }}
                                 {% else %}
@@ -136,6 +149,7 @@
                                         {{ _self.campo(tmp) }}
                                     {% endfor %}
                                 {% endif %}
+                                </span>
                             {% endif %}
                             {% if type=='password' and class=="passmeter" %}
                                 <span class="add-on">
@@ -258,7 +272,8 @@
         {% set icon=campo.icon %}
         {% set iconinv=campo.iconinv %}
         {% set title=campo.title %}
-        <button {% if class %} class="{{ class }}"{% endif %} {% if title %} title="{{ title }}"{% endif %}>
+        {% set style=campo.style %}
+        <button {% if class %} class="{{ class }}"{% endif %} {% if title %} title="{{ title }}"{% endif %} {% if style %} style="{{ style }}"{% endif %}>
         {% if icon %}
             {{ _self.icon(icon,iconinv) }}
         {% endif %}

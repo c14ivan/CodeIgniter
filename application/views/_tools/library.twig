@@ -1,0 +1,55 @@
+{% macro searchbook() %}
+    {% import '_tools/formElements.twig' as forms %}
+    <div class="searchbcont">
+        <form id="searchbook" class="form-horizontal">
+        {{ forms.campo({'tipo':'input','type':'text','placeholder':lang('book_search')~'...','classprep':'false','class':'span10','style':'float:left;','name':'search','prepend':{0:{'tipo':'button','class':'search','title':lang('search'),'icon':'search'},1:{'tipo':'button','class':'searchadv','title':lang('seachadv'),'icon':'chevron-down'}}}) }}
+        <div class="advancesearch" style="display:none;">
+            {{ forms.campo({'tipo':'input','type':'text','name':'title','label':lang('book_title')}) }}
+            {{ forms.campo({'tipo':'input','type':'text','name':'author','label':lang('book_author')}) }}
+            {{ forms.campo({'tipo':'input','type':'text','name':'keywords','label':lang('book_keywords')}) }}
+            <div class="form-actions">
+    		    <p class="center span5">
+                    <button type="submit" class="btn btn-primary">{{ lang('search') }}</button>
+                </p>
+            </div>
+        </div>
+        </form>
+    </div>
+{% endmacro %}
+
+{% macro searchbookjs() %}
+    <script type="text/javascript">
+    $(document).ready(function() {
+        $('form#searchbook').find('input[name=keywords]').tagsInput({
+        	'defaultText':'{{ lang('search')~'...' }}',
+        	'removetagText':'{{ lang('delete')}}',
+        });
+        $('#keywords_tag').keyup(function(event){
+            if(event.keyCode==32 && $(this).val().trim().length>0){
+            	$('form#searchbook').find('input[name=keywords]').addTag($(this).val().trim(),{'removeText':'{{ lang('delete') }}'});
+                $(this).val('');
+            }
+        });
+        $('.searchbcont').find('button.search').click(function(event){
+        	event.preventDefault();
+            $('form#searchbook').trigger('submit');
+        	return false;
+        });
+        
+        $('.searchbcont').find('button.searchadv').click(function(event){
+            event.preventDefault();
+            $(this).closest('.searchbcont').find('.advancesearch').toggle();
+            if($(this).find('i').hasClass('icon-chevron-down')){
+            	$(this).find('i').removeClass('icon-chevron-down').addClass('icon-chevron-up');
+            }else{
+            	$(this).find('i').removeClass('icon-chevron-up').addClass('icon-chevron-down');
+            	$(this).closest('form').find('input[name=title]').val('');
+            	$(this).closest('form').find('input[name=author]').val('');
+            	$(this).closest('.searchbcont').find('#keywords').clearTag();
+            }
+            
+            return false;
+        });
+    });
+    </script>
+{% endmacro %}
