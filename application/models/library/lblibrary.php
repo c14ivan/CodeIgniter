@@ -116,4 +116,12 @@ class Lblibrary extends CI_Model{
             return  $this->db->insert_id();
         }
     }
+    public function getLastCreated(){
+        $this->db->select("{$this->tablebooks}.id,{$this->tablebooks}.ident,{$this->tablebooks}.title,{$this->tablebooks}.author,
+            {$this->tablebooks}.keywords,{$this->tablebooks}.year,{$this->tablebooks}.edition,{$this->tablebooks}.timecreated,{$this->tableedits}.name as editorial");
+        $this->db->join($this->tableedits,"{$this->tablebooks}.editorialid={$this->tableedits}.id");
+        $this->db->order_by("{$this->tablebooks}.timecreated",'DESC');
+        $query=$this->db->get($this->tablebooks,100);
+        return $query->result_array();
+    }
 }

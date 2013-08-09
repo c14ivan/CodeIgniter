@@ -123,7 +123,7 @@ $autoload['helper'] = array('form','url','asset','path','language');
 |
 */
 
-$autoload['config'] = array('twig','asset');
+$autoload['config'] = array('twig','asset','permission');
 
 
 /*

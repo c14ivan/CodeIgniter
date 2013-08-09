@@ -6,6 +6,7 @@ $lang['lbcatident']="Identificador";
 $lang['lbcatparent']="Sumario Padre";
 $lang['lbadminbooks']="Administrar Libros";
 $lang['lbbooks']="Libros";
+$lang['lbchoosecategory']="Debe haber un Sumario Seleccionado";
 $lang['book_othident']="Ya existe otro libro con ese identificador";
 
 $lang['book_title']="Titulo";

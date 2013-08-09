@@ -18,6 +18,7 @@ $lang['noone']="Ninguno(a)";
 $lang['selectanoption']="Seleccione...";
 $lang['search']="Buscar";
 $lang['searchadv']="Busqueda Avanzada";
+$lang['datecreated']="Fecha de Creación";
 
 $lang['auth'] = "Usuarios";
 $lang['auth/users']="Listado de Usuarios";

@@ -498,6 +498,7 @@
                     .not(this.settings.ignore)
                     .filter(function() {
                     if (!this.name) {
+                        return true;
                         if (window.console) {
                             console.error("%o has no name assigned", this);
                         }

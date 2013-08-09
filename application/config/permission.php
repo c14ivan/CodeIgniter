@@ -1,5 +1,5 @@
 <?php
-$config['db_table_prefix']='';
+$config['permission']['db_table_prefix']='';
 
 if (!defined('CONTEXT_HOME')) {
     define('CONTEXT_HOME',0);
@@ -17,15 +17,15 @@ if (!defined('CONTEXT_SUBMODULE')) {
     define('CONTEXT_SUBMODULE',40);
 }
 
-$config['menu_positions']=array('left-bar','top','bottom','mini-top','status');
+$config['permission']['menu_positions']=array('left-bar','top','bottom','mini-top','status');
 
 // used to defined the mode of installation.
-$config['permission']['permissions_mode']='weight';//role,weight
+$config['permission']['permissions_mode']='role';//role,weight
 
 //default role for everybody in home
-$config['default-role']='visitor';
+$config['permission']['default-role']='visitor';
 
-$config['roles']=array(
+$config['permission']['roles']=array(
         array('name'=>'Superuser','weight'=>50,'shortname'=>'super','description'=>''),
         array('name'=>'Administrator','weight'=>40,'shortname'=>'admin','description'=>''),
         array('name'=>'Editing Teacher','weight'=>30,'shortname'=>'teacheredt','description'=>''),
@@ -33,11 +33,12 @@ $config['roles']=array(
         array('name'=>'Student','weight'=>10,'shortname'=>'student','description'=>'')
         );
 
-$config['capabilities']=array(
-        'auth/view' => array('weight'=>30, 'visible'=>true,'position'=>'left-bar','ctx_level'=>CONTEXT_HOME),
-        'auth/add' => array('weight'=>30,'ctx_level'=>CONTEXT_HOME),
-        'auth/enrolments' => array('weight'=>30,'ctx_level'=>CONTEXT_HOME),
-        'school/system' => array('weight'=>30,'ctx_level'=>CONTEXT_HOME),
-        'school/plan' => array('weight'=>30,'ctx_level'=>CONTEXT_HOME),
-        'school/subjects' => array('weight'=>30,'ctx_level'=>CONTEXT_HOME),
+$config['permission']['capabilities']=array(
+        'user/view' => array('weight'=>30,'parent'=>'user_menu', 'visible'=>true,'position'=>'left-bar','ctx_level'=>CONTEXT_HOME,'roles'=>'super,admin'),
+        'user/add' => array('weight'=>30,'ctx_level'=>CONTEXT_HOME,'roles'=>'super,admin'),
+        'user/roles' => array('weight'=>30,'parent'=>'user_menu', 'visible'=>true,'position'=>'left-bar','ctx_level'=>CONTEXT_HOME,'roles'=>'super,admin'),
+        'school/system' => array('weight'=>30,'ctx_level'=>CONTEXT_HOME,'parent'=>'scsystem_menu','visible'=>true,'position'=>'left-bar','roles'=>'super'),
+        'school/plan' => array('weight'=>30,'ctx_level'=>CONTEXT_HOME,'parent'=>'scsystem_menu','visible'=>true,'position'=>'left-bar','roles'=>'super'),
+        'school/subjects' => array('weight'=>30,'ctx_level'=>CONTEXT_HOME,'parent'=>'scsystem_menu','visible'=>true,'position'=>'left-bar','roles'=>'super'),
+        'library/admin' =>array('weight'=>30,'ctx_level'=>CONTEXT_HOME,'parent'=>'library_menu','visible'=>true,'position'=>'left-bar','roles'=>'super'),
         );

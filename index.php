@@ -263,6 +263,8 @@ switch (ENVIRONMENT)
 	}
 
 	define('VIEWPATH', $view_folder);
+	
+	date_default_timezone_set('America/Bogota');
 
 /*
  * --------------------------------------------------------------------

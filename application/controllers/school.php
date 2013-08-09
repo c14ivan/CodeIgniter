@@ -4,7 +4,7 @@
 */
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class School extends CI_Controller {
+class School extends MY_Controller {
 
     function __construct()
     {

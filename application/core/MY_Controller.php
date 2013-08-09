@@ -19,7 +19,7 @@ class MY_Controller extends CI_Controller
         if(empty($segment_two)) $segment_two= 'index';
         $url = $segment_one.'/'.$segment_two;
 
-        if(empty($user_id) && $url!='auth/login') redirect('auth/login'); //&user_id=0;
+        if(empty($user_id) && $url!='auth/login') $user_id=0;
         if(empty($context)){
             $context = $this->Permissions->get_home_context();
             

@@ -118,11 +118,11 @@
 {% set topmenu = CI.permissions.get_user_menu(CI.session.userdata('user_id'),CI.session.userdata('context'),'left-bar') %}
 <!-- left menu starts -->
     {% if topmenu %}
-	<div class="span2 main-menu-span">
-		<div class="well nav-collapse sidebar-nav">
-			{{ nav.menu(topmenu) }}
-		</div><!--/.well -->
-	</div><!--/span-->
+    	<div class="span2 main-menu-span">
+    		<div class="well nav-collapse sidebar-nav">
+    			{{ nav.menu(topmenu,'nav-tabs',true) }}
+    		</div><!--/.well -->
+    	</div><!--/span-->
 	{% endif %}
 <!-- left menu ends -->
 

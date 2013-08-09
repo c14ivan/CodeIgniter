@@ -1,5 +1,5 @@
 <?php
-class Library extends CI_Controller {
+class Library extends MY_Controller {
 
     /**
      * Index Page for this controller.
@@ -31,9 +31,6 @@ class Library extends CI_Controller {
     public function admin(){
         $this->twig->display('library/categories',array('editorials'=>array_values($this->Lblibrary->getEditorials())));
     }
-    public function adminbooks(){
-        
-    }
     public function addbook(){
         if(!$this->input->is_ajax_request()) redirect();
         
@@ -44,7 +41,7 @@ class Library extends CI_Controller {
             
         }else{
             if($this->Lblibrary->validateBook($post['parentident'].'. '.$post['bookident'])){
-                $post['bookid']=$this->Lblibrary->addBook($post['booktitle'],$post['libcatid'],$editorialid,$post['bookauthor'],$post['bookkeywords'],$post['bookyear'],
+                $post['bookid']=$this->Lblibrary->addBook($post['bookname'],$post['libcatid'],$editorialid,$post['bookauthor'],str_replace(',',', ',$post['bookkeywords']),$post['bookyear'],
                     $post['parentident'].'. '.$post['bookident'],$post['bookedition']);
             }else{
                 $post['error']=lang('book_othident');
@@ -78,5 +75,11 @@ class Library extends CI_Controller {
         $response=$this->Lblibrary->getCategory($this->input->post('cat'));
         
         echo json_encode(array('cat'=>$response));
+    }
+    public function lastcreated(){
+        if(!$this->input->is_ajax_request()) redirect();
+        
+        $this->output->enable_profiler(FALSE);
+        echo json_encode(array('books'=>$this->Lblibrary->getLastCreated()));
     }
 }

@@ -1,10 +1,10 @@
 {% macro menu(items,class,vertical) %}
-    <ul class="nav {{ class }} {% if vertical %} nav-stacked {% endif %}">
-    {% for item in items %}
+    <ul class="nav {{ class }} {% if vertical %} nav-stacked{% else %} nav-list {% endif %}">
+    {% for keyitem,item in items %}
         {% if item.options %}
-            <li class="dropdown">
-            <a class="dropdown-toggle" data-toggle="dropdown" href="#">{{ lang(item.label) }} <b class="caret"></b></a>
-            {{ _self.dropdown_menu(items.options,vertical) }}
+            <li class="dropdown-submenu">
+                <li class="nav-header hidden-tablet">{{ lang(keyitem) }}</li>
+                {{ _self.dropdown_menu(item.options,false) }}
             </li>
         {% else %}
             <li>{{ anchor(item.url,lang(item.label)) }}</li>
@@ -14,16 +14,14 @@
 {% endmacro %}
 
 {% macro dropdown_menu(items,submenu) %}
-    <ul class="dropdown-{% if submenu %}sub{% endif %}menu">
-        {% for item in items %}
+        {% for keyitem,item in items %}
             {% if item.options %}
                 <li class="dropdown-submenu">
-                <a href="#">{{ item.label }} <b class="caret"></b></a>
+                <a href="#">{{ lang(keyitem) }} <b class="caret"></b></a>
                 {{ _self.dropdown_menu(items.options,true) }}
                 </li>
             {% else %}
                 <li>{{ anchor(item.url,lang(item.label)) }}</li>
             {% endif %}
         {% endfor %}
-    </ul>
 {% endmacro %}

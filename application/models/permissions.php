@@ -157,7 +157,7 @@ class Permissions extends CI_Model
         if($rol){
             foreach ($this->get_capabilities() as $cap){
                 $permission=0;
-                if(($capmode=='weight' && $rol->weight > $cap['weight']) || ($capmode=='role' && strpos($cap['roles'], $rol['shortname'])))
+                if(($capmode=='weight' && $rol->weight > $cap['weight']) || ($capmode=='role' && strpos($cap['roles'], $rol->shortname)>=0))
                     $permission=1;
                 $this->set_role_permission($rol->id,$cap['id'],$permission,$cap['position']);
             }
@@ -171,7 +171,7 @@ class Permissions extends CI_Model
         $capabilities = $this->get_capabilities();
         foreach ($capabilities as $capability){
             $permission=0;
-            if(($capmode=='weight' && $role->weight > $capability['weight']) || ($capmode=='role' && strpos($capability['roles'], $role['shortname'])))
+            if(($capmode=='weight' && $role->weight > $capability['weight']) || ($capmode=='role' && strpos($capability['roles'], $role->shortname)>=0))
                 $permission=1;
             $this->set_role_permission($roleid,$capability['id'],$permission,$capability['position']);
         }
@@ -392,7 +392,7 @@ class Permissions extends CI_Model
     }
     
     function get_user_menu($userid,$contextid,$position)
-    {
+    {//1,2,left_Bar
         $menu=false;
         $role = $this->get_user_enrolment($userid,$contextid);
         if($role){
