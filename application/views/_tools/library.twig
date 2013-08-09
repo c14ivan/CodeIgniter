@@ -2,7 +2,7 @@
     {% import '_tools/formElements.twig' as forms %}
     <div class="searchbcont">
         <form id="searchbook" class="form-horizontal">
-        {{ forms.campo({'tipo':'input','type':'text','placeholder':lang('book_search')~'...','classprep':'false','class':'span10','style':'float:left;','name':'search','prepend':{0:{'tipo':'button','class':'search','title':lang('search'),'icon':'search'},1:{'tipo':'button','class':'searchadv','title':lang('seachadv'),'icon':'chevron-down'}}}) }}
+        {{ forms.campo({'tipo':'input','type':'text','placeholder':lang('book_search')~'...','classprep':false,'class':'span10','style':'float:left;','name':'search','prepend':{0:{'tipo':'button','class':'search','title':lang('search'),'icon':'search'},1:{'tipo':'button','class':'searchadv','title':lang('seachadv'),'icon':'chevron-down'}}}) }}
         <div class="advancesearch" style="display:none;">
             {{ forms.campo({'tipo':'input','type':'text','name':'title','label':lang('book_title')}) }}
             {{ forms.campo({'tipo':'input','type':'text','name':'author','label':lang('book_author')}) }}

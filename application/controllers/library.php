@@ -22,18 +22,37 @@ class Library extends CI_Controller {
         $this->load->model('library/Lblibrary');
         $this->lang->load('library');
         $this->lang->load('form_validation');
+        $this->output->enable_profiler(TRUE);
     }
     public function index()
     {
         $this->twig->display('home/home');
     }
     public function admin(){
-        $this->twig->display('library/categories');
+        $this->twig->display('library/categories',array('editorials'=>array_values($this->Lblibrary->getEditorials())));
     }
     public function adminbooks(){
         
     }
-    public function addcategorie(){
+    public function addbook(){
+        if(!$this->input->is_ajax_request()) redirect();
+        
+        $this->output->enable_profiler(FALSE);
+        $post=$this->input->post();
+        $editorialid=$this->Lblibrary->getEditorial($this->input->post('bookeditorial'),true);
+        if($post['bookid']>0){
+            
+        }else{
+            if($this->Lblibrary->validateBook($post['parentident'].'. '.$post['bookident'])){
+                $post['bookid']=$this->Lblibrary->addBook($post['booktitle'],$post['libcatid'],$editorialid,$post['bookauthor'],$post['bookkeywords'],$post['bookyear'],
+                    $post['parentident'].'. '.$post['bookident'],$post['bookedition']);
+            }else{
+                $post['error']=lang('book_othident');
+            }
+        }
+        echo json_encode($post);
+    }
+    public function addcategory(){
         if(!$this->input->is_ajax_request()) redirect();
         
         $this->output->enable_profiler(FALSE);
@@ -50,5 +69,14 @@ class Library extends CI_Controller {
         $response=$this->Lblibrary->getCategories();
         
         echo json_encode(array('cats'=>$response));
+    }
+    public function loadcategory(){
+        if(!$this->input->is_ajax_request()) redirect();
+        
+        $this->output->enable_profiler(FALSE);
+        
+        $response=$this->Lblibrary->getCategory($this->input->post('cat'));
+        
+        echo json_encode(array('cat'=>$response));
     }
 }

@@ -248,7 +248,7 @@ $('#scareaedt').validate({
             		loadareas();
             		$('.closeedtarea').trigger('click');
             	}else{
-            		noty({text: '{{ lang('ajaxerror')}}',type:'error',timeout:500});
+            		showNotification('{{ lang('ajaxerror') }}');
             	}
             });
   	}

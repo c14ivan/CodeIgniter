@@ -15,8 +15,8 @@
     {% endmacro %}
     {# label: MUESTRA UN <DIV> CONTENIENDO EL TEXTO value Y APLICANDO LA CLASE class #}
     {# ----------------------------------------------------------------------------- #}
-    {% macro label(value,class,for) %}
-        <div class="{{ class|default('etiqueta') }}"><label for="{{ for }}">{{ value }}</div>
+    {% macro label(value,class,for,id) %}
+        <div {% if id %}id="{{ id }}"{% endif %} class="{{ class|default('etiqueta') }}"><label for="{{ for }}">{{ value }}</div>
     {% endmacro %}
     {# span: MUESTRA UN <span> CONTENIENDO EL TEXTO value Y APLICANDO LA CLASE class #}
     {# ----------------------------------------------------------------------------- #}
@@ -51,9 +51,9 @@
             {{ _self.button(campo) }}
         {% elseif campo.tipo=='icon' %}
             {{ _self.icon(campo.name,campo.inverted,campo.class) }}
-        {% elseif campo.label=='label' %}
-            {{ _self.label(campo.value,campo.class,campo.for) }}
-        {% elseif campo.label=='span' %}
+        {% elseif campo.tipo=='label' %}
+            {{ _self.label(campo.value,campo.class,campo.for,campo.id) }}
+        {% elseif campo.tipo=='span' %}
             {{ _self.span(campo.value,campo.class) }}
         {% elseif campo is iterable %}
             {% if campo.value %}
@@ -74,7 +74,6 @@
     {# input: MUESTRA UN <INPUT> #}
     {# ------------------------- #}
     {% macro input(campo) %}
-    
         {% set label=campo.label %}
         {% set type=campo.type %}
         {% set name=campo.name %}
@@ -91,7 +90,7 @@
         {% set classappprep='' %}
         {% set class=campo.class %}
         {% set style = campo.style %}
-        {% set classprep=campo.classprep|default(true) %}
+        {% set classprep=(campo.classprep is null)?true:campo.classprep %}
         {% if maxLength>20%}
             {% set class=class ~'input-xlarge' %}
         {% endif %}
@@ -104,7 +103,7 @@
         {% if append%}
             {% set classappprep= classappprep ~' input-append' %}
         {% endif %}
-        {% if (prepend or (type=='password' and class=="passmeter")) and classprep!='false' %}
+        {% if (prepend or (type=='password' and class=="passmeter")) and classprep!=false %}
             {% set classappprep= classappprep ~' input-prepend' %}
         {% endif %}
         {% if type=='hidden' %}
@@ -117,8 +116,16 @@
                 {% endif %}
                 <div class="{% if label %}controls{% endif %}">
                     <div class="{{ classappprep }}">
-                        {% if append%}
-                            <span class="add-on">{{ _self.campo(append) }}</span>
+                        {% if append %}
+                            <span class="add-on">
+                            {% if append.tipo or append is not iterable %}
+                                {{ _self.campo(append) }}
+                            {% else %}
+                                {% for tmp in append %}
+                                    {{ _self.campo(tmp) }}
+                                {% endfor %}
+                            {% endif %}
+                            </span>
                         {% endif %}
                         {% if opciones is iterable %}
                             {% if type=='radio' %}
@@ -133,7 +140,7 @@
                                 {% endif %}
                             {% endif %}
                         {% elseif type=='label' %}
-                        	{{ _self.label(valor,class,'') }}
+                        	{{ _self.label(valor,class,'', id|default(name)) }}
                         {% else %}
                             <input type="{{ type|default('text') }}" name="{{ name }}" id="{{ id|default(name)}}"  {% if style %} style="{{ style }}" {% endif %}
                                value="{{ valor }}" {% if maxLength %} maxlength="{{ maxLength|default(20) }}" {% endif %}
@@ -230,13 +237,14 @@
         {% set class=campo.class %}
         {% set estilo=campo.estilo %}
         {% set placeholder=campo.placeholder %}
+        {% set datarel=campo.datarel|default('chosen') %}
         <div class="control-group" {% if id %} id="div_{{id}}" {% endif %} {% if estilo %} style="{{ estilo }}" {% endif %}>
             {% if label %}
                 {{ _self.label(label,'control-label',id|default(name)) }}
             {% endif %}
             <div class="controls">
-                <div class="input-prepend">
-                    <select name="{{ name }}" id="{{ id|default(name)}}" size="{{ size|default(1) }}" data-placeholder="{{ placeholder }}" {{ extra }} class="{{ class }}" onchange="{{onchange}}" data-rel="chosen">
+                <div class="input-prepend" style="max-width: 100%;">
+                    <select name="{{ name }}" id="{{ id|default(name)}}" size="{{ size|default(1) }}" data-placeholder="{{ placeholder }}" {{ extra }} class="{{ class }}" onchange="{{onchange}}" data-rel="{{ datarel }}">
                         {% if placeholder %}
                             <option> </option>
                         {% endif %}
@@ -287,7 +295,7 @@
         {% set id=campo.id %}
         {% set extra=campo.extra %}
         {% set value=campo.value %}
-        <legend>{{ name }}{% if extra %} {{ extra }} {% endif %} {% if value %} {{ value }} {% endif %}</legend>
+        <legend {% if id %} id="{{ id }}" {% endif %}>{{ name }}{% if extra %} {{ extra }} {% endif %}<span> {% if value %} {{ value }} {% endif %}</span></legend>
         
     {% endmacro %}
     {# select: MUESTRA UN <FIELSET> #}

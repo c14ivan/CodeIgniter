@@ -5,6 +5,7 @@ $lang['send'] = "Enviar";
 $lang['save'] = "Guardar";
 $lang['description'] = "Descripción";
 $lang['delete']="Eliminar";
+$lang['add']="Agregar";
 $lang['confirmdelete']="¿Esta seguro de eliminar la información seleccionada?";
 $lang['deleteok']="Información Eliminada Satisfactoriamente";
 $lang['operationfails']="La operación ha fallado";
