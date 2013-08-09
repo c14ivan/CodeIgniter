@@ -7,7 +7,7 @@ class User extends MY_Controller
         $this->load->library('tank_auth');
         $this->lang->load('tank_auth');
     }
-    function view(){
+    function index(){
         if (!$this->tank_auth->is_logged_in()) {
             redirect('');
         }
@@ -22,8 +22,8 @@ class User extends MY_Controller
                 'headers'=>$headers,
                 'data'=>$datos->result(),
                 'hasactions'=>true,
-                'canedit'=>true,
-                'candel'=>true,
+                'canadd'=>false,
+                'candel'=>false,
                 'urledit'=>site_url("auth/edituser/"),
                 'urldel'=>site_url("auth/deluser/"),
                 'delajax'=>false
@@ -31,8 +31,5 @@ class User extends MY_Controller
          
         $this->twig->display('general/table',$data);
         //TODO cambiar y enrolamientos de ciudades
-    }
-    function roles(){
-        //TODO permitir crear roles y asignar permisos
     }
 }

@@ -1,4 +1,8 @@
 <?php
+/**
+
+*/
+defined('BASEPATH') OR exit('No direct script access allowed');
 class Permission extends MY_Controller {
 
 
@@ -17,9 +21,9 @@ class Permission extends MY_Controller {
     /**
      * admin role permissions
      */
-    function admin_roles()
+    function roles()
     {
-
+        
     }
     /**
      * Create a role
@@ -51,7 +55,7 @@ class Permission extends MY_Controller {
         foreach($roles as $role){
             $role['id'] = $this->Permissions->update_role($role['name'],$role['weight'],$role['shortname'],$role['description']);
         }
-        //redirect();
+        redirect();
     }
     /**
      * Instalation, create the defaults and insert into database
@@ -143,6 +147,6 @@ class Permission extends MY_Controller {
         );
         $this->twig->display('general/edit',$data);
     }
-
-
 }
+/* End of file permission.php */
+/* Location: ./application/controllers/permission.php */

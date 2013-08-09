@@ -1,4 +1,8 @@
 <?php
+/**
+
+*/
+defined('BASEPATH') OR exit('No direct script access allowed');
 class Library extends MY_Controller {
 
     /**
@@ -22,7 +26,6 @@ class Library extends MY_Controller {
         $this->load->model('library/Lblibrary');
         $this->lang->load('library');
         $this->lang->load('form_validation');
-        $this->output->enable_profiler(TRUE);
     }
     public function index()
     {
@@ -34,7 +37,6 @@ class Library extends MY_Controller {
     public function addbook(){
         if(!$this->input->is_ajax_request()) redirect();
         
-        $this->output->enable_profiler(FALSE);
         $post=$this->input->post();
         $editorialid=$this->Lblibrary->getEditorial($this->input->post('bookeditorial'),true);
         if($post['bookid']>0){
@@ -52,7 +54,6 @@ class Library extends MY_Controller {
     public function addcategory(){
         if(!$this->input->is_ajax_request()) redirect();
         
-        $this->output->enable_profiler(FALSE);
         $post=$this->input->post();
         $catid=$this->Lblibrary->addcategorie($post['libname'],$post['libident'],$post['lbcatparent']);
         $post['catid']=$catid;
@@ -61,7 +62,6 @@ class Library extends MY_Controller {
     public function loadcategories(){
         if(!$this->input->is_ajax_request()) redirect();
         
-        $this->output->enable_profiler(FALSE);
         
         $response=$this->Lblibrary->getCategories();
         
@@ -70,8 +70,6 @@ class Library extends MY_Controller {
     public function loadcategory(){
         if(!$this->input->is_ajax_request()) redirect();
         
-        $this->output->enable_profiler(FALSE);
-        
         $response=$this->Lblibrary->getCategory($this->input->post('cat'));
         
         echo json_encode(array('cat'=>$response));
@@ -79,7 +77,8 @@ class Library extends MY_Controller {
     public function lastcreated(){
         if(!$this->input->is_ajax_request()) redirect();
         
-        $this->output->enable_profiler(FALSE);
         echo json_encode(array('books'=>$this->Lblibrary->getLastCreated()));
     }
 }
+/* End of file library.php */
+/* Location: ./application/controllers/library.php */

@@ -16,7 +16,6 @@ class School extends MY_Controller {
         $this->lang->load('school');
         $this->config->load('school');
         $this->lang->load('form_validation');
-        $this->output->enable_profiler(TRUE);
 
     }
 
@@ -43,13 +42,8 @@ class School extends MY_Controller {
     public function subject(){
         $this->twig->display('school/subject');
     }
-
-
-
     public function addsystem(){
         if(!$this->input->is_ajax_request()) redirect();
-
-        $this->output->enable_profiler(FALSE);
          
         $data=$this->input->post();
         if(intval($data['scid'])>0){
@@ -71,8 +65,6 @@ class School extends MY_Controller {
     }
     public function getsystems(){
         if(!$this->input->is_ajax_request()) redirect();
-
-        $this->output->enable_profiler(FALSE);
         $systems=$this->scsystem->getsystems();
         echo json_encode(array('systems'=>$systems));
     }
@@ -97,7 +89,6 @@ class School extends MY_Controller {
     }
     public function addcicle(){
         if(!$this->input->is_ajax_request()) redirect();
-        $this->output->enable_profiler(FALSE);
 
         $cicledata=$this->input->post();
          
@@ -111,10 +102,6 @@ class School extends MY_Controller {
     }
     public function delcicle(){
         if(!$this->input->is_ajax_request()) redirect();
-        $this->output->enable_profiler(FALSE);
-        
-        if(!$this->input->is_ajax_request()) redirect();
-        $this->output->enable_profiler(FALSE);
     
         $cicledata=$this->input->post();
     
@@ -122,7 +109,6 @@ class School extends MY_Controller {
     }
     public function ordercicles(){
         if(!$this->input->is_ajax_request()) redirect();
-        $this->output->enable_profiler(FALSE);
          
         $postdata=$this->input->post();
         $cicles=$this->scsystem->getCicles($postdata['system']);
@@ -143,7 +129,6 @@ class School extends MY_Controller {
     }
     public function adddivision(){
         if(!$this->input->is_ajax_request()) redirect();
-        $this->output->enable_profiler(FALSE);
          
         $divdata=$this->input->post();
 
@@ -157,7 +142,6 @@ class School extends MY_Controller {
     }
     public function orderdivs(){
         if(!$this->input->is_ajax_request()) redirect();
-        $this->output->enable_profiler(FALSE);
 
         $postdata=$this->input->post();
         $divs=$this->scsystem->getDivisions($postdata['system']);
@@ -178,10 +162,6 @@ class School extends MY_Controller {
     }
     public function deldivision(){
         if(!$this->input->is_ajax_request()) redirect();
-        $this->output->enable_profiler(FALSE);
-    
-        if(!$this->input->is_ajax_request()) redirect();
-        $this->output->enable_profiler(FALSE);
     
         $cicledata=$this->input->post();
     
@@ -189,7 +169,6 @@ class School extends MY_Controller {
     }
     public function addplan(){
         if(!$this->input->is_ajax_request()) redirect();
-        $this->output->enable_profiler(FALSE);
          
         $postdata=$this->input->post();
 
@@ -203,7 +182,6 @@ class School extends MY_Controller {
     }
     public function addplanversion(){
     	if(!$this->input->is_ajax_request()) redirect();
-    	$this->output->enable_profiler(FALSE);
     	 
     	$postdata=$this->input->post();
     	
@@ -216,22 +194,18 @@ class School extends MY_Controller {
     }
     public function getplans(){
     	if(!$this->input->is_ajax_request()) redirect();
-    	$this->output->enable_profiler(FALSE);
     	echo json_encode(array('plans'=>$this->scplan->getPlans()));
     }
     public function getplan(){
     	if(!$this->input->is_ajax_request()) redirect();
-    	$this->output->enable_profiler(FALSE);
     	echo json_encode(array('plan'=>$this->scplan->getPlan($this->input->post('planid'))));
     }
     public function getplanversions(){
     	if(!$this->input->is_ajax_request()) redirect();
-    	$this->output->enable_profiler(FALSE);
     	echo json_encode(array('planversions'=>$this->scplan->getVersions($this->input->post('planid'))));
     }
     public function addarea(){
         if(!$this->input->is_ajax_request()) redirect();
-        $this->output->enable_profiler(FALSE);
         $postdata=$this->input->post();
         if(intval($postdata['scareaid'])>0){
             $areaid=$this->scsubject->updateArea($postdata['scareaid'],$postdata['scarea'],$postdata['scdescription'],isset($postdata['scblocked']));
@@ -243,27 +217,23 @@ class School extends MY_Controller {
         echo json_encode(array('ok'=>($areaid!=false),'area'=>$postdata));
     }
     public function getareas(){
-        $this->output->enable_profiler(FALSE);
+        if(!$this->input->is_ajax_request()) redirect();
         echo json_encode(array('areas'=>$this->scsubject->getAreas()));
     }
     public function getsubject(){
         if(!$this->input->is_ajax_request()) redirect();
-        $this->output->enable_profiler(FALSE);
         echo json_encode($this->scsubject->getSubject($this->input->post('subjectid')));
     }
     public function getsubjects(){
         if(!$this->input->is_ajax_request()) redirect();
-        $this->output->enable_profiler(FALSE);
         echo json_encode(array('subjects'=>$this->scsubject->getSubjects()));
     }
     public function getsubjectversions(){
         if(!$this->input->is_ajax_request()) redirect();
-        $this->output->enable_profiler(FALSE);
         echo json_encode(array('versions'=>$this->scsubject->getVersions($this->input->post('subjectid'))));
     }
     public function addsubject(){
         if(!$this->input->is_ajax_request()) redirect();
-        $this->output->enable_profiler(FALSE);
          
         $postdata=$this->input->post();
         if(intval($postdata['scsubjectid'])>0){
@@ -277,7 +247,6 @@ class School extends MY_Controller {
     }
     public function addsubjectversion(){
         if(!$this->input->is_ajax_request()) redirect();
-        $this->output->enable_profiler(FALSE);
 
         $postdata=$this->input->post();
         if(intval($postdata['scsubjectversionid'])>0){
@@ -291,7 +260,7 @@ class School extends MY_Controller {
     }
     public function  getdataversion(){
     	if(!$this->input->is_ajax_request()) redirect();
-    	$this->output->enable_profiler(FALSE);
+    	
     	$versionid=$this->input->post('versionid');
     	$versiondata= $this->scplan->getVersion($versionid);
     	$cicles=$this->scsystem->getCicles($versiondata->scsystemid);
@@ -301,7 +270,6 @@ class School extends MY_Controller {
     }
     public function asignsubject(){
     	if(!$this->input->is_ajax_request()) redirect();
-    	$this->output->enable_profiler(FALSE);
     	
     	$subjectid=$this->input->post('subject');
     	$planversionid=$this->input->post('version');
@@ -316,7 +284,6 @@ class School extends MY_Controller {
     }
     public function unasignsubject(){
         if(!$this->input->is_ajax_request()) redirect();
-        $this->output->enable_profiler(FALSE);
          
         $subjectid=$this->input->post('subject');
         $planversionid=$this->input->post('version');
@@ -326,11 +293,11 @@ class School extends MY_Controller {
     }
     public function ordersubjects(){
     	if(!$this->input->is_ajax_request()) redirect();
-    	$this->output->enable_profiler(FALSE);
+    	
     	$orderid=$this->input->post('order');
     	$planversionid=$this->input->post('version');
     }
 }
 
-/* End of file welcome.php */
-/* Location: ./application/controllers/welcome.php */
+/* End of file school.php */
+/* Location: ./application/controllers/school.php */

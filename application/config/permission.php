@@ -36,7 +36,7 @@ $config['permission']['roles']=array(
 $config['permission']['capabilities']=array(
         'user/view' => array('weight'=>30,'parent'=>'user_menu', 'visible'=>true,'position'=>'left-bar','ctx_level'=>CONTEXT_HOME,'roles'=>'super,admin'),
         'user/add' => array('weight'=>30,'ctx_level'=>CONTEXT_HOME,'roles'=>'super,admin'),
-        'user/roles' => array('weight'=>30,'parent'=>'user_menu', 'visible'=>true,'position'=>'left-bar','ctx_level'=>CONTEXT_HOME,'roles'=>'super,admin'),
+        'permission/roles' => array('weight'=>30,'parent'=>'user_menu', 'visible'=>true,'position'=>'left-bar','ctx_level'=>CONTEXT_HOME,'roles'=>'super,admin'),
         'school/system' => array('weight'=>30,'ctx_level'=>CONTEXT_HOME,'parent'=>'scsystem_menu','visible'=>true,'position'=>'left-bar','roles'=>'super'),
         'school/plan' => array('weight'=>30,'ctx_level'=>CONTEXT_HOME,'parent'=>'scsystem_menu','visible'=>true,'position'=>'left-bar','roles'=>'super'),
         'school/subjects' => array('weight'=>30,'ctx_level'=>CONTEXT_HOME,'parent'=>'scsystem_menu','visible'=>true,'position'=>'left-bar','roles'=>'super'),
