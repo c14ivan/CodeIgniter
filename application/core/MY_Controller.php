@@ -36,7 +36,7 @@ class MY_Controller extends CI_Controller
             $this->session->set_flashdata('nopermission', lang('nopermission'));
             redirect('auth/login');
         }
-        //if(!$this->input->is_ajax_request())
-        //$this->output->enable_profiler(TRUE);
+        if(!$this->input->is_ajax_request() && ENVIRONMENT=='development')
+            $this->output->enable_profiler(TRUE);
     }
 }
