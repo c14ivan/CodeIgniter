@@ -1,0 +1,311 @@
+{% extends '_layouts/index.html.twig' %}
+
+{% block headext %}
+<link rel="stylesheet" type="text/css" href="{{ asset_url()~'cssapp/general.css' }}" media="all">
+{% endblock %}
+
+{% block content %}
+{% import '_tools/formElements.twig' as forms %}
+<div class="row-fluid">
+    <div class="box span12">
+        <div class="box-header well">
+            <h2>{{ lang('roles') }}</h2>
+            <div class="box-icon">
+                <a href="#" class="btn btn-minimize btn-round"><i class="icon-chevron-up"></i></a>
+                <a href="#" class="btn btn-add btn-round adduserbtn"><i class="icon-plus" title="{{ lang('addrole') }}"></i></a>
+            </div>
+        </div>
+        <div class="box-content">
+            <div class="useradd box box-content" style="display:none;">
+				<i class="icon-remove closeadduser" style="float:right"></i>
+				<form id="useraddform" class="form-horizontal" method="post">
+					{{ forms.campo({'tipo':'input','type':'text','name':'name','label':lang('name'),'maxlength':45}) }}
+					{{ forms.campo({'tipo':'input','type':'text','name':'email','label':lang('auth_logwithemail'),'maxlength':20}) }}
+					{{ forms.campo({'tipo':'select','name':'homerol','label':lang('auth_homerole'),'opciones':roles}) }}
+					<div class="form-actions">
+						<p class="center span5">
+                      		<button type="submit" class="btn btn-primary">{{ lang('save') }}</button>
+                   		</p>
+                   	</div>
+				</form>
+			</div>
+            <table id="userstable" class="table table-striped table-bordered bootstrap-datatable tabledata" style="width:100%;">
+                <thead>
+                    <tr>
+                        <th data-priority="persistent">{{ lang('actions') }}<b></b></th>
+                        <th>{{ lang('name') }}</th>
+                        <th>{{ lang('auth_logwithemail') }}</th>
+                        <th>{{ lang('role_site') }}</th>
+                        <th>{{ lang('status') }}</th>
+                        <th>{{ lang('lastlogin') }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<div id="banuser" style="display:none;" class="modal hide fade in">
+    <form id="banuserform">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">×</button>
+            <h3>{{ lang('auth_banaction') }}</h3>
+        </div>
+        <div class="modal-body form-horizontal">
+            {{ forms.campo({'tipo':'input','type':'hidden','name':'userid'}) }}
+            {{ forms.campo({'tipo':'input','type':'text','name':'banreason','label':lang('auth_ban_reason')}) }}
+        </div>
+        <div class="modal-footer">
+			<a href="#" class="btn" data-dismiss="modal">{{ lang('cancel') }}</a>
+          	<button type="submit" class="btn btn-primary">{{ lang('confirm') }}</button>
+       	</div>
+    </form>
+</div>
+<div id="deluser" style="display:none;" class="modal hide fade in">
+    <form id="deluserform">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">×</button>
+            <h3>{{ lang('aresure') }}</h3>
+        </div>
+        <div class="modal-body">
+            {{ forms.campo({'tipo':'input','type':'hidden','name':'userid'}) }}
+            <p>{{ lang('auth_confirmdel') }}</p>
+        </div>
+        <div class="modal-footer">
+			<a href="#" class="btn" data-dismiss="modal">{{ lang('cancel') }}</a>
+          	<button type="submit" class="btn btn-primary">{{ lang('confirm') }}</button>
+       	</div>
+    </form>
+</div>
+<div id="unbanuser" style="display:none;" class="modal hide fade in">
+    <form id="unbanuserform">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">×</button>
+            <h3>{{ lang('aresure') }}</h3>
+        </div>
+        <div class="modal-body">
+            {{ forms.campo({'tipo':'input','type':'hidden','name':'userid'}) }}
+            <p>{{ lang('auth_unbanaction') }}</p>
+        </div>
+        <div class="modal-footer">
+			    <a href="#" class="btn" data-dismiss="modal">{{ lang('cancel') }}</a>
+          		<button type="submit" class="btn btn-primary">{{ lang('confirm') }}</button>
+       	</div>
+    </form>
+</div>
+{% endblock %}
+{% block jscode %}
+<script type="text/javascript">
+$().ready(function(){
+	var readyswitch=false;
+	$('.closeadduser').click(function(){
+		$('.useradd').slideUp();
+		resetForm($('.useradd').find('form'));
+	});
+	$('.adduserbtn').click(function(){
+		$('.useradd').trigger('click');
+		$('.useradd').slideDown();
+	});
+	var tableusers=$('#userstable').dataTable({
+        "sDom": "<'row-fluid'<'span6'l><'span6'f>r>t<'row-fluid'<'span12'i><'span12 center'p>>",
+        "sPaginationType": "bootstrap",
+        "oLanguage": {
+            "sProcessing": "{{ lang('table_processing') }}",
+            "sLengthMenu": "{{ lang('table_recordsperpage') }}",
+            "sZeroRecords": "{{ lang('table_noregisters') }}",
+            "sEmptyTable": "{{ lang('table_empty') }}",
+            "sInfo": "{{ lang('table_pager') }}",
+            "sInfoEmpty": "{{ lang('table_pagerempty') }}",
+            "sInfoFiltered": "{{ lang('table_filtered') }}",
+            "sSearch": "{{ lang('table_search') }}",
+            "sLoadingRecords": "{{ lang('table_loading') }}",
+            "oAria": {
+                "sSortAscending": "{{ lang('table_sortAsc') }}",
+                "sSortDescending": "{{ lang('table_sortDesc') }}",
+            },
+            "oPaginate": {
+                "sFirst": "{{ lang('table_first') }}",
+                "sLast": "{{ lang('table_last') }}",
+                "sNext": "{{ lang('table_next') }}",
+                "sPrevious": "{{ lang('table_previous') }}",
+            },
+        }
+    });
+	$('#deluserform').validate({
+		errorClass:'errorlabelform',
+        elErrorClass:'errorlabel',
+        submitHandler: function(form) {
+        	$.ajax({
+                type:"POST",
+                url: '{{ site_url('user/deluser') }}',
+                dataType:'json',
+                data: $(form).serializeObject(),
+                error:function (jqXHR, textStatus, errorThrown) {
+                    console.log(JSON.stringify(jqXHR) + ' ' + textStatus + '  ' + errorThrown);
+                }
+            }).done(function (data) {
+            	if (data.ok){
+            		loadusers();
+            	}else{
+            		showNotification('{{ lang('ajaxerror') }}');
+            	}
+            });
+        },
+	});
+	$('#unbanuserform').validate({
+		errorClass:'errorlabelform',
+        elErrorClass:'errorlabel',
+        submitHandler: function(form) {
+        	$.ajax({
+                type:"POST",
+                url: '{{ site_url('user/unbanuser') }}',
+                dataType:'json',
+                data: $(form).serializeObject(),
+                error:function (jqXHR, textStatus, errorThrown) {
+                    console.log(JSON.stringify(jqXHR) + ' ' + textStatus + '  ' + errorThrown);
+                }
+            }).done(function (data) {
+            	if (data.ok){
+            		loadusers();
+            	}else{
+            		showNotification('{{ lang('ajaxerror') }}');
+            	}
+            });
+        },
+	});
+	$('#banuserform').validate({
+		errorClass:'errorlabelform',
+        elErrorClass:'errorlabel',
+        rules:{
+        	banreason:{required:true,minlength:5}
+        },
+        messages:{
+            banreason:{
+            	required: '{{ lang('required')|format('')}}',
+        		minlength: '{{ lang('min_length')|format('',5)}}',
+            }
+        },
+        submitHandler: function(form) {
+        	$.ajax({
+                type:"POST",
+                url: '{{ site_url('user/banuser') }}',
+                dataType:'json',
+                data: $(form).serializeObject(),
+                error:function (jqXHR, textStatus, errorThrown) {
+                    console.log(JSON.stringify(jqXHR) + ' ' + textStatus + '  ' + errorThrown);
+                }
+            }).done(function (data) {
+            	if (data.ok){
+            		loadusers();
+            	}else{
+            		showNotification('{{ lang('ajaxerror') }}');
+            	}
+            });
+        },
+	});
+    $('#useraddform').validate({
+    	errorClass:'errorlabelform',
+        elErrorClass:'errorlabel',
+        ignore:':hidden.chzn',
+        rules:{
+        	name:{required: true,minlength:5,},
+        	shortname:{required: true,minlength:5,email:true},
+        	description:{required: true,minlength:5,},
+        },
+        messages:{
+        	name:{
+        		required: '{{ lang('required')|format('')}}',
+        		minlength: '{{ lang('min_length')|format('',5)}}',
+        		
+        	},
+        	email:{
+        		required: '{{ lang('required')|format('')}}',
+        		minlength: '{{ lang('min_length')|format('',5)}}',
+        		email:'{{ lang('auth_email_formatwrong') }}',
+        	},
+        },
+        submitHandler: function(form) {
+        	$.ajax({
+                    type:"POST",
+                    url: '{{ site_url('user/adduser') }}',
+                    dataType:'json',
+                    data: $(form).serializeObject(),
+                    error:function (jqXHR, textStatus, errorThrown) {
+                        console.log(JSON.stringify(jqXHR) + ' ' + textStatus + '  ' + errorThrown);
+                    }
+                }).done(function (data) {
+                	if (data.ok){
+                		$('.closeadduser').trigger('click');
+                		loadusers();
+                	}else{
+                		showNotification('{{ lang('ajaxerror') }}');
+                	}
+                });
+        }
+    });
+    function dom_tableusers(){
+        $('.deluser').click(function(e){
+        	e.preventDefault();
+    		$('#deluser').modal('show');
+        });
+        $('.banuser').click(function(e){
+        	e.preventDefault();
+    		$('#banuser').modal('show');
+        });
+        $('.unbanuser').click(function(e){
+        	e.preventDefault();
+    		$('#unbanuser').modal('show');
+        });
+    }
+    function addusertable(user){
+        var colstatus='',candel=true,canban=true,canunban=false;;
+         if(user.deleted==1){
+             canban=false;
+             candel=false;
+        	colstatus='<span class="label label-important">{{ lang('auth_user_deleted')  }}</span>';
+        }else if(user.banned==1){
+            canban=false;
+            canunban=true;
+        	colstatus='<span class="label label-warning">{{ lang('auth_user_banned')  }}</span>';
+        }else if(user.activated==0){
+            colstatus='<span class="label">{{ lang('auth_user_noactivate')  }}</span>';
+        }else{
+        	colstatus='<span class="label label-sucess">{{ lang('auth_user_active')  }}</span>';
+        }
+        var actions='';
+        if(candel){
+            actions+='<a class="btn btn-info" href="javascript:void(0)" data-id="'+user.id+'" >'+
+            '<i class="icon-remove icon-white deluser" title="{{ lang('auth_deleteaction') }}"></i></a>';
+        }
+        if(canban){
+            actions+='<a class="btn btn-info" href="javascript:void(0)" data-id="'+user.id+'" >'+
+            '<i class="icon-ban-circle icon-white banuser" title="{{ lang('auth_banaction') }}"></i></a>';
+        }
+        if(canunban){
+            actions+='<a class="btn btn-info" href="javascript:void(0)" data-id="'+user.id+'" >'+
+            '<i class="icon-ok-circle icon-white unbanuser" title="{{ lang('auth_unbanaction') }}"></i></a>';
+        }
+        tableusers.fnAddData([actions,user.username,user.email,user.rolename,colstatus,user.last_login]);
+    }
+    function loadusers(){
+    	$.ajax({
+            type:"POST",
+            url: '{{ site_url('user/getusers') }}',
+            dataType:'json',
+            error:function (jqXHR, textStatus, errorThrown) {
+                console.log(JSON.stringify(jqXHR) + ' ' + textStatus + '  ' + errorThrown);
+            }
+        }).done(function (data) {
+        	tableusers.fnClearTable();
+        	for (i in data.users){
+        		addusertable(data.users[i]);
+            }
+        	tableusers.fnDraw();
+        	dom_tableusers();
+        });
+    }
+    loadusers();
+});
+</script>
+{% endblock %}

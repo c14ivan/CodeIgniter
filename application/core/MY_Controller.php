@@ -32,7 +32,6 @@ class MY_Controller extends CI_Controller
             redirect('home');
         }
         
-        
         if(!$this->Permissions->has_permission($segment_one.'/'.$segment_two,$user_id,$context)){
             $this->session->set_flashdata('nopermission', lang('nopermission'));
             redirect('auth/login');

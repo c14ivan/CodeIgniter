@@ -12,8 +12,10 @@
  */
 class Users extends CI_Model
 {
-	private $table_name			= 'users';			// user accounts
-	private $profile_table_name	= 'user_profiles';	// user profiles
+	private $table_name          = 'users';			// user accounts
+	private $profile_table_name  = 'user_profiles';	// user profiles
+	private $table_roles         = 'role';            // roles
+    private $table_enrolments    = 'role_assignments';   // role asignments
 
 	function __construct()
 	{
@@ -24,6 +26,16 @@ class Users extends CI_Model
 		$this->profile_table_name	= $ci->config->item('db_table_prefix', 'tank_auth').$this->profile_table_name;
 	}
 
+	function get_users(){
+	    $homectx=$this->permissions->get_home_context();
+	    $this->db->select("{$this->table_name}.id,{$this->table_name}.username,{$this->table_name}.email,
+	        {$this->table_name}.activated,{$this->table_name}.deleted,{$this->table_name}.banned,
+	        {$this->table_name}.ban_reason,{$this->table_name}.last_login,{$this->table_roles}.name as rolename");
+	    $this->db->join($this->table_enrolments,"{$this->table_enrolments}.userid={$this->table_name}.id","LEFT");
+	    $this->db->join($this->table_roles,"{$this->table_enrolments}.roleid={$this->table_roles}.id","LEFT");
+	    $query=$this->db->get($this->table_name);
+	    return $query->result_array();
+	}
 	/**
 	 * Get user record by Id
 	 *
@@ -194,7 +206,7 @@ class Users extends CI_Model
 	function delete_user($user_id)
 	{
 		$this->db->where('id', $user_id);
-		$this->db->delete($this->table_name);
+		$this->db->update($this->table_name,array('deleted'=>1));
 		if ($this->db->affected_rows() > 0) {
 			$this->delete_profile($user_id);
 			return TRUE;
@@ -389,8 +401,8 @@ class Users extends CI_Model
 	 */
 	private function delete_profile($user_id)
 	{
-		$this->db->where('user_id', $user_id);
-		$this->db->delete($this->profile_table_name);
+		//$this->db->where('user_id', $user_id);
+		//$this->db->delete($this->profile_table_name);
 	}
 }
 

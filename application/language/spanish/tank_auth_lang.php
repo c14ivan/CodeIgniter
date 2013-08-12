@@ -109,5 +109,16 @@ $lang['auth_adminname_holder']="Ingrese el login";
 $lang['auth_defaultrole']="Rol por defecto para los usuarios";
 
 $lang['auth_profile']="Perfil";
+
+$lang['auth_user_noactivate']="Sin Activar";
+$lang['auth_user_active']="Activo";
+$lang['auth_user_deleted']="Eliminado";
+$lang['auth_user_banned']="Baneado";
+$lang['auth_deleteaction']="Eliminar";
+$lang['auth_banaction']="Banear";
+$lang['auth_unbanaction']="Quitar Baneo";
+$lang['auth_confirmdel']="¿Esta seguro de eliminar el usuario? esta operación no es reversible";
+$lang['auth_ban_reason']="Razón del Baneo";
+$lang['auth_homerole']="Rol en el Sitio";
 /* End of file tank_auth_lang.php */
 /* Location: ./application/language/spanish/tank_auth_lang.php */

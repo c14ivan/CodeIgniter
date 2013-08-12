@@ -9,23 +9,7 @@ class Permission extends MY_Controller {
         //  load libs
         $this->load->library('tank_auth');
         $this->lang->load('tank_auth');
-        $this->lang->load('menu');
         $this->load->model('Permissions');
-    }
-
-    //TODO implement this functions
-    /**
-     * admin role permissions
-     */
-    function admin_roles()
-    {
-
-    }
-    /**
-     * Create a role
-     */
-    function create_role(){
-
     }
     /**
      * TODO make something with this, it's only for update profiles quickly on development
@@ -51,7 +35,7 @@ class Permission extends MY_Controller {
         foreach($roles as $role){
             $role['id'] = $this->Permissions->update_role($role['name'],$role['weight'],$role['shortname'],$role['description']);
         }
-        //redirect();
+        redirect();
     }
     /**
      * Instalation, create the defaults and insert into database

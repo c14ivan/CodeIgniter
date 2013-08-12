@@ -4,6 +4,7 @@ $lang['cancel'] = "Cancelar";
 $lang['send'] = "Enviar";
 $lang['save'] = "Guardar";
 $lang['description'] = "Descripción";
+$lang['aresure'] = "¿Esta Seguro?";
 $lang['delete']="Eliminar";
 $lang['add']="Agregar";
 $lang['confirmdelete']="¿Esta seguro de eliminar la información seleccionada?";
@@ -18,7 +19,9 @@ $lang['noone']="Ninguno(a)";
 $lang['selectanoption']="Seleccione...";
 $lang['search']="Buscar";
 $lang['searchadv']="Busqueda Avanzada";
+$lang['status']="Estado";
 $lang['datecreated']="Fecha de Creación";
+$lang['lastlogin']="Ultimo Login";
 
 $lang['auth'] = "Usuarios";
 $lang['auth/users']="Listado de Usuarios";

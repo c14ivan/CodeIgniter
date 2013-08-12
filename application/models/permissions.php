@@ -195,13 +195,26 @@ class Permissions extends CI_Model
          
         return NULL;
     }
-    function get_roles(){
+    function get_rolePermissions($role){
+        $this->db->select("{$this->table_caps}.id,capability,permission");
+        $this->db->from($this->table_rolecaps);
+        $this->db->join($this->table_caps, "{$this->table_caps}.id = {$this->table_rolecaps}.capabilityid", 'inner');
+        $this->db->where('roleid=',$role);
+        
+        $query=$this->db->get();
+        return $query->result_array();
+    }
+    function get_roles($alldata=false){
          
         $query = $this->db->get($this->table_roles);
         $response=Array();
         if ($query->num_rows() > 0){
-            foreach ($query->result_array() as $role){
-                $response[$role['id']]=$role['name'];
+            if($alldata){
+                $response=$query->result_array();
+            }else{
+                foreach ($query->result_array() as $role){
+                    $response[$role['id']]=$role['name'];
+                }
             }
         }
          
@@ -246,10 +259,9 @@ class Permissions extends CI_Model
             $roleperm= $query->row_array();
             
             $roleupdate = array(
-                    'position'=>$position,
                     'permission'=> $permission
                     );
-            
+            if ($position!='') $roleupdate['position']='position';
             $this->db->where('id', $roleperm['id']);
             $this->db->update($this->table_rolecaps, $roleupdate);
         }else{//insert permission

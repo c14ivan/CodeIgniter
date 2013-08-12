@@ -25,7 +25,6 @@ class Tank_auth
 		$this->ci =& get_instance();
 
 		$this->ci->load->config('tank_auth', TRUE);
-		$this->ci->load->database();
 		$this->ci->load->model('tank_auth/users');
 
 		// Try to autologin
@@ -64,6 +63,9 @@ class Tank_auth
 
 					if ($user->banned == 1) {									// fail - banned
 						$this->error = array('banned' => $user->ban_reason);
+
+					}elseif ($user->deleted == 1) {									// fail - Deleted
+						$this->error = array('deleted' => "");
 
 					} else {
 						$this->ci->session->set_userdata(array(
