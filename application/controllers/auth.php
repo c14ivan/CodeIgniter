@@ -495,8 +495,8 @@ class Auth extends CI_Controller
 	function _send_email($type, $email, &$data)
 	{
 		$this->load->library('email');
-		$this->email->from($this->config->item('webmaster_email', 'tank_auth'), $this->config->item('appname'));
-		$this->email->reply_to($this->config->item('webmaster_email', 'tank_auth'), $this->config->item('appname'));
+		$this->email->from($this->config->item('email_info'), $this->config->item('appname'));
+		$this->email->reply_to($this->config->item('email_info'), $this->config->item('appname'));
 		$this->email->to($email);
 		$this->email->subject(sprintf($this->lang->line('auth_subject_'.$type), $this->config->item('appname')));
 		$this->email->message($this->twig->getDisplay('email/'.$type.'_html', $data));

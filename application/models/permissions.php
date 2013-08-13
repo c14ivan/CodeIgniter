@@ -259,7 +259,7 @@ class Permissions extends CI_Model
             $roleperm= $query->row_array();
             
             $roleupdate = array(
-                    'permission'=> $permission
+                    'permission'=> ($permission)?1:0
                     );
             if ($position!='') $roleupdate['position']='position';
             $this->db->where('id', $roleperm['id']);
@@ -269,7 +269,7 @@ class Permissions extends CI_Model
                     'roleid'=>$roleid,
                     'capabilityid'=>$capabilityid,
                     'position'=>$position,
-                    'permission'=>$permission,
+                    'permission'=>($permission)?1:0,
                     );
             $this->db->insert($this->table_rolecaps, $roleperm);
         }
@@ -404,7 +404,7 @@ class Permissions extends CI_Model
     }
     
     function get_user_menu($userid,$contextid,$position)
-    {//1,2,left_Bar
+    {
         $menu=false;
         $role = $this->get_user_enrolment($userid,$contextid);
         if($role){

@@ -7,6 +7,7 @@ class User extends MY_Controller
         $this->lang->load('permissions');
         $this->lang->load('tank_auth');
         $this->load->model('tank_auth/users');
+        $this->load->helper('password');
     }
     function roles(){
         $data=array(
@@ -50,6 +51,34 @@ class User extends MY_Controller
         $this->Permissions->set_role_permission($postdata['role'],$postdata['perm'],$postdata['val']);
         echo json_encode(array('ok'=>true));
     }
+    function adduser(){
+        if(!$this->input->is_ajax_request()) redirect();
+        $data=$this->input->post();
+        $email_activation = $this->config->item('email_activation', 'tank_auth');
+        $use_username = $this->config->item('use_username', 'tank_auth');
+        $password=get_random_password();
+        
+        if (!is_null($data = $this->tank_auth->create_user( $use_username ? $data['name'] : '',$data['email'] ,$password,$email_activation))) {									// success
+            $data['site_name'] = $this->config->item('appname');
+            $contextid=$this->Permissions->get_home_context();
+            $this->Permissions->enrol_user($data['user_id'],$contextid,$post['rol']);
+            
+            if ($email_activation) {// send "activate" email
+                $data['activation_period'] = $this->config->item('email_activation_expire', 'tank_auth') / 3600;
+                $this->_send_email('activate', $data['email'], $data);
+                unset($data['password']); // Clear password (just for any case)
+            } else {
+                if ($this->config->item('email_account_details', 'tank_auth')) {// send "welcome" email
+                    $this->_send_email('welcome', $data['email'], $data);
+                }
+                    unset($data['password']); // Clear password (just for any case)
+            }
+        } else {
+            $errors = $this->tank_auth->get_error_message();
+            foreach ($errors as $k => $v)	$data['errors'][$k] = $this->lang->line($v);
+        }
+        echo json_encode(array('ok'=>!isset($errors)));
+    }
     function getusers(){
         if(!$this->input->is_ajax_request()) redirect();
         $users=$this->users->get_users();
@@ -66,5 +95,16 @@ class User extends MY_Controller
     function unbanuser(){
         if(!$this->input->is_ajax_request()) redirect();
         echo json_encode(array('ok'=>$this->users->unban_user($this->input->post('userid'))));
+    }
+    function _send_email($type, $email, &$data)
+    {
+        $this->load->library('email');
+        $this->email->from($this->config->item('email_info'), $this->config->item('appname'));
+        $this->email->reply_to($this->config->item('email_info'), $this->config->item('appname'));
+        $this->email->to($email);
+        $this->email->subject(sprintf($this->lang->line('auth_subject_'.$type), $this->config->item('appname')));
+        $this->email->message($this->twig->getDisplay('email/'.$type.'_html', $data));
+        $this->email->set_alt_message($this->twig->getDisplay('email/'.$type.'_txt', $data));
+        $this->email->send();
     }
 }

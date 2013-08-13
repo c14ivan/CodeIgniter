@@ -88,8 +88,6 @@
                 </a>
                 <ul class="dropdown-menu">
                 {% if CI.session.userdata('username') %}
-                    <li><a href="{{ site_url('auth/profile')}}">{{ lang('auth_profile') }}</a></li>
-                    <li class="divider"></li>
                     <li><a href="{{ site_url('auth/logout')}}"> {{ lang('logout') }} </a></li>
                 {% else %}
                     <li><a href="{{ site_url('auth/login')}}">{{ lang('login') }}</a></li>

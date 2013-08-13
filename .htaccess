@@ -5,7 +5,7 @@ SetEnvIf Host www.test.ieflafloresta.edu.co$ CI_ENV=testing
 RewriteCond $1 !^(index\.php|resources|robots\.txt)
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^(.*)$ index.php/$1 [L,QSA]
+RewriteRule ^(.*)$ index.php?/$1 [L,QSA]
 
 RewriteCond %{SERVER_PORT} 443
 RewriteRule ^(.*)$ https://<IP>/$1 [L]
