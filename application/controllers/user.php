@@ -8,30 +8,6 @@ class User extends MY_Controller
         $this->lang->load('tank_auth');
         $this->load->model('tank_auth/users');
     }
-    /*function view(){
-        if (!$this->tank_auth->is_logged_in()) {
-            redirect('');
-        }
-        $headers= array(
-                'username'=>array('priority'=>1,'abbr'=>'username','valor'=>'Nombre de Usuario','celllabel'=>'Username'),
-                'email'=>array('priority'=>2,'abbr'=>'e-mail','valor'=>'Correo electronico','celllabel'=>'e-mail'),
-                'created'=>array('priority'=>3,'abbr'=>'Creación','valor'=>'Fecha de Creación','celllabel'=>'Creado en'),
-        );
-        $datos= $this->db->get('users');
-         
-        $data=array(
-                'headers'=>$headers,
-                'data'=>$datos->result(),
-                'hasactions'=>true,
-                'canedit'=>true,
-                'candel'=>true,
-                'urledit'=>site_url("auth/edituser/"),
-                'urldel'=>site_url("auth/deluser/"),
-                'delajax'=>false
-        );
-         
-        $this->twig->display('general/table',$data);
-    }*/
     function roles(){
         $data=array(
                 'capabilities'=>$this->Permissions->get_capabilities(),
@@ -47,6 +23,9 @@ class User extends MY_Controller
     function enrolments(){
         $this->twig->display('user/enrolments',$data);
     }
+    
+    
+    
     function getroles(){
         if(!$this->input->is_ajax_request()) redirect();
         echo json_encode(array('roles'=>$this->Permissions->get_roles(true)));
@@ -77,12 +56,15 @@ class User extends MY_Controller
         echo json_encode(array('users'=>$users));
     }
     function deluser(){
-        
-    }
-    function unbanuser(){
-        
+        if(!$this->input->is_ajax_request()) redirect();
+        echo json_encode(array('ok'=>$this->users->delete_user($this->input->post('userid'))));
     }
     function banuser(){
-        
+        if(!$this->input->is_ajax_request()) redirect();
+        echo json_encode(array('ok'=>$this->users->ban_user($this->input->post('userid'),$this->input->post('banreason'))));
+    }
+    function unbanuser(){
+        if(!$this->input->is_ajax_request()) redirect();
+        echo json_encode(array('ok'=>$this->users->unban_user($this->input->post('userid'))));
     }
 }

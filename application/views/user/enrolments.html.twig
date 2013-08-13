@@ -1,0 +1,17 @@
+{% extends '_layouts/index.html.twig' %}
+
+{% block headext %}
+<link rel="stylesheet" type="text/css" href="{{ asset_url()~'cssapp/general.css' }}" media="all">
+{% endblock %}
+
+{% block content %}
+{% import '_tools/formElements.twig' as forms %}
+
+{% endblock %}
+{% block jscode %}
+<script type="text/javascript">
+$().ready(function(){
+	
+});
+</script>
+{% endblock %}
