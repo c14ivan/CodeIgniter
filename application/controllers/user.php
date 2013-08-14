@@ -54,30 +54,37 @@ class User extends MY_Controller
     function adduser(){
         if(!$this->input->is_ajax_request()) redirect();
         $data=$this->input->post();
-        $email_activation = $this->config->item('email_activation', 'tank_auth');
-        $use_username = $this->config->item('use_username', 'tank_auth');
-        $password=get_random_password();
-        
-        if (!is_null($data = $this->tank_auth->create_user( $use_username ? $data['name'] : '',$data['email'] ,$password,$email_activation))) {									// success
-            $data['site_name'] = $this->config->item('appname');
-            $contextid=$this->Permissions->get_home_context();
-            $this->Permissions->enrol_user($data['user_id'],$contextid,$post['rol']);
-            
-            if ($email_activation) {// send "activate" email
-                $data['activation_period'] = $this->config->item('email_activation_expire', 'tank_auth') / 3600;
-                $this->_send_email('activate', $data['email'], $data);
-                unset($data['password']); // Clear password (just for any case)
-            } else {
-                if ($this->config->item('email_account_details', 'tank_auth')) {// send "welcome" email
-                    $this->_send_email('welcome', $data['email'], $data);
-                }
+        $contextid=$this->Permissions->get_home_context();
+
+        $error=false;
+        if($data['userid']>0){
+            $this->Permissions->enrol_user($data['userid'],$contextid,$data['homerol']);
+        }else{
+            $email_activation = $this->config->item('email_activation', 'tank_auth');
+            $use_username = $this->config->item('use_username', 'tank_auth');
+            $password=get_random_password();
+
+            if (!is_null($data = $this->tank_auth->create_user( $use_username ? $data['name'] : '',$data['email'] ,$password,$email_activation))) {									// success
+                $data['site_name'] = $this->config->item('appname');
+                $this->Permissions->enrol_user($data['user_id'],$contextid,$data['homerol']);
+                
+                if ($email_activation) {// send "activate" email
+                    $data['activation_period'] = $this->config->item('email_activation_expire', 'tank_auth') / 3600;
+                    $this->_send_email('activate', $data['email'], $data);
                     unset($data['password']); // Clear password (just for any case)
+                } else {
+                    if ($this->config->item('email_account_details', 'tank_auth')) {// send "welcome" email
+                        $this->_send_email('welcome', $data['email'], $data);
+                    }
+                        unset($data['password']); // Clear password (just for any case)
+                }
+            } else {
+                $errors = $this->tank_auth->get_error_message();
+                foreach ($errors as $k => $v)	$data['errors'][$k] = $this->lang->line($v);
+                $error=true;
             }
-        } else {
-            $errors = $this->tank_auth->get_error_message();
-            foreach ($errors as $k => $v)	$data['errors'][$k] = $this->lang->line($v);
         }
-        echo json_encode(array('ok'=>!isset($errors)));
+        echo json_encode(array('ok'=>!$error,'errors'=>(isset($data['errors'])?$data['errors']:false)));
     }
     function getusers(){
         if(!$this->input->is_ajax_request()) redirect();

@@ -501,6 +501,7 @@ class Auth extends CI_Controller
 		$this->email->subject(sprintf($this->lang->line('auth_subject_'.$type), $this->config->item('appname')));
 		$this->email->message($this->twig->getDisplay('email/'.$type.'_html', $data));
 		$this->email->set_alt_message($this->twig->getDisplay('email/'.$type.'_txt', $data));
+
 		$this->email->send();
 	}
 

@@ -28,8 +28,9 @@ class Permission extends MY_Controller {
     /**
      * TODO make something with this, it's only for update profiles quickly on development
      */
-    function reset(){
+    /*function reset(){
 
+//TODO delete permissions and role assignments before update permissions.
         $capmode=$this->config->item('permissions_mode','permission');
         //1. crear las capabilities en DB
         $capabilities=$this->config->item('capabilities','permission');
@@ -50,7 +51,7 @@ class Permission extends MY_Controller {
             $role['id'] = $this->Permissions->update_role($role['name'],$role['weight'],$role['shortname'],$role['description']);
         }
         redirect();
-    }
+    }*/
     /**
      * Instalation, create the defaults and insert into database
      */

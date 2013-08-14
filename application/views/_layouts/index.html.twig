@@ -111,69 +111,48 @@
     </div>
 </div>
 <!-- topbar ends -->
-<div class="container-fluid">
-<div class="row-fluid">
-{% set topmenu = CI.permissions.get_user_menu(CI.session.userdata('user_id'),CI.session.userdata('context'),'left-bar') %}
-<!-- left menu starts -->
-    {% if topmenu %}
-    	<div class="span2 main-menu-span">
-    		<div class="well nav-collapse sidebar-nav">
-    			{{ nav.menu(topmenu,'nav-tabs',true) }}
-    		</div><!--/.well -->
-    	</div><!--/span-->
-	{% endif %}
-<!-- left menu ends -->
-
 <noscript>
-    <div class="alert alert-block span10">
+    <div class="alert alert-block span{{ spanmenu }}">
         <h4 class="alert-heading">Advertencia!</h4>
         <p>Necesitas tener habilitado <a href="http://en.wikipedia.org/wiki/JavaScript" target="_blank">JavaScript</a> para utilizar este sitio.</p>
     </div>
 </noscript>
 
-<div id="content" class="span10">
-<!-- content starts -->
-
-
-<div>
-    <ul class="breadcrumb">
-        <li>
-            <a href="{{ site_url() }}">Inicio</a> <span class="divider">/</span>
-        </li>
-        {% block breadcrums %}
-        <!--<li>
-            <a href="#">Dashboard</a>
-        </li>-->
-        {% endblock %}
-    </ul>
-</div>
-    {% block content %}
-{% endblock %}
-<!-- content ends -->
-</div><!--/#content.span10-->
-</div><!--/fluid-row-->
-
-<hr>
-
-<div class="modal hide fade" id="myModal">
-    <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">×</button>
-        <h3>Settings</h3>
-    </div>
-    <div class="modal-body">
-        <p>Here settings can be configured...</p>
-    </div>
-    <div class="modal-footer">
-        <a href="#" class="btn" data-dismiss="modal">Close</a>
-        <a href="#" class="btn btn-primary">Save changes</a>
-    </div>
-</div>
-
-<footer>
-    <p class="pull-left"><a href="http://www.ieflafloresta.edu.co" target="_blank">IEF</a> {{ "now"|date("Y") }}</p>
-    <p class="pull-right"><!--Powered by: <a href="http://usman.it/free-responsive-admin-template">Charisma</a>--></p>
-</footer>
-
+<div class="container-fluid">
+    <div class="row-fluid">
+        {% set leftmenu = CI.permissions.get_user_menu(CI.session.userdata('user_id'),CI.session.userdata('context'),'left-bar') %}
+        <!-- left menu starts -->
+        {% set spanmenu='12' %}
+        {% if leftmenu %}
+            {% set spanmenu='10' %}
+        	<div class="span2 main-menu-span">
+        		<div class="well nav-collapse sidebar-nav">
+        			{{ nav.menu(leftmenu,'nav-tabs',true) }}
+        		</div><!--/.well -->
+        	</div><!--/span-->
+    	{% endif %}
+        <!-- left menu ends -->
+        <div id="content" class="span{{ spanmenu }}">
+        <!-- content starts -->
+            <div>
+                <ul class="breadcrumb">
+                    <li>
+                        <a href="{{ site_url() }}">Inicio</a> <span class="divider">/</span>
+                    </li>
+                    {% block breadcrums %}
+                    {% endblock %}
+                </ul>
+            </div>
+            {% block content %}
+            {% endblock %}
+        <!-- content ends -->
+        </div><!--/#content.span10-->
+    </div><!--/fluid-row-->
+    <hr>
+    <footer>
+        <p class="pull-left"><a href="http://www.ieflafloresta.edu.co" target="_blank">IEF</a> {{ "now"|date("Y") }}</p>
+        <p class="pull-right"><!--Powered by: <a href="http://usman.it/free-responsive-admin-template">Charisma</a>--></p>
+    </footer>
 </div><!--/.fluid-container-->
 
 <!-- external javascript

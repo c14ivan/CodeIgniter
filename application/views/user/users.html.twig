@@ -19,6 +19,7 @@
             <div class="useradd box box-content" style="display:none;">
 				<i class="icon-remove closeadduser" style="float:right"></i>
 				<form id="useraddform" class="form-horizontal" method="post">
+				    {{ forms.campo({'tipo':'input','type':'hidden','name':'userid'}) }}
 					{{ forms.campo({'tipo':'input','type':'text','name':'name','label':lang('name'),'maxlength':45}) }}
 					{{ forms.campo({'tipo':'input','type':'text','name':'email','label':lang('auth_logwithemail'),'maxlength':20}) }}
 					{{ forms.campo({'tipo':'select','name':'homerol','label':lang('auth_homerole'),'opciones':roles}) }}
@@ -102,9 +103,12 @@ $().ready(function(){
 	$('.closeadduser').click(function(){
 		$('.useradd').slideUp();
 		resetForm($('.useradd').find('form'));
+		$('.useradd').find('form').find('input[name=name]').removeAttr('readonly');
+		$('.useradd').find('form').find('input[name=email]').removeAttr('readonly');
+		$('.useradd').find('form').find('input[name=userid]').val(0);
 	});
 	$('.adduserbtn').click(function(){
-		$('.useradd').trigger('click');
+		$('.closeadduser').trigger('click');
 		$('.useradd').slideDown();
 	});
 	var tableusers=$('#userstable').dataTable({
@@ -239,12 +243,27 @@ $().ready(function(){
                 		$('.closeadduser').trigger('click');
                 		loadusers();
                 	}else{
-                		showNotification('{{ lang('ajaxerror') }}');
+                    	var htmlerror= '';
+                    	if(data.errors && data.errors.lenth>0) htmlerror=data.errors.join();
+                		showNotification('<b>{{ lang('ajaxerror') }}:</b><br/>'+htmlerror);
                 	}
                 });
         }
     });
     function dom_tableusers(){
+    	$('.edtuser').click(function(e){
+        	e.preventDefault();
+        	$('.closeadduser').trigger('click');
+        	$('.useradd').find('form').find('input[name=userid]').val($(this).closest('a').attr('data-id'));
+        	$('.useradd').find('form').find('input[name=name]').val($($(this).closest('tr').find('td')[1]).html());
+        	$('.useradd').find('form').find('input[name=name]').attr('readonly',true);
+        	$('.useradd').find('form').find('input[name=email]').val($($(this).closest('tr').find('td')[2]).html());
+        	$('.useradd').find('form').find('input[name=email]').attr('readonly',true);
+        	$('.useradd').find('form').find('select[name=homerol]').find('option').removeAttr('selected');
+        	$('.useradd').find('form').find('select[name=homerol]').find('option[text="'+$($(this).closest('tr').find('td')[3]).html()+'"]').attr('selected',true);
+        	
+    		$('.useradd').slideDown();
+        });
         $('.deluser').click(function(e){
         	e.preventDefault();
     		$('#deluser').modal('show');
@@ -274,6 +293,10 @@ $().ready(function(){
         	colstatus='<span class="label label-sucess">{{ lang('auth_user_active')  }}</span>';
         }
         var actions='';
+        if (candel || canban){
+            actions+='<a class="btn btn-info" href="javascript:void(0)" data-id="'+user.id+'" >'+
+            '<i class="icon-edit icon-white edtuser" title="{{ lang('edit') }}"></i></a>';
+        }
         if(candel){
             actions+='<a class="btn btn-info" href="javascript:void(0)" data-id="'+user.id+'" >'+
             '<i class="icon-remove icon-white deluser" title="{{ lang('auth_deleteaction') }}"></i></a>';
