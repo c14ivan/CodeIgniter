@@ -304,13 +304,17 @@ $(document).ready(function() {
                     firstsum=data.cats[i];
                     addparent(firstsum.id,firstsum.name,firstsum.ident);
                     $('form#libcatedt').find('select[name=lbcatparent]').append('<option value="'+firstsum.id+'">'+firstsum.ident+'00 -'+firstsum.name+'</option>');
-                    for (j in firstsum.childrens){
-                        secondsum=firstsum.childrens[j]
-                        addchildren(firstsum.id,secondsum.id,secondsum.name,firstsum.ident+secondsum.ident+'0',true);
-                        $('form#libcatedt').find('select[name=lbcatparent]').append('<option value="'+secondsum.id+'">- '+firstsum.ident+secondsum.ident+'0 -'+secondsum.name+'</option>');
-                        for(k in secondsum.childrens){
-                            thirdsum=secondsum.childrens[k];
-                            addchildren(secondsum.id,thirdsum.id,thirdsum.name,firstsum.ident+secondsum.ident+thirdsum.ident,false);
+                    if(firstsum.childrens.length>0){
+                        for (j in firstsum.childrens){
+                            secondsum=firstsum.childrens[j]
+                            addchildren(firstsum.id,secondsum.id,secondsum.name,firstsum.ident+secondsum.ident+'0',true);
+                            $('form#libcatedt').find('select[name=lbcatparent]').append('<option value="'+secondsum.id+'">- '+firstsum.ident+secondsum.ident+'0 -'+secondsum.name+'</option>');
+                            if(secondsum.childrens.length>0){
+                                for(k in secondsum.childrens){
+                                    thirdsum=secondsum.childrens[k];
+                                    addchildren(secondsum.id,thirdsum.id,thirdsum.name,firstsum.ident+secondsum.ident+thirdsum.ident,false);
+                                }
+                            }
                         }
                     }
                 }
