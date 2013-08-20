@@ -8,72 +8,69 @@
 {% block content %}
 {% import '_tools/formElements.twig' as forms %}
 <div class="row-fluid">
-    <div class="box span12">
-        <div class="box-header well">
+    <div class="box span6">
+	    <div class="box-header well">
 			<h2>{{ lang('lbcategories') }}</h2>
 			<div class="box-icon">
-				<a href="#" class="btn btn_addcat btn-round"><i class="icon-plus"></i></a>
+				<a href="#" title="{{ lang('lbaddcategories') }}" class="btn btn_addcat btn-round"><i class="icon-plus"></i></a>
 			</div>
 		</div>
 		<div class="box-content">
-		    <div class="box span6">
-		        <div class="areaedt box span12" style="display:none;">
-    				<i class="icon-remove closeedtarea" style="float:right"></i>
-    				<form id="libcatedt" class="form-horizontal" method="post">
-    					{{ forms.campo({'tipo':'input','type':'hidden','name':'libcatid'}) }}
-    					{{ forms.campo({'tipo':'input','type':'text','name':'libname','label':lang('name'),'maxlength':45}) }}
-    					{{ forms.campo({'tipo':'input','type':'text','name':'libident','label':lang('lbcatident'),'maxlength':2}) }}
-    					{{ forms.campo({'tipo':'select','name':'lbcatparent','label':lang('lbcatparent'),'opciones':{0:lang('noone')}}) }}
-    					<div class="form-actions">
-    						<p class="center">
-                          		<button type="submit" class="btn btn-primary">{{ lang('save') }}</button>
-                       		</p>
-                       	</div>
-    				</form>
-    			</div>
-                <div id="treecontrol">
-            		<a title="{{ lang('tree_collapse_title') }}" href="#"><img src="{{ img_url() }}tree/minus.gif" />{{ lang('tree_collapse') }}</a>
-            		<a title="{{ lang('tree_expand_title') }}" href="#"><img src="{{ img_url() }}tree/plus.gif" /> {{ lang('tree_expand') }}</a>
-            		<a title="{{ lang('tree_expand_title') }}" href="#">{{ lang('tree_toggle') }}</a>
-            		<a title="{{ lang('lbaddcategories') }}" href="#" style="float:right"><i class="icon-plus btn_addcat"></i></a>
-            		
-            	</div>
-                <ul id="cattree" class="treeview-gray">
-                
-                </ul>
-		    </div>
-		    <div class="box span6 sumarycont form-horizontal">
-    		    <div class="box-header well">
-        			<h2>{{ lang('lbcategory') }}:<span id="selectedcategory"></span></h2>
-        			<div class="box-icon">
-        				<a href="#" class="btn btn_addbook btn-round"><i class="icon-plus"></i></a>
-        			</div>
-        		</div>
-        		<div class="box-content">
-            		<div class="bookedt box span12" style="display:none;">
-        				<i class="icon-remove closeedtbook" style="float:right"></i>
-        				<form id="bookedt" class="form-horizontal" method="post">
-        				{% set datasource=editorials|json_encode() %}
-        				    {{ forms.campo({'tipo':'input','type':'hidden','name':'bookid'}) }}
-        					{{ forms.campo({'tipo':'input','type':'hidden','name':'libcatid'}) }}
-        					{{ forms.campo({'tipo':'input','type':'hidden','name':'parentident'}) }}
-        					{{ forms.campo({'tipo':'input','type':'text','name':'bookname','label':lang('book_title'),'maxlength':45}) }}
-        					{{ forms.campo({'tipo':'input','type':'text','name':'bookeditorial','label':lang('book_editorial'),'class':'typeahead','extra':'data-provide="typeahead" data-items="5" data-source= \''~datasource~'\''}) }}
-        					{{ forms.campo({'tipo':'input','type':'text','name':'bookauthor','label':lang('book_author'),'maxlength':45}) }}
-        					{{ forms.campo({'tipo':'input','type':'text','name':'bookkeywords','label':lang('book_keywords')}) }}
-        					{{ forms.campo({'tipo':'input','type':'text','name':'bookyear','label':lang('book_year'),'maxlength':4}) }}
-        					{{ forms.campo({'tipo':'input','type':'text','name':'bookident','label':lang('lbcatident'),'maxlength':4,'append':{'tipo':'label','id':'catident'}}) }}
-        					{{ forms.campo({'tipo':'input','type':'text','name':'bookedition','label':lang('book_edition'),'maxlength':10}) }}
-        					<div class="form-actions">
-        						<p class="center">
-                              		<button type="submit" class="btn btn-primary">{{ lang('save') }}</button>
-                           		</p>
-                           	</div>
-        				</form>
-        			</div>
-    		    </div>
-            </div>
+	        <div class="areaedt" style="display:none;">
+				<i class="icon-remove closeedtarea" style="float:right"></i>
+				<form id="libcatedt" class="form-horizontal" method="post">
+					{{ forms.campo({'tipo':'input','type':'hidden','name':'libcatid'}) }}
+					{{ forms.campo({'tipo':'input','type':'text','name':'libname','label':lang('name'),'maxlength':45}) }}
+					{{ forms.campo({'tipo':'input','type':'text','name':'libident','label':lang('lbcatident'),'maxlength':2}) }}
+					{{ forms.campo({'tipo':'select','name':'lbcatparent','label':lang('lbcatparent'),'opciones':{0:lang('noone')}}) }}
+					<div class="form-actions">
+						<p class="center">
+                      		<button type="submit" class="btn btn-primary">{{ lang('save') }}</button>
+                   		</p>
+                   	</div>
+				</form>
+			</div>
+            <div id="treecontrol">
+        		<a title="{{ lang('tree_collapse_title') }}" href="#"><img src="{{ img_url() }}tree/minus.gif" />{{ lang('tree_collapse') }}</a>
+        		<a title="{{ lang('tree_expand_title') }}" href="#"><img src="{{ img_url() }}tree/plus.gif" /> {{ lang('tree_expand') }}</a>
+        		<a title="{{ lang('tree_expand_title') }}" href="#">{{ lang('tree_toggle') }}</a>
+        		
+        	</div>
+            <ul id="cattree" class="treeview-gray">
+            
+            </ul>
         </div>
+    </div>
+    <div class="box span6 sumarycont form-horizontal" style="display:none;">
+	    <div class="box-header well">
+			<h2>{{ lang('lbcategory') }}:<span id="selectedcategory"></span></h2>
+			<div class="box-icon">
+				<a href="#" title="{{ lang('lbaddbook') }}" class="btn btn_addbook btn-round"><i class="icon-plus"></i></a>
+			</div>
+		</div>
+		<div class="box-content">
+    		<div class="bookedt box span12" style="display:none;">
+				<i class="icon-remove closeedtbook" style="float:right"></i>
+				<form id="bookedt" class="form-horizontal" method="post">
+				{% set datasource=editorials|json_encode() %}
+				    {{ forms.campo({'tipo':'input','type':'hidden','name':'bookid'}) }}
+					{{ forms.campo({'tipo':'input','type':'hidden','name':'libcatid'}) }}
+					{{ forms.campo({'tipo':'input','type':'hidden','name':'parentident'}) }}
+					{{ forms.campo({'tipo':'input','type':'text','name':'bookname','label':lang('book_title'),'maxlength':45}) }}
+					{{ forms.campo({'tipo':'input','type':'text','name':'bookeditorial','label':lang('book_editorial'),'class':'typeahead','extra':'data-provide="typeahead" data-items="5" data-source= \''~datasource~'\''}) }}
+					{{ forms.campo({'tipo':'input','type':'text','name':'bookauthor','label':lang('book_author'),'maxlength':45}) }}
+					{{ forms.campo({'tipo':'input','type':'text','name':'bookkeywords','label':lang('book_keywords')}) }}
+					{{ forms.campo({'tipo':'input','type':'text','name':'bookyear','label':lang('book_year'),'maxlength':4}) }}
+					{{ forms.campo({'tipo':'input','type':'text','name':'bookident','label':lang('lbcatident'),'maxlength':4,'append':{'tipo':'label','id':'catident'}}) }}
+					{{ forms.campo({'tipo':'input','type':'text','name':'bookedition','label':lang('book_edition'),'maxlength':10}) }}
+					<div class="form-actions">
+						<p class="center">
+                      		<button type="submit" class="btn btn-primary">{{ lang('save') }}</button>
+                   		</p>
+                   	</div>
+				</form>
+			</div>
+	    </div>
     </div>
 </div>
 <div class="row-fluid">
@@ -280,6 +277,7 @@ $(document).ready(function() {
                     $('.sumarycont').find('#catident').children('label').html(data.cat.ident);
                     $('.sumarycont').find('#parentident').val(data.cat.ident);
                     $('.sumarycont').find('#libcatid').val(data.cat.id);
+                    $('.sumarycont').slideDown();
                 });
         });
         $('.editcat').click(function(){
@@ -297,6 +295,7 @@ $(document).ready(function() {
             	console.log(JSON.stringify(jqXHR) + ' ' + textStatus + '  ' + errorThrown);
             }
             }).done(function(data){
+                console.log(data);
                 var firstsum=null;
                 var secondsum=null;
                 $('form#libcatedt').find('select[name=lbcatparent]').find('option').not('[value=0]').remove();
@@ -304,12 +303,12 @@ $(document).ready(function() {
                     firstsum=data.cats[i];
                     addparent(firstsum.id,firstsum.name,firstsum.ident);
                     $('form#libcatedt').find('select[name=lbcatparent]').append('<option value="'+firstsum.id+'">'+firstsum.ident+'00 -'+firstsum.name+'</option>');
-                    if(firstsum.childrens.length>0){
+                    if(firstsum.childrens){
                         for (j in firstsum.childrens){
                             secondsum=firstsum.childrens[j]
                             addchildren(firstsum.id,secondsum.id,secondsum.name,firstsum.ident+secondsum.ident+'0',true);
                             $('form#libcatedt').find('select[name=lbcatparent]').append('<option value="'+secondsum.id+'">- '+firstsum.ident+secondsum.ident+'0 -'+secondsum.name+'</option>');
-                            if(secondsum.childrens.length>0){
+                            if(secondsum.childrens){
                                 for(k in secondsum.childrens){
                                     thirdsum=secondsum.childrens[k];
                                     addchildren(secondsum.id,thirdsum.id,thirdsum.name,firstsum.ident+secondsum.ident+thirdsum.ident,false);

@@ -1,5 +1,6 @@
 <?php
 $lang['lbaddcategories'] = "Agregar Sumario";
+$lang['lbaddbook']="Agregar Libro";
 $lang['lbcategories'] = "Sumarios";
 $lang['lbcategory'] = "Sumario";
 $lang['lbcatident']="Identificador";

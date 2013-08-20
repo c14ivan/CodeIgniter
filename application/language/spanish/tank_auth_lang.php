@@ -81,7 +81,7 @@ $lang['auth_youremail'] = 'Su Dirección de correo electronico';
 $lang['auth_yourpassword'] = 'Su Contraseña';
 $lang['auth_theteam']='El Equipo de %s';
 
-$lang['auth_getnewpsw']='Obtener nueva contraseña';
+$lang['auth_getnewpw']='Obtener nueva contraseña';
 $lang['auth_createnewpassword']='Crear una nueva contraseña para %s';
 $lang['auth_creatednewpassword']='Nueva contraseña para %s';
 $lang['auth_newpswlabel']='¿Olvidaste tu contraseña? No hay problema!<br />

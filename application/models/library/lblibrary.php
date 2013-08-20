@@ -25,7 +25,7 @@ class Lblibrary extends CI_Model{
                 }
             }
         }
-        if(count($secondsumary)>0){
+        if(isset($secondsumary) && count($secondsumary)>0){
             $this->db->where_in('catparent',array_keys($secondsumary));
             $query=$this->db->get($this->tablecats);
             if($query->num_rows()>0){
