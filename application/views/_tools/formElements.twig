@@ -79,7 +79,7 @@
         {% set name=campo.name %}
         {% set id=campo.id %}
         {% set valor=campo.value %}
-        {% set maxLength=campo.maxLength %}
+        {% set maxLength=campo.maxlength %}
         {% set extra=campo.extra %}
         {% set placeholder=campo.placeholder %}
         {% set onchange=campo.onchange %}
@@ -148,7 +148,7 @@
                         {% endif %}
                         {% if prepend or type=='password' %}
                             {% if prepend%}
-                                <span class="add-on">
+                                {% if campo.noaddon is not defined %}<span class="add-on">{% endif %}
                                 {% if prepend.tipo or prepend is not iterable %}
                                     {{ _self.campo(prepend) }}
                                 {% else %}
@@ -156,7 +156,7 @@
                                         {{ _self.campo(tmp) }}
                                     {% endfor %}
                                 {% endif %}
-                                </span>
+                                {% if campo.noaddon is not defined %}</span>{% endif %}
                             {% endif %}
                             {% if type=='password' and class=="passmeter" %}
                                 <span class="add-on">

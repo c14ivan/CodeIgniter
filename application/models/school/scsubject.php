@@ -84,9 +84,10 @@ class Scsubject extends CI_Model{
 		return false;
 	}
 	function getSubjects(){
-		$this->db->select("{$this->table_subjects}.id,{$this->table_areas}.name as areaname,{$this->table_subjects}.name,{$this->table_subjects}.shortname,
-			{$this->table_subjects}.blocked,{$this->table_areas}.name as areaname");
-		$this->db->join($this->table_areas,"{$this->table_areas}.id={$this->table_subjects}.scareaid");
+		$this->db->select("{$this->table_subjects}.id,IFNULL({$this->table_areas}.name,'".lang('noone')."') as areaname,{$this->table_subjects}.name,{$this->table_subjects}.shortname,
+			{$this->table_subjects}.blocked");
+		$this->db->join($this->table_areas,"{$this->table_areas}.id={$this->table_subjects}.scareaid","LEFT");
+		$this->db->order_by("{$this->table_subjects}.id","ASC");
 		$query=$this->db->get($this->table_subjects);
 		return $query->result_array();
 	}

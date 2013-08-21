@@ -175,7 +175,7 @@ class School extends MY_Controller {
         if($postdata['planid']>0){
             $postdata['planid']=$this->scplan->updatePlan($postdata['planid'],$postdata['planname'],$postdata['plandescription']);
         }else{
-            $postdata['planid']=$this->scplan->addPlan($postdata['scsystemid'],$postdata['planname'],$postdata['plandescription']);
+            $postdata['planid']=$this->scplan->addPlan($postdata['plansystem'],$postdata['planname'],$postdata['plandescription']);
         }
         echo json_encode(array('plan'=>$postdata));
          

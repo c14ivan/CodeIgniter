@@ -57,6 +57,9 @@ ul.wide-list li .action {
 .dragsubject{
 	cursor:move;
 	z-index:10;
+	padding:3px;
+	margin:4px;
+	display:inline-block;
 }
 .selected{
 	background-color:#A4A4A4 !important;
