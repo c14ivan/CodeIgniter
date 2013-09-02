@@ -118,7 +118,7 @@ function docReady(){
 	$("input:checkbox, input:radio, input:file").not('[data-no-uniform="true"],#uniform-is-ajax').uniform();
 
 	//chosen - improves select
-	$('[data-rel="chosen"],[rel="chosen"]').chosen();
+	$('[data-rel="chosen"],[rel="chosen"]').chosen({disable_search_threshold: 10});
 
 	//tabs
 	$('#myTab a:first').tab('show');

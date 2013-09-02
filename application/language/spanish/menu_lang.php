@@ -10,3 +10,7 @@ $lang['school/subjects']="Asignaturas";
 
 $lang['library_menu']="Biblioteca";
 $lang['library/admin']="Administración";
+
+$lang['enrolment_menu']="Matriculas";
+$lang['enrolments/manage']="Administración";
+$lang['enrolments/asigns']="Matriculas";

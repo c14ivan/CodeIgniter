@@ -115,4 +115,80 @@ CREATE TABLE `scsubjectversion` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+DROP TABLE IF EXISTS `sc_enrolmethods`;
 
+CREATE TABLE `ci`.`sc_enrolmethods` (
+  `idenrolmethods` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(100) DEFAULT NULL,
+  `scplanid` bigint(10) DEFAULT NULL,
+  `method` varchar(20) DEFAULT NULL,
+  `hasinscription` tinyint(4) DEFAULT NULL,
+  `hasform` tinyint(4) DEFAULT NULL,
+  `roleid` bigint(10) DEFAULT NULL,
+  `mode` varchar(20) DEFAULT NULL,
+  `statusinsc` tinyint(4) DEFAULT '0',
+  `statusenrol` tinyint(4) DEFAULT '0',
+  `longmode` tinyint(4) DEFAULT NULL,
+  `time` bigint(10) DEFAULT NULL,
+  `fini` datetime DEFAULT NULL,
+  `fend` datetime DEFAULT NULL,
+  PRIMARY KEY (`idenrolmethods`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+DROP TABLE IF EXISTS `sc_student`;
+
+CREATE  TABLE `ci`.`sc_student` (
+  `idstudent` INT NOT NULL AUTO_INCREMENT ,
+  `nuip` VARCHAR(45) NOT NULL ,
+  `lastnames` VARCHAR(50) NULL ,
+  `names` VARCHAR(50) NULL ,
+  `nuipfrom` BIGINT(10) NULL ,
+  `bornday` DATETIME NULL ,
+  `bornplace` BIGINT(10) NULL ,
+  `adress` VARCHAR(100) NULL ,
+  `neighborhood` VARCHAR(100) NULL ,
+  `phone` VARCHAR(100) NULL ,
+  `stratum` BIGINT(10) NULL ,
+  `rh` VARCHAR(5) NULL ,
+  `eps` VARCHAR(50) NULL ,
+  `inscriptionid` BIGINT(10) NULL ,
+  PRIMARY KEY (`idstudent`) ,
+  UNIQUE INDEX `nuip_UNIQUE` (`nuip` ASC) );
+
+DROP TABLE IF EXISTS `sc_parent`;
+  
+CREATE  TABLE `ci`.`sc_parent` (
+  `idparent` INT NOT NULL AUTO_INCREMENT ,
+  `name` VARCHAR(100) NULL ,
+  `phone` VARCHAR(100) NULL ,
+  `kinship` VARCHAR(20) NULL ,
+  `company` VARCHAR(100) NULL ,
+  `job` VARCHAR(100) NULL ,
+  `jobtime` VARCHAR(45) NULL ,
+  `studentid` BIGINT(10) NULL ,
+  PRIMARY KEY (`idparent`) 
+);
+
+DROP TABLE IF EXISTS `sc_inscription`;
+
+CREATE  TABLE `ci`.`sc_inscription` (
+  `idinscription` INT NOT NULL AUTO_INCREMENT ,
+  `lastnames` VARCHAR(50) NULL ,
+  `names` VARCHAR(50) NULL ,
+  `nuip` VARCHAR(45) NULL ,
+  `nuipfrom` BIGINT(10) NULL ,
+  `bornday` DATETIME NULL ,
+  `bornplace` DATETIME NULL ,
+  `adress` VARCHAR(100) NULL ,
+  `neighborhood` VARCHAR(100) NULL ,
+  `phone` VARCHAR(100) NULL ,
+  `stratum` BIGINT(10) NULL ,
+  `conduct` VARCHAR(20) NULL ,
+  `relatives` TINYINT(4) NULL ,
+  `ownhouse` TINYINT(4) NULL ,
+  `family` VARCHAR(255) NULL ,
+  `interviewcoment` TEXT NULL ,
+  `interviewresult` VARCHAR(20) NULL ,
+  `schoolfrom` VARCHAR(100) NULL ,
+  PRIMARY KEY (`idinscription`) 
+);

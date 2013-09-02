@@ -41,4 +41,6 @@ $config['permission']['capabilities']=array(
         'school/plan' => array('weight'=>30,'ctx_level'=>CONTEXT_HOME,'parent'=>'scsystem_menu','visible'=>true,'position'=>'left-bar','roles'=>'super'),
         'school/subjects' => array('weight'=>30,'ctx_level'=>CONTEXT_HOME,'parent'=>'scsystem_menu','visible'=>true,'position'=>'left-bar','roles'=>'super'),
         'library/admin' =>array('weight'=>30,'ctx_level'=>CONTEXT_HOME,'parent'=>'library_menu','visible'=>true,'position'=>'left-bar','roles'=>'super'),
+        'enrolment/manage'=>array('ctx_level'=>CONTEXT_HOME,'parent'=>'enrolment_menu','visible'=>true,'position'=>'left-bar','roles'=>'super'),
+        'enrolment/asigns'=>array('ctx_level'=>CONTEXT_HOME,'parent'=>'enrolment_menu','visible'=>true,'position'=>'left-bar','roles'=>'super,admin'),
         );

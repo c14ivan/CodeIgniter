@@ -19,25 +19,26 @@ class MY_Controller extends CI_Controller
         if(empty($segment_two)) $segment_two= 'index';
         $url = $segment_one.'/'.$segment_two;
 
-        if(empty($user_id) && $url!='auth/login') $user_id=0;
         if(empty($context)){
             $context = $this->Permissions->get_home_context();
             
             $this->session->set_userdata(array('context'=>$context));
         }
+        
         if(!$context && $url!='permission/install' ){
             redirect('permission/install');
         }
         if($context && $url=='permission/install'){
             redirect('home');
         }
+
+        if(empty($user_id) && $url!='auth/login' && $context) redirect('auth/login'); //&user_id=0;
         
-        if(!$this->Permissions->has_permission($segment_one.'/'.$segment_two,$user_id,$context)){
+        if($context && !$this->Permissions->has_permission($segment_one.'/'.$segment_two,$user_id,$context)){
             $this->session->set_flashdata('nopermission', lang('nopermission'));
             redirect('auth/login');
         }
-        if(!$this->input->is_ajax_request() && ENVIRONMENT=='development'){
-            $this->output->enable_profiler(TRUE);
-        }
+        if(!$this->input->is_ajax_request())
+        $this->output->enable_profiler(TRUE);
     }
 }

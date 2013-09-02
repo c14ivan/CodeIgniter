@@ -9,3 +9,5 @@ $lang['view_capabilities']="Administrar Permisos";
 $lang['addrole']="Crear Rol";
 $lang['capupdated']="Permiso Actualizado";
 $lang['role_site']="Rol en el Sitio";
+$lang['inscription']="Inscripción";
+$lang['enrolment']="Matricula";

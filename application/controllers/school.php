@@ -33,7 +33,6 @@ class School extends MY_Controller {
     	}
     	$subjects=$this->scsubject->getSubjects();
     	
-    	//TODO permitir editar planes de estudio, ya esta hecho en system, migrar
         $this->twig->display('school/plan',array('systems'=>$systems,'subjects'=>$subjects));
     }
     public function subjects(){
@@ -71,7 +70,6 @@ class School extends MY_Controller {
 
     public function getsystem(){
         if(!$this->input->is_ajax_request()) redirect();
-        $this->output->enable_profiler(FALSE);
          
         $systemid=$this->input->post('sysid');
         $systemdata=$this->scsystem->getsystems($systemid);

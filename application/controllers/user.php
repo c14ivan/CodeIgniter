@@ -48,7 +48,8 @@ class User extends MY_Controller
     function editpermission(){
         if(!$this->input->is_ajax_request()) redirect();
         $postdata=$this->input->post();
-        $this->Permissions->set_role_permission($postdata['role'],$postdata['perm'],$postdata['val']);
+        //TODO modificar posicion de menus?
+        $this->Permissions->set_role_permission($postdata['role'],$postdata['perm'],$postdata['val'],'left-bar');
         echo json_encode(array('ok'=>true));
     }
     function adduser(){

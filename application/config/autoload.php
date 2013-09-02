@@ -139,7 +139,7 @@ $autoload['config'] = array('twig','asset','permission');
 |
 */
 
-$autoload['language'] = array('general','tank_auth','menu');
+$autoload['language'] = array('general','tank_auth','menu','permissions');
 
 
 /*

@@ -1,0 +1,324 @@
+{% extends '_layouts/index.html.twig' %} {% block headext %}
+<link
+    rel="stylesheet" type="text/css"
+    href="{{ asset_url()~'cssapp/general.css' }}" media="all">
+{% endblock %} {% block content %} {% import
+'_tools/formElements.twig'as forms %}
+<div class="row-fluid">
+    <div class="box span12 enrolcont">
+        <div class="box-header well">
+            <h2>{{ lang('sc_enrolments') }}</h2>
+            <div class="box-icon">
+                <a href="#" class="btn btn_addenrol btn-round"><i class="icon-plus"></i>
+                </a>
+            </div>
+        </div>
+        <div class="box-content">
+            <div class="formcont box box-content" style="display: none;">
+                <i class="icon-remove closeedtenrol" style="float: right"></i>
+                <form id="scenroledt" class="form-horizontal" method="post">
+                    {{
+                    forms.campo({'tipo':'input','type':'hidden','name':'scenrolmentid'})
+                    }} {{
+                    forms.campo({'tipo':'input','type':'text','name':'name','label':lang('name'),'maxlength':45})
+                    }} {{
+                    forms.campo({'tipo':'select',name:'plan',opciones:plans,'label':lang('sc_plan')})
+                    }} {{
+                    forms.campo({tipo:'select',label:lang('sc_enrolmentmethod'),name:'method',opciones:config.school.enrolments})
+                    }} {{
+                    forms.campo({tipo:'input',type:'checkbox',label:lang('sc_reqinscription'),name:'hasinscription'})
+                    }} {{
+                    forms.campo({tipo:'input',type:'checkbox',label:lang('sc_reqenrolform'),name:'hasenrolform'})
+                    }} {{
+                    forms.campo({tipo:'select',name:'rol',opciones:roles,label:lang('role')})
+                    }} {{
+                    forms.campo({tipo:'select',name:'enrolmode',opciones:config.school.enrolmode,label:lang('sc_enrolmode')})
+                    }} {{
+                    forms.campo({tipo:'select',name:'statusinscription',opciones:config.school.enrolstatus,label:lang('sc_statusinscription')})
+                    }} {{
+                    forms.campo({tipo:'select',name:'statusenrolment',opciones:config.school.enrolstatus,label:lang('sc_statusenrolment')})
+                    }} {{ forms.legend({name:lang('sc_duration')}) }} {{
+                    forms.campo({tipo:'input',type:'radio',label:lang('type'),name:'typelong',opciones:{1:lang('sc_enrollong_time'),2:lang('sc_enrollong_dates')}})
+                    }} {{
+                    forms.campo({tipo:'input',type:'number',label:lang('sc_duration'),prepend:lang('date_months'),'name':'enrollong'})
+                    }} {{
+                    forms.campo({tipo:'input',type:'date',label:lang('date_ini'),name:'enrol_fini'})
+                    }} {{
+                    forms.campo({tipo:'input',type:'date',label:lang('date_end'),name:'enrol_fend'})
+                    }}
+                    <div class="form-actions">
+                        <p class="center span5">
+                            <button type="submit" class="btn btn-primary">{{ lang('save') }}</button>
+                        </p>
+                    </div>
+                </form>
+            </div>
+            <table id="enroltable"
+                class="table table-striped table-bordered bootstrap-datatable tabledata">
+                <thead>
+                    <tr>
+                        <th>{{ lang('actions') }}</th>
+                        <th>{{ lang('name') }}</th>
+                        <th>{{ lang('sc_plan') }}</th>
+                        <th>{{ lang('sc_enrolmentmethod') }}</th>
+                        <th>{{ lang('role') }}</th>
+                        <th>{{ lang('inscription') }}</th>
+                        <th>{{ lang('enrolment') }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %} {% block jscode %}
+<script type="text/javascript">
+$(document).ready(function() {
+    $('.btn_addenrol').click(function(){
+        resetForm($(this).closest('.box').find('form'));
+        $(this).closest('.box').find('form').find('input[name=scenrolmentid]').val(0);
+        $(this).closest('.box').find('.formcont').slideDown();
+    });
+    $('.closeedtenrol').click(function(){
+        resetForm($(this).closest('.box').find('form'));
+        $(this).closest('.box').find('form').find('input[name=scenrolmentid]').val(0);
+        $(this).closest('.box').slideUp();
+    });
+    var enroltable= $('#enroltable').dataTable({
+        "sDom": "<'row-fluid'<'span6'l><'span6'f>r>t<'row-fluid'<'span12'i><'span12 center'p>>",
+        "sPaginationType": "bootstrap",
+        "oLanguage": {
+            "sProcessing": "{{ lang('table_processing') }}",
+            "sLengthMenu": "{{ lang('table_recordsperpage') }}",
+            "sZeroRecords": "{{ lang('table_noregisters') }}",
+            "sEmptyTable": "{{ lang('table_empty') }}",
+            "sInfo": "{{ lang('table_pager') }}",
+            "sInfoEmpty": "{{ lang('table_pagerempty') }}",
+            "sInfoFiltered": "{{ lang('table_filtered') }}",
+            "sSearch": "{{ lang('table_search') }}",
+            "sLoadingRecords": "{{ lang('table_loading') }}",
+            "oAria": {
+                "sSortAscending": "{{ lang('table_sortAsc') }}",
+                "sSortDescending": "{{ lang('table_sortDesc') }}",
+            },
+            "oPaginate": {
+                "sFirst": "{{ lang('table_first') }}",
+                "sLast": "{{ lang('table_last') }}",
+                "sNext": "{{ lang('table_next') }}",
+                "sPrevious": "{{ lang('table_previous') }}",
+            },
+        }
+    });
+    $('#scenroledt').validate({
+        errorClass:'errorlabelform',
+        elErrorClass:'errorlabel',
+        ignore:':hidden.chzn',
+        rules:{
+            name:{required: true,minlength:5,},
+        },
+        messages:{
+            name:{
+                required: '{{ lang('required')|format('')}}',
+                minlength: '{{ lang('min_length')|format('',5)}}',
+                
+            },
+        },
+        submitHandler: function(form) {
+            $.ajax({
+                    type:"POST",
+                    url: '{{ site_url('enrolments/setenrolmethod') }}',
+                    dataType:'json',
+                    data: $(form).serializeObject(),
+                    error:function (jqXHR, textStatus, errorThrown) {
+                        console.log(JSON.stringify(jqXHR) + ' ' + textStatus + '  ' + errorThrown);
+                    }
+                }).done(function (data) {
+                    if (data.ok){
+                        $('.closeedtenrol').trigger('click');
+                        showNotification('{{ lang('ajaxok') }}');
+                        loadenrolments();
+                    }else{
+                        showNotification('{{ lang('ajaxerror') }}');
+                    }
+                });
+        }
+    });
+    $('#hasinscription').change(function(){
+        if($(this).is(':checked')){
+            $('#statusinscription').attr('disabled',false).trigger("liszt:updated");
+        }else{
+            $('#statusinscription').attr('disabled',true).trigger("liszt:updated");
+        }
+    });
+    $('#scenroledt').find('input[name=typelong]').change(function(){
+        if($(this).val()==1){
+            $('#enrol_fini').closest('.control-group').slideUp();
+            $('#enrol_fend').closest('.control-group').slideUp();
+            $('#enrollong').closest('.control-group').slideDown();
+        }else if( $(this).val()==2){
+            $('#enrollong').closest('.control-group').slideUp();
+            $('#enrol_fini').closest('.control-group').slideDown();
+            $('#enrol_fend').closest('.control-group').slideDown();
+        }
+    });
+    function dom_tableenrol(){
+        $('.status_insc').click(function(){
+            $.ajax({
+                type:"POST",
+                url: '{{ site_url('enrolments/toggle_inscription_status') }}',
+                dataType:'json',
+                data:{enrolmentid:$(this).attr('data-id')},
+                error:function (jqXHR, textStatus, errorThrown) {
+                    console.log(JSON.stringify(jqXHR) + ' ' + textStatus + '  ' + errorThrown);
+                }
+            }).done(function (data) {
+                if (data.ok){
+                    showNotification('{{ lang('ajaxok') }}');
+                    loadenrolments();
+                }else{
+                    showNotification('{{ lang('ajaxerror') }}');
+                }
+            });
+        });
+        $('.status_enrol').click(function(){
+            $.ajax({
+                type:"POST",
+                url: '{{ site_url('enrolments/toggle_enrol_status') }}',
+                dataType:'json',
+                data:{enrolmentid:$(this).attr('data-id')},
+                error:function (jqXHR, textStatus, errorThrown) {
+                    console.log(JSON.stringify(jqXHR) + ' ' + textStatus + '  ' + errorThrown);
+                }
+            }).done(function (data) {
+                if (data.ok){
+                    showNotification('{{ lang('ajaxok') }}');
+                    loadenrolments();
+                }else{
+                    showNotification('{{ lang('ajaxerror') }}');
+                }
+            });
+        });
+        $('.edit_enrol').click(function(e){
+            e.preventDefault();
+            $.ajax({
+                type:"POST",
+                url: '{{ site_url('enrolments/get_method') }}',
+                dataType:'json',
+                data: {id:$(this).attr('data-id')},
+                error:function (jqXHR, textStatus, errorThrown) {
+                    console.log(JSON.stringify(jqXHR) + ' ' + textStatus + '  ' + errorThrown);
+                }
+            }).done(function (data) {
+                if(data.method){
+                    $('.btn_addenrol').trigger('click');
+                    $('#scenroledt').find('input[name=scenrolmentid]').val(data.method.id);
+                    $('#scenroledt').find('input[name=name]').val(data.method.name);
+                    
+                    $('#scenroledt').find('select[name=plan]').children('option').removeAttr('selected');
+                    $('#scenroledt').find('select[name=plan]').children('option[value='+data.method.planid+']').attr('selected',true);
+                    $('#scenroledt').find('select[name=plan]').trigger("liszt:updated");
+
+                    $('#scenroledt').find('select[name=method]').children('option').removeAttr('selected');
+                    $('#scenroledt').find('select[name=method]').children('option[value='+data.method.method+']').attr('selected',true);
+                    $('#scenroledt').find('select[name=method]').trigger("liszt:updated");
+
+                    $.uniform.update($('input[type=checkbox][name=hasinscription]').attr('checked',parseInt(data.method.hasinscription)==1));
+                    $.uniform.update($('input[type=checkbox][name=hasenrolform]').attr('checked',parseInt(data.method.hasform)==1));
+                    $('#hasinscription').trigger('change');
+                    
+                    $('#scenroledt').find('select[name=rol]').children('option').removeAttr('selected');
+                    $('#scenroledt').find('select[name=rol]').children('option[value='+data.method.roleid+']').attr('selected',true);
+                    $('#scenroledt').find('select[name=rol]').trigger("liszt:updated");
+
+                    $('#scenroledt').find('select[name=enrolmode]').children('option').removeAttr('selected');
+                    $('#scenroledt').find('select[name=enrolmode]').children('option[value='+data.method.mode+']').attr('selected',true);
+                    $('#scenroledt').find('select[name=enrolmode]').trigger("liszt:updated");
+
+                    $('#scenroledt').find('select[name=statusinscription]').children('option').removeAttr('selected');
+                    $('#scenroledt').find('select[name=statusinscription]').children('option[value='+data.method.statusinsc+']').attr('selected',true);
+                    $('#scenroledt').find('select[name=statusinscription]').trigger("liszt:updated");
+
+                    $('#scenroledt').find('select[name=statusenrolment]').children('option').removeAttr('selected');
+                    $('#scenroledt').find('select[name=statusenrolment]').children('option[value='+data.method.statusenrol+']').attr('selected',true);
+                    $('#scenroledt').find('select[name=statusenrolment]').trigger("liszt:updated");
+
+                    $('#scenroledt').find('input[name=typelong]').val(data.method.longmode);
+                    $.uniform.update($('input[name=typelong][value='+data.method.longmode+']').attr('checked',true));
+                    $('#scenroledt').find('input[name=typelong]').trigger('change');
+
+                    $('#scenroledt').find('input[name=enrollong]').val(data.method.time);
+
+                    if(data.method.fini){
+                        $('#scenroledt').find('input[name=enrol_fini]').val(data.method.fini);
+                    }
+                    if(data.method.fend){
+                        $('#scenroledt').find('input[name=enrol_fend]').val(data.method.fend);
+                    }
+                    
+                    $.uniform.update();
+                }else{
+                    showNotification('{{ lang('ajaxerror') }}');
+                }
+            });
+        });
+        $('.delete_enrol').click(function(){
+            var id = $(this).attr('data-id');
+            if (typeof id != "undefined") {
+                confirmDel('center', '{{ lang('confirm') }}', '{{ lang('cancel') }}', '{{ lang('confirmdelete') }}',{id:id}, '{{ site_url('enrolments/delete_enrolmeth') }}', okDelete);
+            };
+        });
+    }
+    function okDelete(data) {
+        loadenrolments();
+        showNotification(data.msj);
+    }
+    function loadenrolments(){
+        enroltable.fnClearTable();
+        $.ajax({
+            type:"POST",
+            url: '{{ site_url('enrolments/getenrolmethods') }}',
+            dataType:'json',
+            error:function (jqXHR, textStatus, errorThrown) {
+                console.log(JSON.stringify(jqXHR) + ' ' + textStatus + '  ' + errorThrown);
+            }
+        }).done(function (data) {
+            if (data.ok){
+                for (i in data.data){
+                    htmlins='';
+                    if(data.data[i].hasinscription==1){
+                        if(data.data[i].statusinsc==0){
+                            iconins='remove-sign';
+                        }else{
+                            iconins='ok-sign';
+                        }
+                        htmlins='<a class="btn btn-info status_insc" data-id="'+data.data[i].id+'" href="#" >'+
+                            '<i class="icon-'+iconins+' icon-white" title="{{ lang('toggle_status') }}"></i></a>';
+                    }
+                    htmlenrol='';
+                    if(data.data[i].statusenrol==0){
+                        iconins='remove-sign';
+                    }else{
+                        iconins='ok-sign';
+                    }
+                    htmlenrol='<a class="btn btn-info status_enrol" data-id="'+data.data[i].id+'" href="#" >'+
+                        '<i class="icon-'+iconins+' icon-white" title="{{ lang('toggle_status') }}"></i></a>';
+                    htmledit='<a class="btn btn-info edit_enrol" data-id="'+data.data[i].id+'" href="#" >'+
+                        '<i class="icon-edit icon-white" title="{{ lang('edit') }}"></i></a>';
+                    htmldel='<a class="btn btn-info delete_enrol" data-id="'+data.data[i].id+'" href="#" >'+
+                        '<i class="icon-remove icon-white" title="{{ lang('delete') }}"></i></a>';
+                    enroltable.fnAddData( [htmledit+htmldel,data.data[i].name,data.data[i].planname,data.data[i].method,data.data[i].rolename,htmlins,htmlenrol] );
+                }
+            }else{
+                showNotification('{{ lang('ajaxerror') }}');
+            }
+            enroltable.fnDraw();
+            dom_tableenrol();
+        });
+    }
+    
+    $('#hasinscription').trigger('change');
+    loadenrolments();
+});
+</script>
+{% endblock %}

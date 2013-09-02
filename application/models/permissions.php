@@ -29,11 +29,35 @@ class Permissions extends CI_Model
         $this->table_caps         = $ci->config->item('db_table_prefix', 'permission').$this->table_caps;
         $this->table_ctx          = $ci->config->item('db_table_prefix', 'permission').$this->table_ctx;
     }
-    function has_permission($url,$user=0,$context=0){
+    function has_permission($url,$user=0,$contextid=0){
+        $perm=false;
         $user_id = ($user>0)?$user:$this->session->userdata('user_id');
-        $context = ($context>0)?$context:$this->session->userdata('context');
+        $contextid = ($contextid>0)?$contextid:$this->session->userdata('context');
         
-        return true;
+        $rol=$this->get_user_enrolment($user_id,$contextid);
+        
+        //averiguar permiso
+        if($rol){
+            $context=$this->get_context_by_id($contextid);
+            
+            $this->db->select('capability,roleid,permission');
+            $this->db->where('roleid',$rol['roleid']);
+            $this->db->where('capability',$url);
+            $this->db->where('contextlevel',$context['contextlevel']);
+            $this->db->join($this->table_rolecaps,"capabilityid=capabilities.id");
+            $query=$this->db->get($this->table_caps);
+            if($query->num_rows()>0){
+                $p=$query->row();
+                if($p->permission==1){
+                    $perm=true;
+                }
+            }elseif(!$this->get_capability($url)){
+                $perm= true;
+            }
+        }elseif(!$this->get_capability($url)){
+            $perm= true;
+        }
+        return $perm;
     }
     /**
      * Create a context
@@ -87,8 +111,8 @@ class Permissions extends CI_Model
         }
     }
     function get_context_by_id($id){
-        $this->ci->db->select('*');
-        $this->ci->db->where('id',$id);
+        $this->db->select('*');
+        $this->db->where('id',$id);
     
         $query = $this->db->get($this->table_ctx);
         $result = $query->result_array();
@@ -274,7 +298,14 @@ class Permissions extends CI_Model
             $this->db->insert($this->table_rolecaps, $roleperm);
         }
     }
-    
+    function get_capability($capability){
+        $this->db->where('capability',$capability);
+        $q = $this->db->get($this->table_caps);
+        if($q->num_rows()>0){
+            return $q->row_array();
+        }
+        return false;
+    }
     function set_capability($capability,$weight,$context_level,$position,$visible,$roles='',$parent='',$icon=''){
         $this->db->where('capability=',$capability);
         $this->db->where('contextlevel=',$context_level);

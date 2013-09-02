@@ -13,8 +13,6 @@ $lang['sc_plan']="Plan de Estudio";
 $lang['sc_plans']="Planes de Estudio";
 $lang['sc_editplan']="Editar Plan de Estudio";
 $lang['sc_addplan']="Agregar Plan de Estudio";
-$lang['sc_enrolment']="Matriculación";
-$lang['sc_enrolmanual']="Manual";
 $lang['sc_versions']="Versiones";
 $lang['sc_version']="Versión";
 $lang['sc_editplanversion']="Editar Versión";
@@ -53,3 +51,37 @@ $lang['sc_ciclessort']="Ciclos Reordenados";
 $lang['sc_divssort']="Divisiones Reordenadas";
 $lang['sc_subjectsort']="Asignaturas Reordenadas";
 
+//enrolments
+$lang['sc_enrolments']="Métodos de Matriculación";
+$lang['sc_reqinscription']="Requiere Inscripción";
+$lang['sc_inscription']="Inscripción";
+$lang['sc_enrolmentmethod']="Método";
+$lang['sc_reqenrolform']="Requiere formato de Matricula";
+
+$lang['scmode_cicles']="Por ciclos";
+$lang['scmode_subjects']="Por Asignaturas Especificas";
+$lang['sc_enrolmanual']="Manual";
+$lang['sc_enrolmode']="Modo de Enrolamiento";
+$lang['sc_statusinscription']="Estado de la inscripción";
+$lang['sc_statusenrolment']="Estado del proceso de Matriculas";
+
+$lang['sc_enrollong_time']="Limite de Tiempo";
+$lang['sc_enrollong_dates']="Rango de Fechas";
+
+//datos estudiantes
+$lang['sc_lastnames']="Apellidos";
+$lang['sc_names']="Nombres";
+$lang['sc_nuip']="Nuip";
+$lang['sc_nuipfrom']="Expedido en";
+$lang['sc_bornday']="Fecha de nacimiento";
+$lang['sc_bornplace']="Lugar de Nacimiento";
+$lang['sc_address']="Dirección";
+$lang['sc_neighborhood']="Barrio";
+$lang['sc_phone']="Teléfono";
+$lang['sc_stratum']="Estrato";
+$lang['sc_conduct']="Comportamiento";
+$lang['sc_livewith']="Nucleo Familiar";
+$lang['sc_hasbrothers']="Tiene hermanos estudiando en la institución o interesados en ingresar?";
+$lang['sc_ownhouse']="Vive en casa propia";
+$lang['sc_interviewresult']="Resultado de la entrevista";
+$lang['sc_schoolfrom']="Institución de donde proviene";

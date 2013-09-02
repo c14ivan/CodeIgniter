@@ -191,10 +191,10 @@ $().ready(function(){
         });
     }
     function addroletable(roleid,rolename,shortname,description){
-        htmledit='<a class="btn btn-info" href="javascript:void(0)" data-id="'+roleid+'" >'+
-                '<i class="icon-edit icon-white editrole" title="{{ lang('edit') }}"></i></a>';
-        htmladmin='<a class="btn btn-info" href="javascript:void(0)" data-id="'+roleid+'" >'+
-                '<i class="icon-edit icon-white adminrole" title="{{ lang('view_capabilities') }}"></i></a>';
+        htmledit='<a class="btn btn-info editrole" href="javascript:void(0)" data-id="'+roleid+'" >'+
+                '<i class="icon-edit icon-white" title="{{ lang('edit') }}"></i></a>';
+        htmladmin='<a class="btn btn-info adminrole" href="javascript:void(0)" data-id="'+roleid+'" >'+
+                '<i class="icon-list-alt icon-white" title="{{ lang('view_capabilities') }}"></i></a>';
     	tableroles.fnAddData( [htmledit+htmladmin,rolename,shortname,description] );
     }
     function dom_tableroles(){

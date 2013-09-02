@@ -1,0 +1,22 @@
+{% extends '_layouts/index.html.twig' %} {% block headext %}
+<link
+	rel="stylesheet" type="text/css"
+	href="{{ asset_url()~'cssapp/general.css' }}" media="all">
+{% endblock %} {% block content %} {% import
+'_tools/formElements.twig'as forms %}
+<div class="row-fluid">
+<form class="form-horizontal" method="post">
+{% for method in enrolmethods %}
+    {% if method.statusinsc==1 or method.statusenrol==1 %}
+    <h2>{{ method.name }}</h2>
+        {% if method.statusinsc==1 %}
+            <button type="submit" value="insc_{{ method.id }}" name="action">inscripciones</button>
+        {% endif %}
+        {% if method.statusenrol==1 %}
+            <button type="submit" value=enrol_{{ method.id }}" name="action">Matriculas</button>
+        {% endif %}
+    {% endif %}
+{% endfor %}
+</form>
+</div>
+{% endblock %} {% block jscode %} {% endblock %}

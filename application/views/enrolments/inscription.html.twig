@@ -1,0 +1,36 @@
+{% extends '_layouts/index.html.twig' %} {% block headext %}
+<link
+	rel="stylesheet" type="text/css"
+	href="{{ asset_url()~'cssapp/general.css' }}" media="all">
+{% endblock %} {% block content %} {% import
+'_tools/formElements.twig'as forms %}
+<div class="row-fluid">
+<h2>{{ data.planname }}</h2>
+<h3>Inscripciones</h3>
+{% set cities= {} %}
+<form class="form-horizontal">
+{{ forms.campo({tipo:'input',type:'hidden',name:'methodid',value:data.id}) }}
+{{ forms.campo({tipo:'input',type:'text',name:'lastnames',label:lang('sc_lastnames')}) }}
+{{ forms.campo({tipo:'input',type:'text',name:'names',label:lang('sc_names')}) }}
+{{ forms.campo({tipo:'input',type:'text',name:'nuip',label:lang('sc_nuip')}) }}
+{{ forms.campo({tipo:'select',name:'nuipfrom',label:lang('sc_nuipfrom'),options:cities}) }}
+{{ forms.campo({tipo:'input',type:'date',name:'bornday',label:lang('sc_bornday'),options:cities}) }}
+{{ forms.campo({tipo:'select',name:'bornplace',label:lang('sc_bornplace'),options:cities}) }}
+{{ forms.campo({tipo:'input',type:'text',name:'address',label:lang('sc_address')}) }}
+{{ forms.campo({tipo:'input',type:'text',name:'neighborhood',label:lang('sc_neighborhood')}) }}
+{{ forms.campo({tipo:'input',type:'text',name:'phone',label:lang('sc_phone')}) }}
+{{ forms.campo({tipo:'select',name:'stratum',label:lang('sc_stratum'),opciones:{1:1,2:2,3:3,4:4,5:5,6:6}}) }}
+{{ forms.campo({tipo:'input',type:'text',name:'conduct',label:lang('sc_conduct')}) }}
+{{ forms.campo({tipo:'input',type:'checkbox',name:'hasbrothers',label:lang('sc_hasbrothers')}) }}
+{{ forms.campo({tipo:'input',type:'radio',name:'ownhouse',opciones:{0:lang('no'),1:lang('yes')},label:lang('sc_ownhouse')}) }}
+{{ forms.campo({tipo:'select',name:'relatives',label:lang('sc_livewith'),opciones:config.school.relatives}) }}
+{{ forms.campo({tipo:'textarea',name:'interviewcoment',label:lang('sc_interviewresult')}) }}
+{{ forms.campo({tipo:'input',type:'text',name:'schoolfrom',label:lang('sc_schoolfrom')}) }}
+<div class="form-actions">
+    <p class="center span5">
+        <button type="submit" class="btn btn-primary">{{ lang('save') }}</button>
+    </p>
+</div>
+</form>
+</div>
+{% endblock %} {% block jscode %} {% endblock %}

@@ -1,4 +1,6 @@
 <?php
+$lang['yes']="Si";
+$lang['no']="No";
 $lang['error'] = "Error";
 $lang['cancel'] = "Cancelar";
 $lang['send'] = "Enviar";
@@ -20,8 +22,15 @@ $lang['selectanoption']="Seleccione...";
 $lang['search']="Buscar";
 $lang['searchadv']="Busqueda Avanzada";
 $lang['status']="Estado";
+$lang['type']="Tipo";
+$lang['toggle_status']="Cambiar Estado";
 $lang['datecreated']="Fecha de Creación";
+$lang['date_ini']="Fecha inicial";
+$lang['date_end']="Fecha Final";
 $lang['lastlogin']="Ultimo Login";
+
+$lang['status_able']="Habilitado";
+$lang['status_disable']="Deshabilitado";
 
 $lang['auth'] = "Usuarios";
 $lang['auth/users']="Listado de Usuarios";

@@ -25,7 +25,10 @@
 $().ready(function(){
     $('.delete_register').on('click',function(){
         {% if delajax %}
-        
+            var id = $(this).attr('data-id');
+            if (typeof id != "undefined") {
+                confirmDel('center', '{{ lang('confirm') }}', '{{ lang('cancel') }}', '{{ lang('confirmdelete') }}',{id:id}, '{{ urldel }}', okDelete);
+            };
         {% else %}
         window.location.href = "{{ urldel }}/"+$(this).attr('data-id');
         {% endif %}
@@ -54,7 +57,11 @@ $().ready(function(){
                 "sPrevious": "{{ lang('table_previous') }}",
             },
         }
-    	});
+    });
+    function okDelete(data) {
+    	datatable.fnDeleteRow(datatable.fnGetPosition($('.tabledata').find('.delete_register[data-id='+data.id+']').closest('tr')[0]));
+    	showNotification(data.msj);
+    }
 });
 </script>
 {% endblock %}
