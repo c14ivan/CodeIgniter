@@ -1,14 +1,14 @@
 <?php
 class Enrolment extends CI_Model{
-    private $table_enrolmets = 'sc_enrolmethods';
-    private $table_plans = 'scplan';
-    private $table_roles = 'role';
+    private $table_enrolmets    = 'sc_enrolmethods';
+    private $table_plans        = 'scplan';
+    private $table_roles        = 'role';
+    private $table_inscriptions = 'sc_inscription';
+    private $table_preparent    = 'sc_preparent';
     
     function __construct()
     {
         parent::__construct();
-    
-        $ci =& get_instance();
         //$this->table_name			= $ci->config->item('db_table_prefix', 'school').$this->table_name;
         //$this->profile_table_name	= $ci->config->item('db_table_prefix', 'school').$this->profile_table_name;
     }
@@ -94,5 +94,80 @@ class Enrolment extends CI_Model{
         $this->db->where('idenrolmethods',$enrolmentid);
         $this->db->update($this->table_enrolmets,$data);
         return ($this->db->affected_rows()==1)?true:false;
+    }
+    function get_inscription($inscriptionid){
+        $query=$this->db->get($this->table_inscriptions);
+        if($query->num_rows()>0){
+            $dato=$query->row();
+            return $dato;
+        }else{
+            return false;
+        }
+    }
+    function set_inscription($methodid,$contexts,$lastnames,$names,$nuip, $nuipfrom,$bornday,
+            $bornplace,$address,$neighborhood,$homeplace,$phone,$stratum,$rh,$conduct,$has_brothers,$ownhouse,
+            $relatives,$interview,$interview_result,$isrepeating,$schoolfrom,$whyfrom,$reasontoenter){
+        $data=array(
+                'methodid'=>$methodid,
+                'lastnames'=>$lastnames,
+                'names'=>$names,
+                'nuip'=>$nuip,
+                'nuipfrom'=>$nuipfrom,
+                'bornday'=>date('Y-m-d H:i:s',strtotime($bornday)),
+                'bornplace'=>$bornplace,
+                'address'=>$address,
+                'neighborhood'=>$neighborhood,
+                'homeplace'=>$homeplace,
+                'phone'=>$phone,
+                'stratum'=>$stratum,
+                'rh'=>$rh,
+                'conduct'=>$conduct,
+                'relatives'=>$has_brothers,
+                'ownhouse'=>$ownhouse,
+                'family'=>$relatives,
+                'interviewcoment'=>$interview,
+                'interviewresult'=>$interview_result,
+                'repeating'=>$isrepeating,
+                'schoolfrom'=>$schoolfrom,
+                'schoolwhyfrom'=>$whyfrom,
+                'whyenter'=>$reasontoenter,
+                'context'=>$contexts,
+                'timecreated'=>date('Y-m-d H:i:s')
+        );
+        if($this->db->insert($this->table_inscriptions, $data)){
+            return $this->db->insert_id();
+        }
+        return false;
+    }
+    function get_preparent($inscription){
+        $this->db->where('inscriptionid',$inscription);
+        $query=$this->db->get($this->table_preparent);
+        if($query->num_rows()>0){
+            return $query->result_array();
+        }else{
+            return false;
+        }
+    }
+    function set_preparent($inscription,$parentname,$kinship,$job,$company,$companytime,$phone,$email){
+        $data=array(
+                'inscriptionid'=>$inscription,
+                'parentname'=>$parentname,
+                'kinship'=>$kinship,
+                'job'=>$job,
+                'company'=>$company,
+                'comptime'=>$companytime,
+                'phone'=>$phone,
+                'email'=>$email,
+        );
+        if($this->db->insert($this->table_preparent, $data)){
+            return $this->db->insert_id();
+        }
+        return false;
+    }
+    function set_enrolform(){
+        
+    }
+    function set_enrolment(){
+        
     }
 }

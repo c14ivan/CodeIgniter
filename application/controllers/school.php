@@ -32,7 +32,6 @@ class School extends MY_Controller {
     		$systems[$avsys['id']]=$avsys['name'];
     	}
     	$subjects=$this->scsubject->getSubjects();
-    	
         $this->twig->display('school/plan',array('systems'=>$systems,'subjects'=>$subjects));
     }
     public function subjects(){
@@ -178,6 +177,18 @@ class School extends MY_Controller {
         echo json_encode(array('plan'=>$postdata));
          
     }
+    public function activeplanversion(){
+        if(!$this->input->is_ajax_request()) redirect();
+        $planversion=$this->input->post('version');
+        $versiondata= $this->scplan->getVersion($planversion);
+        if($versiondata->status==0){
+            $response['ok']=$this->scplan->activeVersion($planversion);
+            $response['plan']=$versiondata->planid;
+        }else{
+            $response['ok']=false;
+        }
+        echo json_encode($response);
+    }
     public function addplanversion(){
     	if(!$this->input->is_ajax_request()) redirect();
     	 
@@ -263,7 +274,14 @@ class School extends MY_Controller {
     	$versiondata= $this->scplan->getVersion($versionid);
     	$cicles=$this->scsystem->getCicles($versiondata->scsystemid);
     	$subasigned= $this->scplan->getSubjectsAsigned($versionid);
-    	$response=array('versionid'=>$versionid,'versiondata'=>$versiondata,'cicles'=>$cicles,'subasigned'=>$subasigned);
+    	$response=array(
+    	        'versionid'=>$versionid,
+    	        'versiondata'=>$versiondata,
+    	        'cicles'=>$cicles,
+    	        'subasigned'=>$subasigned,
+    	        'statuschanger'=>($versiondata->status==0)?'<i title="'.lang('sc_statusactivate').'" class="planstatus icon-ok" data-id="'.$versionid.'"></i>':''
+    	);
+    	//'statuschanger'=>
     	echo json_encode($response);
     }
     public function asignsubject(){

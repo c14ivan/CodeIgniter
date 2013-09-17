@@ -1,0 +1,95 @@
+<h2 style="text-align:center;">{{ lang('sc_inscriptionform') }} {{ method.name }}</h2>
+<h3 style="text-align:center;font-style:italic">{{ lang('sc_inscriptionsubtitle') }}</h3>
+<br/>
+<div style="width:100%;"></div>
+<div style="width:100%;"></div>
+<h4 style="border: 1px solid black;">{{ lang('sc_infoenrol') }}</h4>
+<div style="width:100%;"></div>
+<table border="1" style="padding:1mm;">
+    <tr>
+        <td><b>{{ lang('sc_inscriptionnumber') }}: </b>{{ data.idinscription }}</td>
+        <td><b>{{ lang('datecreated') }}:</b> {{ data.timecreated|date("Y/m/d") }}</td>
+        {% if method.mode==1 %}
+            <td rowspan="2" style="text-align:center;"><b>{{ lang('sc_enrolto') }}:</b> <br/><span style="font-size:10mm;">{{ cicles[data.context] }}</span></td>
+        {% endif %}
+    </tr>
+    <tr>
+        <td><b>{{ lang('sc_conduct') }}:</b> {{ data.conduct }}</td>
+        {% if method.mode==2 %}
+            {% set contexts = data.context|split(',') %}
+            <td><b>{{ lang('sc_enrolto') }}:</b>
+                {% for ctx in contexts %}
+                    {{ subjects[ctx] }}
+                {% endfor %}
+            </td>
+        {% endif %}
+        {% if data.repeating==1 %}
+            <td><b>{{ lang('sc_repeating') }}</b></td>
+        {% endif %}
+    </tr>
+</table>
+<h4 style="border: 1px solid black;">{{ lang('sc_infobasic') }}</h4>
+<div style="width:100%;"></div>
+<table style="padding:1mm;">
+    <tr>
+        <td><b>{{ lang('sc_lastnames') }}:</b> {{ data.lastnames }}</td>
+        <td><b>{{ lang('sc_names') }}:</b> {{ data.names }}</td>
+    </tr>
+    <tr>
+        <td><b>{{ lang('sc_bornday') }}:</b> {{ data.bornday|date("Y/m/d") }}</td>
+        <td><b>{{ lang('sc_bornplace') }}:</b> {{ cities[data.bornplace].name }} - {{ cities[data.bornplace].dept }}</td>
+    </tr>
+    <tr>
+        <td><b>{{ lang('sc_nuip') }}:</b> {{ data.nuip }}</td>
+        <td><b>{{ lang('sc_nuipfrom') }}:</b> {{ cities[data.nuipfrom].name }} - {{ cities[data.nuipfrom].dept }}</td>
+    </tr>
+    <tr>
+        <td><b>{{ lang('sc_address') }}:</b> {{ data.address }}</td>
+        <td><b>{{ lang('sc_neighborhood') }}:</b> {{ data.neighborhood }}</td>
+    </tr>
+    <tr>
+        <td><b>{{ lang('sc_phone') }}:</b> {{ data.phone }}</td>
+        <td><b>{{ lang('sc_rh') }}:</b> {{ data.rh }}</td>
+    </tr>
+</table>
+<h4 style="border: 1px solid black;">{{ lang('sc_infofamily') }}</h4>
+<div style="width:100%;"></div>
+<table style="padding:1mm;">
+    <tr>
+        <td><b>{{ lang('sc_stratum') }}:</b> {{ data.stratum }}</td>
+        <td><b>{{ lang('sc_ownhouse') }}:</b> {% if data.ownhouse==1 %}{{ lang('yes') }}{% else %} {{ lang('no') }} {%endif %}</td>
+    </tr>
+    <tr>
+        <td><b>{{ lang('sc_livewith') }}:</b> {{ data.family }}</td>
+    </tr>
+    {% for parent in data.parents %}
+    <tr >
+        <td style="border-top:0.1mm solid black;"><b>{{ lang('sc_fullnames') }}:</b> {{ parent.parentname }}</td>
+        <td style="border-top:0.1mm solid black;"><b>{{ lang('sc_ocupation') }}:</b> {{ parent.job }}</td>
+    </tr>
+    <tr>
+        <td><b>{{ lang('sc_email') }}:</b> {{ parent.email }}</td>
+        <td><b>{{ lang('sc_phone') }}:</b> {{ parent.phone }}</td>
+    </tr>
+    <tr>
+        <td><b>{{ lang('sc_parentcompany') }}:</b> {{ parent.company }}</td>
+        <td><b>{{ lang('sc_parentcomptime') }}:</b> {{ parent.comptime }}</td>
+    </tr>
+    {% endfor %}
+</table>
+<h4 style="border: 1px solid black;">{{ lang('sc_infoadd') }}</h4>
+<div style="width:100%;"></div>
+<table style="padding:1mm;">
+    <tr>
+        <td><b>{{ lang('sc_schoolfrom') }}:</b> {{ data.schoolfrom }}</td>
+    </tr>
+    <tr>
+        <td><b>{{ lang('sc_schoolwhyfrom') }}:</b> {{ data.schoolwhyfrom }}</td>
+    </tr>
+    <tr>
+        <td><b>{{ lang('sc_reasontoenter') }}:</b> {{ data.whyenter }}</td>
+    </tr>
+    <tr>
+        <td><b>{{ lang('sc_interviewresult') }}:</b> <b>{{ data.interviewresult }}</b> {{ data.interviewcoment }}</td>
+    </tr>
+</table>

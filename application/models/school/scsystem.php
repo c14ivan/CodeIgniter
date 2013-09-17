@@ -92,13 +92,21 @@ class Scsystem extends CI_Model{
         }
         return array();
     }
-    function getCicles($systemid){
+    function getCicles($systemid,$toselect=false){
         //TODO verificar si los ciclos se estan usando en alguna asignación. si es asi agregar atributo para no permitir eliminar
         $this->db->where('scsystemid',$systemid);
         $this->db->order_by('order','ASC');
         $query=$this->db->get($this->table_cicles);
         if ($query->num_rows() > 0){
-            return $query->result_array();
+            if($toselect){
+                $res=array();
+                foreach ($query->result_array() as $cicle){
+                    $res[$cicle['id']]=$cicle['name'];
+                }
+                return $res;
+            }else{
+                return $query->result_array();
+            }
         }
         return array();
     }

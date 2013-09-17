@@ -96,9 +96,9 @@
         {% endif %}
         {% if type=='date' %}
             {% set type='text' %}
-            {% set class='input datepicker ' %}
+            {% set class=class ~'input datepicker ' %}
         {% elseif type=='file' %}
-            {% set class='input-file uniform_on ' %}
+            {% set class=class ~'input-file uniform_on ' %}
         {% endif %}
         {% if append%}
             {% set classappprep= classappprep ~' input-append' %}

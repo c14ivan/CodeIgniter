@@ -285,7 +285,7 @@ class Permissions extends CI_Model
             $roleupdate = array(
                     'permission'=> ($permission)?1:0
                     );
-            if ($position!='') $roleupdate['position']='position';
+            if ($position!='') $roleupdate['position'] = $position;
             $this->db->where('id', $roleperm['id']);
             $this->db->update($this->table_rolecaps, $roleupdate);
         }else{//insert permission

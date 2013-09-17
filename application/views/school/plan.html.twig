@@ -57,10 +57,10 @@
 				<form id="planversionform" class="form-horizontal">
 					{{ forms.campo({'tipo':'input','type':'hidden','name':'scplanid'}) }}
 					{{ forms.campo({'tipo':'input','type':'hidden','name':'scplanversionid'}) }}
-					{{ forms.campo({'tipo':'input','type':'text','name':'scname','label':lang('sc_plan'),'maxlength':45}) }}
+					{{ forms.campo({'tipo':'input','type':'text','name':'scname','label':lang('name'),'maxlength':20}) }}
 					{{ forms.campo({'tipo':'textarea','label':lang('description'),'name':'scdescription','cols':50}) }}
-					{{ forms.campo({'tipo':'select','label':lang('sc_status'),'name':'scstatus',
-						'opciones':config.school.systemstatus }) }}
+					{# forms.campo({'tipo':'select','label':lang('sc_status'),'name':'scstatus',
+						'opciones':config.school.systemstatus }) #}
 					<div class="form-actions">
 						<p class="center span5">
                       		<button type="submit" class="btn btn-primary">{{ lang('save') }}</button>
@@ -93,7 +93,7 @@
     				{{ forms.campo({tipo:'input',type:'hidden',value:'',name:'versionid'})}}
     				{{ forms.campo({tipo:'input',type:'label',label:lang('name'),value:'',id:'versionname'})}}
     				{{ forms.campo({tipo:'input',type:'label',label:lang('description'),value:'',id:'versiondesc'})}}
-    				{{ forms.campo({tipo:'input',type:'label',label:lang('sc_status'),value:'',id:'versionstatus'})}}
+    				{{ forms.campo({tipo:'input',type:'label',label:lang('sc_status'),value:'',id:'versionstatus',prepend:'<span class="change_stat_planversion"></span>'})}}
     			</div>
 			</div>
     		<div class="row-fluid">
@@ -192,7 +192,7 @@ $(document).ready(function() {
                     console.log(JSON.stringify(jqXHR) + ' ' + textStatus + '  ' + errorThrown);
                 }
             }).done(function(data){
-            	asignsubjectli(data.cicle,data.subjectid,data.ih,data.credits,data.subject,data.shortname);
+            	asignsubjectli(data.cicle,data.subjectid,data.ih,data.credits,data.subject,data.shortname,0);
             	
 				dom_asignments();
 				$('#asignsubject').find('button.close').trigger('click');
@@ -226,7 +226,6 @@ $(document).ready(function() {
                     console.log(JSON.stringify(jqXHR) + ' ' + textStatus + '  ' + errorThrown);
                 }
             }).done(function (data) {
-            
             	resetForm($('form#planversionform'));
             	dom_tableversions();
             	loadplanversion(data.planid);
@@ -341,6 +340,8 @@ $(document).ready(function() {
 	}
 	function dom_tableversions(){
 		$('.adminplanversion').click(function(){
+			$(this).closest('table').find('tr.selectedplan').removeClass('selectedplan');
+			$(this).closest('tr').addClass('selectedplan');
 			loadplanversion($(this).attr('data-id'));
 		});
 	}
@@ -397,6 +398,22 @@ $(document).ready(function() {
 		});
 	}
 	function dom_asignments(){
+		$('.planstatus').click(function(){
+			$.ajax({
+                type:"POST",
+                url: '{{ site_url('school/activeplanversion') }}',
+                dataType:'json',
+                data:{version:$(this).attr('data-id')},
+                error:function (jqXHR, textStatus, errorThrown) {
+                    console.log(JSON.stringify(jqXHR) + ' ' + textStatus + '  ' + errorThrown);
+                }
+            }).done(function (data) {
+                if (data.ok){
+                	showNotification('{{ lang('ajaxok') }}');
+                    $('.adminplan[data-id='+data.plan+']').trigger('click');
+                }
+            });
+		});
 		$('.editasign').click(function(){
 			$('form#asignsubjectform').find('input[name=subject]').val($(this).closest('li').attr('data-id'));
 			$('form#asignsubjectform').find('input[name=version]').val($('.versioncontent').find('input[name=versionid]').val());
@@ -423,12 +440,16 @@ $(document).ready(function() {
             });
 		});
 	}
-	function asignsubjectli(cicle,subjectid,ih,credits,subject,shortname){
+	function asignsubjectli(cicle,subjectid,ih,credits,subject,shortname,canedit){
+		htmladmin='';
+		if(canedit==0){
+			htmladmin='<i class="icon-edit editasign"></i>'+
+			'<i class="icon-remove removeasign"></i>';
+		}
 		var htmlli='<a href="#" data-ih="'+ih+'" data-cred="'+credits+'" data-cicle="'+cicle+'"'+
 	                        'data-rel="popover" data-content="<b>{{ lang('sc_ih')}}:</b> '+ih+'<br>'+
             				'<b>{{ lang('sc_credits')}}:</b> '+credits+'<br>" title="'+subject+'">'+shortname+'</a>'+
-            				'<i class="icon-edit editasign"></i>'+
-            				'<i class="icon-remove removeasign"></i>';
+            				htmladmin;
         if($('.ciclecontent[data-id='+cicle+']').find('li[data-id='+subjectid+']').length>0){
             $('.ciclecontent[data-id='+cicle+']').find('li[data-id='+subjectid+']').html(htmlli)
         }else{
@@ -459,9 +480,12 @@ $(document).ready(function() {
             }).done(function (data) {
 				$('.versioncontent').closest('.row-fluid').slideDown();
 				$('.versioncontent').find('input[name=versionid]').val(data.versionid);
-				$('#div_versionname').find('.etiqueta label').html(data.versiondata.name)
-				$('#div_versiondesc').find('.etiqueta label').html(data.versiondata.description)
-				$('#div_versionstatus').find('.etiqueta label').html(versionstatus[data.versiondata.status])
+				$('#div_versionname').find('.etiqueta label').html(data.versiondata.name);
+				$('#div_versiondesc').find('.etiqueta label').html(data.versiondata.description);
+				$('#div_versionstatus').find('.etiqueta label').html(versionstatus[data.versiondata.status]);
+			    
+			    $('.change_stat_planversion').html(data.statuschanger);
+				
 				$('#plancontent').empty();
 				for (i in data.cicles){
 					oddeven='odd';
@@ -474,42 +498,44 @@ $(document).ready(function() {
 					'</div>');
 				}
 				for (i in data.subasigned){
-					asignsubjectli(data.subasigned[i].sccicleid,data.subasigned[i].id,data.subasigned[i].ih,data.subasigned[i].credits,data.subasigned[i].name,data.subasigned[i].shortname)
+					asignsubjectli(data.subasigned[i].sccicleid,data.subasigned[i].id,data.subasigned[i].ih,data.subasigned[i].credits,data.subasigned[i].name,data.subasigned[i].shortname,data.versiondata.status)
 				}
-				dom_asignments();
-				$('.ciclecontent').droppable({
-					accept: ".dragsubject",
-					drop: function( event, ui ) {
-						resetForm($('form#asignsubjectform'));
-						$('form#asignsubjectform').find('input[name=subject]').val(ui.helper.attr('data-id'));
-						$('form#asignsubjectform').find('input[name=version]').val($('.versioncontent').find('input[name=versionid]').val());
-						$('form#asignsubjectform').find('input[name=cicle]').val($(this).attr('data-id'));
-						$('#asignsubject').modal({'show':true});
-	
-      				}
-				}).sortable({
-					update: function(event, ui) {
-						//create the array that hold the positions...
-            			var order = []; 
-            			//loop trought each li...
-            			$(ui.item).closest('ul').find('li').each( function(e) {
-            				//add each li position to the array...     
-               				// the +1 is for make it start from 1 instead of 0
-               				order[parseInt($(this).attr('data-id'))]=$(this).index() + 1;
-            			});
-						$.ajax({
-                			type:"POST",
-                				url: '{{ site_url('plan/ordersubjects') }}',
-                				dataType:'json',
-                				data: {'order':order,'version':$('.versioncontent').find('input[name=versionid]').val()},
-                				error:function (jqXHR, textStatus, errorThrown) {
-                    			console.log(JSON.stringify(jqXHR) + ' ' + textStatus + '  ' + errorThrown);
-                			}
-            			}).done(function(data){
-            				showNotification('{{ lang('sc_subjectsort') }}');
-            			});
-        			}
-				});
+				if(data.versiondata.status==0){
+    				dom_asignments();
+    				$('.ciclecontent').droppable({
+    					accept: ".dragsubject",
+    					drop: function( event, ui ) {
+    						resetForm($('form#asignsubjectform'));
+    						$('form#asignsubjectform').find('input[name=subject]').val(ui.helper.attr('data-id'));
+    						$('form#asignsubjectform').find('input[name=version]').val($('.versioncontent').find('input[name=versionid]').val());
+    						$('form#asignsubjectform').find('input[name=cicle]').val($(this).attr('data-id'));
+    						$('#asignsubject').modal({'show':true});
+    	
+          				}
+    				}).sortable({
+    					update: function(event, ui) {
+    						//create the array that hold the positions...
+                			var order = []; 
+                			//loop trought each li...
+                			$(ui.item).closest('ul').find('li').each( function(e) {
+                				//add each li position to the array...     
+                   				// the +1 is for make it start from 1 instead of 0
+                   				order[parseInt($(this).attr('data-id'))]=$(this).index() + 1;
+                			});
+    						$.ajax({
+                    			type:"POST",
+                    				url: '{{ site_url('plan/ordersubjects') }}',
+                    				dataType:'json',
+                    				data: {'order':order,'version':$('.versioncontent').find('input[name=versionid]').val()},
+                    				error:function (jqXHR, textStatus, errorThrown) {
+                        			console.log(JSON.stringify(jqXHR) + ' ' + textStatus + '  ' + errorThrown);
+                    			}
+                			}).done(function(data){
+                				showNotification('{{ lang('sc_subjectsort') }}');
+                			});
+            			}
+    				});
+				}
             });
 	}
 	function loadfilters(){

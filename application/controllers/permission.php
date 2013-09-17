@@ -14,23 +14,13 @@ class Permission extends MY_Controller {
         $this->load->library('tank_auth');
         $this->lang->load('tank_auth');
         $this->load->model('Permissions');
-    }
-
-
-    //TODO implement this functions
-    /**
-     * admin role permissions
-     */
-    function roles()
-    {
-        
+        $this->load->model('install/Locations');
     }
     /**
      * TODO make something with this, it's only for update profiles quickly on development
      */
-    /*function reset(){
-
-//TODO delete permissions and role assignments before update permissions.
+    function reset(){
+    //TODO delete permissions and role assignments before update permissions.
         $capmode=$this->config->item('permissions_mode','permission');
         //1. crear las capabilities en DB
         $capabilities=$this->config->item('capabilities','permission');
@@ -50,8 +40,12 @@ class Permission extends MY_Controller {
         foreach($roles as $role){
             $role['id'] = $this->Permissions->update_role($role['name'],$role['weight'],$role['shortname'],$role['description']);
         }
+        
+        //3. update locations
+        $datafolder=APPPATH.'/data/cities';
+        $this->Locations->load($datafolder);
         redirect();
-    }*/
+    }
     /**
      * Instalation, create the defaults and insert into database
      */
@@ -100,6 +94,11 @@ class Permission extends MY_Controller {
             $roleadmin=$this->Permissions->get_role($adminrole['name']);
             if(intval($data['user_id'])>0)
                 $this->Permissions->enrol_user($data['user_id'],$home_contextid,$roleadmin->id);
+            
+            //7. update locations
+            $datafolder=APPPATH.'/data/cities';
+            $this->Locations->load($datafolder);
+            
             redirect('');
         }else{
             if(validation_errors()!='')

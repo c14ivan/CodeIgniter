@@ -18,7 +18,8 @@ $config['school']['systemstatus']=array(
 $config['school']['subjectversionstatus']=array(
 		0=>lang('sc_edition'),
 		1=>lang('sc_inuse'),
-		2=>lang('sc_deprecated')
+		2=>lang('sc_deprecated'),
+        3=>lang('sc_discarded')
 );
 //metodos de enrolamiento: por ahora solo manual
 $config['school']['enrolments']=array(
@@ -35,7 +36,7 @@ $config['school']['enrolmode']=array(
         1=>lang('scmode_cicles'),
         2=>lang('scmode_subjects'),
 );
-
+//Familiares del nucleo familiar
 $config['school']['relatives']=array(
         'father'=>lang('relative_father'),
         'mother'=>lang('relative_mother'),
@@ -43,7 +44,15 @@ $config['school']['relatives']=array(
         'uncle'=>lang('relative_uncle'),
         'cousin'=>lang('relative_cousin'),
         'brother'=>lang('relative_brother'),
+        'sister'=>lang('relative_sister'),
         'godfather'=>lang('relative_godfather'),
         'godmother'=>lang('relative_godmother'),
         'familyfriend'=>lang('relative_familyfriend'),
+);
+//comportamiento de los estudiantes en inscripciones
+$config['school']['conduct']=array(
+        'top'=>lang('sc_conduct_top'),
+        'high'=>lang('sc_conduct_high'),
+        'middle'=>lang('sc_conduct_middle'),
+        'low'=>lang('sc_conduct_low')
 );

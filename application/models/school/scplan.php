@@ -7,6 +7,7 @@ class Scplan extends CI_Model{
 	private $table_planversion  = 'scplanversion';
 	private $table_subjects		= 'scsubject';
 	private $table_subversions	= 'scsubjectversion';
+	private $table_cicles       = 'sccicle';
 	
 	function __construct()
 	{
@@ -73,6 +74,16 @@ class Scplan extends CI_Model{
 		}
 		return false;
 	}
+	function getCurrentVersion($planid){
+	    $this->db->where('planid',$planid);
+	    $this->db->where('status',1);
+	    $query=$this->db->get($this->table_versions);
+	    $response=array();
+	    if ($query->num_rows() > 0){
+	        $response = $query->row_array();
+	    }
+	    return $response;
+	}
 	function createVersion($planid,$name,$description){
 		$this->db->where('planid',$planid);
 		$this->db->order_by('version','DESC');
@@ -91,7 +102,21 @@ class Scplan extends CI_Model{
 		);
 		
 		if($this->db->insert($this->table_versions, $data)){
-			return $this->db->insert_id();
+		    $idcreated= $this->db->insert_id();
+			
+			$currentversion=$this->getCurrentVersion($planid);
+			if($currentversion){
+			    $subasigned=$this->asignSubject($currentversion['id']);
+			    foreach ($subasigned as $asigned){
+			        $this->asignSubject($asigned['sccicleid'],$asigned['id'],$idcreated,$asigned['ih'],$asigned['credits']);
+			    }
+			}
+			
+			$this->db->where('status',0);
+			$this->db->where('planid',$planid);
+			$this->db->where('id!=',$idcreated);
+			$this->db->update($this->table_versions,array('status'=>3));
+			return $idcreated;
 		}
 		return false;
 		
@@ -111,8 +136,19 @@ class Scplan extends CI_Model{
 		}
 		return false;
 	}
+	function activeVersion($planversionid){
+	    $versiondata=$this->getVersion($planversionid);
+	    $this->db->where('planid',$versiondata->planid);
+	    $this->db->update($this->table_versions,array('status'=>2));
+	    
+	    $this->db->where('id',$planversionid);
+	    $this->db->update($this->table_versions,array('status'=>1));
+	    
+	    return $this->db->affected_rows()==1?true:false;
+	}
 	function getVersions($planid){
 		$this->db->where('planid',$planid);
+		$this->db->order_by("{$this->table_planversion}.timecreated","DESC");
 		$response=array();
 		$query=$this->db->get($this->table_planversion);
 		if ($query->num_rows() > 0){
@@ -131,7 +167,7 @@ class Scplan extends CI_Model{
 	}
 	function getVersion($versionid){
 		$this->db->select("{$this->table_planversion}.name,{$this->table_planversion}.description,{$this->table_planversion}.status,
-		{$this->table_plan}.scsystemid");
+		{$this->table_plan}.scsystemid,{$this->table_planversion}.planid");
 		$this->db->join($this->table_plan,"{$this->table_planversion}.planid={$this->table_plan}.id");
 		$this->db->where($this->table_planversion.".id",$versionid);
 		
@@ -147,6 +183,8 @@ class Scplan extends CI_Model{
 			{$this->table_subjectplan}.sccicleid,{$this->table_subjectplan}.ih,{$this->table_subjectplan}.credits");
 		$this->db->where($this->table_subjectplan.".scplanversionid",$versionid);
 		$this->db->join($this->table_subjects,"{$this->table_subjects}.id={$this->table_subjectplan}.scsubjectid");
+		$this->db->join($this->table_cicles,"{$this->table_cicles}.id={$this->table_subjectplan}.sccicleid");
+		$this->db->order_by("{$this->table_cicles}.order","ASC");
 		$this->db->order_by("{$this->table_subjectplan}.order","ASC");
 		$query = $this->db->get($this->table_subjectplan);
 		return $query->result_array();

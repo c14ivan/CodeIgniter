@@ -5,32 +5,192 @@
 {% endblock %} {% block content %} {% import
 '_tools/formElements.twig'as forms %}
 <div class="row-fluid">
-<h2>{{ data.planname }}</h2>
-<h3>Inscripciones</h3>
-{% set cities= {} %}
-<form class="form-horizontal">
-{{ forms.campo({tipo:'input',type:'hidden',name:'methodid',value:data.id}) }}
-{{ forms.campo({tipo:'input',type:'text',name:'lastnames',label:lang('sc_lastnames')}) }}
-{{ forms.campo({tipo:'input',type:'text',name:'names',label:lang('sc_names')}) }}
-{{ forms.campo({tipo:'input',type:'text',name:'nuip',label:lang('sc_nuip')}) }}
-{{ forms.campo({tipo:'select',name:'nuipfrom',label:lang('sc_nuipfrom'),options:cities}) }}
-{{ forms.campo({tipo:'input',type:'date',name:'bornday',label:lang('sc_bornday'),options:cities}) }}
-{{ forms.campo({tipo:'select',name:'bornplace',label:lang('sc_bornplace'),options:cities}) }}
-{{ forms.campo({tipo:'input',type:'text',name:'address',label:lang('sc_address')}) }}
-{{ forms.campo({tipo:'input',type:'text',name:'neighborhood',label:lang('sc_neighborhood')}) }}
-{{ forms.campo({tipo:'input',type:'text',name:'phone',label:lang('sc_phone')}) }}
-{{ forms.campo({tipo:'select',name:'stratum',label:lang('sc_stratum'),opciones:{1:1,2:2,3:3,4:4,5:5,6:6}}) }}
-{{ forms.campo({tipo:'input',type:'text',name:'conduct',label:lang('sc_conduct')}) }}
-{{ forms.campo({tipo:'input',type:'checkbox',name:'hasbrothers',label:lang('sc_hasbrothers')}) }}
-{{ forms.campo({tipo:'input',type:'radio',name:'ownhouse',opciones:{0:lang('no'),1:lang('yes')},label:lang('sc_ownhouse')}) }}
-{{ forms.campo({tipo:'select',name:'relatives',label:lang('sc_livewith'),opciones:config.school.relatives}) }}
-{{ forms.campo({tipo:'textarea',name:'interviewcoment',label:lang('sc_interviewresult')}) }}
-{{ forms.campo({tipo:'input',type:'text',name:'schoolfrom',label:lang('sc_schoolfrom')}) }}
-<div class="form-actions">
-    <p class="center span5">
-        <button type="submit" class="btn btn-primary">{{ lang('save') }}</button>
-    </p>
+	<h2>{{ data.planname }}</h2>
+	<h3>{{ lang('sc_inscriptions') }}<i class="icon-chevron-right showadd"></i></h3>
+	<div id="inscresult" style="display:none;" class="box">
+	    <i class="icon-remove closeform" style="float:right"></i>
+	    <h3 id="inscresulttitle"></h3>
+	    <p></p>
+	</div>
+	<form class="form-horizontal" id="inscriptionform">
+		{{ forms.legend({name:lang('sc_infobasic')}) }} {{
+		forms.campo({tipo:'input',type:'hidden',name:'parentscount',value:0})
+		}} {{
+		forms.campo({tipo:'input',type:'hidden',name:'methodid',value:data.id})
+		}} {{
+		forms.campo({tipo:'input',type:'text',name:'lastnames',label:lang('sc_lastnames')})
+		}} {{
+		forms.campo({tipo:'input',type:'text',name:'names',label:lang('sc_names')})
+		}}{{
+		forms.campo({tipo:'select',name:'rh',label:lang('sc_rh'),opciones:{'A+':'A+','A-':'A-','B+':'B+','B-':'B-','AB+':'AB+','O+':'O+','O-':'O-'}})
+		}}<h4>{{ lang('sc_nuipid') }}</h4> {{
+		forms.campo({tipo:'input',type:'text',name:'nuip',label:lang('sc_nuip')})
+		}} {{
+		forms.campo({tipo:'select',name:'nuipfrom',label:lang('sc_nuipfrom'),opciones:cities,placeholder:lang('selectanoption')})
+		}}<h4>{{ lang('sc_born') }}</h4> {{
+		forms.campo({tipo:'input',type:'date',name:'bornday',label:lang('sc_bornday')})
+		}} {{
+		forms.campo({tipo:'select',name:'bornplace',label:lang('sc_bornplace'),opciones:cities,placeholder:lang('selectanoption')})
+		}}<h4>{{ lang('sc_home') }}</h4>  {{
+		forms.campo({tipo:'input',type:'text',name:'address',label:lang('sc_address'),maxlength:45})
+		}} {{
+		forms.campo({tipo:'input',type:'text',name:'neighborhood',label:lang('sc_neighborhood')})
+		}} {{
+		forms.campo({tipo:'select',name:'homeplace',label:lang('sc_homeplace'),opciones:cities,placeholder:lang('selectanoption')})
+		}} {{
+		forms.campo({tipo:'input',type:'text',name:'phone',label:lang('sc_phone')})
+		}} {{ forms.legend({name:lang('sc_infoenrol')}) }} {% if data.mode==1
+		%} {{
+		forms.campo({tipo:'select',name:'contexts',opciones:cicles,label:lang('sc_enrolto'),placeholder:lang('selectanoption')})
+		}} {% else %} {{
+		forms.campo({tipo:'select',name:'contexts',opciones:ciclesubjects,label:lang('sc_enrolto'),placeholder:lang('selectanoption'),extra:'multiple'})
+		}} {% endif %} {{ forms.legend({name:lang('sc_infofamily')}) }}
+		{{
+		forms.campo({tipo:'input',type:'text',name:'relatives',label:lang('sc_livewith'),maxlength:100})
+		}} {{
+		forms.campo({tipo:'input',type:'checkbox',name:'hasbrothers',label:lang('sc_hasbrothers')})
+		}} {{
+		forms.campo({tipo:'input',type:'radio',name:'ownhouse',opciones:{0:lang('no'),1:lang('yes')},label:lang('sc_ownhouse')})
+		}} {{
+		forms.campo({tipo:'select',name:'stratum',label:lang('sc_stratum'),opciones:{1:1,2:2,3:3,4:4,5:5,6:6}})
+		}}
+		<div class="parentcontainer">
+		<h4>{{ lang('sc_parents') }} <i class="icon-plus addparent" title="{{ lang('sc_parentadd') }}"></i></h4>
+		</div> {{ forms.legend({name:lang('sc_infoadd')}) }} {{
+		forms.campo({tipo:'select',name:'conduct',label:lang('sc_conduct'),opciones:config.school.conduct})
+		}} {{
+		forms.campo({tipo:'input',type:'checkbox',name:'repeat',label:lang('sc_repeating')})
+		}} {{
+		forms.campo({tipo:'input',type:'text',name:'interviewresult',label:lang('sc_interviewresult')})
+		}}{{
+		forms.campo({tipo:'textarea',name:'interviewcoment',label:lang('result')})
+		}} {{
+		forms.campo({tipo:'textarea',name:'reasontoenter',label:lang('sc_reasontoenter')})
+		}} {{
+		forms.campo({tipo:'input',type:'text',name:'schoolfrom',label:lang('sc_schoolfrom')})
+		}} {{
+		forms.campo({tipo:'input',type:'text',name:'schoolwhyfrom',label:lang('sc_schoolwhyfrom')})
+		}}
+		<div class="form-actions">
+			<p class="center span5">
+				<button type="submit" class="btn btn-primary">{{ lang('save') }}</button>
+			</p>
+		</div>
+	</form>
+	<form id="parentform">
+    	<div class="parentinfo box box-content parcont" style="display:none;">
+    	    <i class="icon-remove closeparent" style="float:right"></i>
+    	    {{ forms.campo({tipo:'input',type:'text',name:'parentname',label:lang('sc_fullnames')}) }}
+    	    {{ forms.campo({tipo:'select',name:'parentrol',label:lang('sc_parentrol'),opciones:config.school.relatives}) }}
+    	    {{ forms.campo({tipo:'input',type:'text',name:'parentjob',label:lang('sc_ocupation')}) }}
+    	    {{ forms.campo({tipo:'input',type:'text',name:'parentcomp',label:lang('sc_parentcompany')}) }}
+    	    {{ forms.campo({tipo:'input',type:'text',name:'parentcomptime',label:lang('sc_parentcomptime')}) }}
+    	    {{ forms.campo({tipo:'input',type:'text',name:'parentphone',label:lang('sc_phone')}) }}
+    	    {{ forms.campo({tipo:'input',type:'text',name:'parentemail',label:lang('sc_email')}) }}
+    	</div>
+	</form>
 </div>
-</form>
-</div>
-{% endblock %} {% block jscode %} {% endblock %}
+{% endblock %} {% block jscode %}
+<script type="text/javascript">
+$(document).ready(function() {
+	$('.closeform').click(function(){
+		$(this).closest('.box').slideUp();
+	})
+	$('.showadd').click(function(){
+		$('#inscriptionform').toggle();
+	});
+	$('.addparent').click(function(){
+		addparent(false);
+	});
+	$('#parentform').validate({
+		rules:{
+			parentname:{required:true,minlength:5}
+		},
+		messages:{
+			parentname:{
+	    		required: '{{ lang('required')|format('')}}',
+	    		minlength: '{{ lang('min_length')|format('',5)}}',
+	    	}
+		}
+	});
+	$('#inscriptionform').validate({
+		rules:{
+			lastnames:{required: true,minlength:5,},
+	    	names:{required: true,minlength:5,},
+	    	nuip:{noSpace:true}
+	    },
+	    messages:{
+	    	lastnames:{
+	    		required: '{{ lang('required')|format('')}}',
+	    		minlength: '{{ lang('min_length')|format('',5)}}',
+	    		
+	    	},
+	    	names:{
+	    		required: '{{ lang('required')|format('')}}',
+	    		minlength: '{{ lang('min_length')|format('',5)}}',
+	    		
+	    	},
+	    	nuip:{
+	    		noSpace:'{{ lang('auth_nospaces') }}'
+		    }
+	    },
+	    submitHandler: function(form) {
+    		$.ajax({
+                type:"POST",
+                url: '{{ site_url('enrolments/inscriptionform') }}',
+                dataType:'json',
+                data: $(form).serializeObject(),
+                error:function (jqXHR, textStatus, errorThrown) {
+                    console.log(JSON.stringify(jqXHR) + ' ' + textStatus + '  ' + errorThrown);
+                }
+            }).done(function(data){
+            	$('#inscresult').find('h3').html(data.msj);
+            	$('#inscresult').find('p').html(data.url);
+            	if(data.ok){
+            	    $('#inscresult').slideDown();
+            	    $('#inscriptionform').slideUp();
+            	    resetForm($('#inscriptionform'));
+            	    $('#inscriptionform').find('.parcont').remove();
+            	    $('#inscriptionform').find('input[name=parentscount]').val(0);
+            	    addparent('father');
+            		addparent('mother');
+            	}
+			});
+    	}
+	});
+	function addparent(preparent){
+		var countparents=parseInt($('#parentscount').val())+1;
+
+		htmlparent=$('.parentinfo').clone();
+		$(htmlparent).find('[name]').each(function(){
+			//var rules=$('#parentform').find('[name='+$(this).attr('name')+']').rules();
+			//rules['messages'] = $('#parentform').data('validator').settings.messages[$(this).attr('name')];
+			
+			$(this).attr('name',$(this).attr('name')+'['+countparents+']');
+			$(this).attr('id',$(this).attr('id')+'_'+countparents+'');
+			
+			//$(htmlparent).find("#"+$(this).attr('id')).rules("add", rules);
+		});
+		if(preparent){
+			$(htmlparent).find('select').find('option[value='+preparent+']').attr('selected',true);
+		}
+		$(htmlparent).css('display','block');
+		$(htmlparent).find('select').css('display','block');
+		$(htmlparent).find('select').removeClass('chzn-done');
+		$(htmlparent).find('[id$=_chzn]').remove();
+		$(htmlparent).removeClass('parentinfo');
+		$('#parentscount').val(countparents);
+		$('.parentcontainer').append(htmlparent);
+		$('[data-rel="chosen"],[rel="chosen"]').chosen({disable_search_threshold: 10});
+		dom_parent();
+	}
+	function dom_parent(){
+		$('.closeparent').click(function(){
+			$(this).closest('.box').remove();
+		});
+	}
+	addparent('father');
+	addparent('mother');
+});
+</script>
+} {% endblock %}

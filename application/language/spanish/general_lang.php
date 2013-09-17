@@ -28,6 +28,8 @@ $lang['datecreated']="Fecha de Creación";
 $lang['date_ini']="Fecha inicial";
 $lang['date_end']="Fecha Final";
 $lang['lastlogin']="Ultimo Login";
+$lang['result']="Resultado";
+$lang['view_pdf']="Ver pdf";
 
 $lang['status_able']="Habilitado";
 $lang['status_disable']="Deshabilitado";

@@ -171,7 +171,7 @@ CREATE  TABLE `ci`.`sc_parent` (
 
 DROP TABLE IF EXISTS `sc_inscription`;
 
-CREATE  TABLE `ci`.`sc_inscription` (
+CREATE  TABLE `sc_inscription` (
   `idinscription` INT NOT NULL AUTO_INCREMENT ,
   `lastnames` VARCHAR(50) NULL ,
   `names` VARCHAR(50) NULL ,
@@ -191,4 +191,18 @@ CREATE  TABLE `ci`.`sc_inscription` (
   `interviewresult` VARCHAR(20) NULL ,
   `schoolfrom` VARCHAR(100) NULL ,
   PRIMARY KEY (`idinscription`) 
+);
+
+DROP TABLE IF EXISTS `sc_preparent`;
+
+CREATE TABLE `sc_preparent` (
+  `idpreparent` int(11) NOT NULL AUTO_INCREMENT,
+  `inscriptionid` bigint(10) DEFAULT NULL,
+  `parentname` varchar(100) DEFAULT NULL,
+  `kinship` varchar(20) DEFAULT NULL,
+  `company` varchar(100) DEFAULT NULL,
+  `comptime` varchar(10) DEFAULT NULL,
+  `phone` varchar(45) DEFAULT NULL,
+  `email` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`idpreparent`)
 );
