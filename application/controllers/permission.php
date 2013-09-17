@@ -14,7 +14,7 @@ class Permission extends MY_Controller {
         $this->load->library('tank_auth');
         $this->lang->load('tank_auth');
         $this->load->model('Permissions');
-        $this->load->model('install/Locations');
+        $this->load->model('general/Locations');
     }
     /**
      * TODO make something with this, it's only for update profiles quickly on development

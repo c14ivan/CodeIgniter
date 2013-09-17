@@ -17,7 +17,7 @@ class Enrolments extends MY_Controller {
         $this->lang->load('form_validation');
         $this->load->model('school/Scplan');
         $this->load->model('school/Scsystem');
-        $this->load->model('install/Locations');
+        $this->load->model('general/Locations');
         $this->load->model('school/enrolment');
         $this->load->library('Pdf');
 

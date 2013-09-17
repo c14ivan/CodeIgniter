@@ -78,6 +78,16 @@ CREATE TABLE `scarea` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+DROP TABLE IF EXISTS `scareacicle`;
+
+CREATE TABLE `scareacicle` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `scareaid` int(11) DEFAULT NULL,
+  `sccicleid` int(11) DEFAULT NULL,
+  `order` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
 DROP TABLE IF EXISTS `scsubject`;
 
 CREATE TABLE `scsubject` (
@@ -87,6 +97,16 @@ CREATE TABLE `scsubject` (
   `shortname` varchar(5) DEFAULT NULL,
   `description` text,
   `blocked` int(4) DEFAULT 0,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+DROP TABLE IF EXISTS `scsubjectasign`;
+
+CREATE TABLE `scsubjectasign` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `scareacicleid` int(11) DEFAULT NULL,
+  `scsubjectid` int(11) DEFAULT NULL,
+  `order` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
